@@ -6,19 +6,36 @@
     <script>
       (function () {
         try {
-            var t = localStorage.getItem("ps-theme");
-          if (
+          var t = localStorage.getItem("ps-theme");
+          var isLight =
             t === "light" ||
             (!t &&
               window.matchMedia &&
-              matchMedia("(prefers-color-scheme: light)").matches)
-          ) {
+              matchMedia("(prefers-color-scheme: light)").matches);
+          if (isLight) {
             document.documentElement.classList.add("light");
           }
         } catch (e) {}
       })();
     </script>
     <title>Pablo Schefer — Full-Stack Developer & Cybersecurity Analyst</title>
+    <link
+      id="favicon"
+      rel="icon"
+      type="image/png"
+      href="assets/favicon-dark.png"
+    />
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+    <script>
+      (function () {
+        try {
+          var fav = document.getElementById("favicon");
+          if (fav && document.documentElement.classList.contains("light")) {
+            fav.href = "assets/favicon-light.png";
+          }
+        } catch (e) {}
+      })();
+    </script>
     <meta
       name="description"
       content="Portfolio de Pablo Schefer Orduña, Full-Stack Developer, Cybersecurity Analyst y mantenedor de proyectos open source."
@@ -12571,6 +12588,10 @@
               "aria-label",
               light ? "Switch to dark mode" : "Switch to light mode",
             );
+            var fav = document.getElementById("favicon");
+            if (fav) {
+              fav.href = light ? "assets/favicon-light.png" : "assets/favicon-dark.png";
+            }
           }
           sync();
           tt.addEventListener("click", function () {
