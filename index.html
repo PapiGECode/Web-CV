@@ -438,27 +438,107 @@
         display: block;
       }
 
-      /* ─── CURSOR (Standard native) ─────────────────────────── */
+      /* ─── CURSOR (Premium custom, works everywhere) ─────────── */
       #cur {
-        display: none !important;
+        position: fixed;
+        inset: 0;
+        pointer-events: none !important;
+        z-index: 99999999 !important;
+        display: none;
       }
-      a,
-      button,
-      [role="button"],
-      .btn,
-      .btn-case,
-      .nav-cta,
-      .nav-theme,
-      .nav-link,
-      .social,
-      .metric-pill,
-      .panel-visual,
-      .cap-card,
-      .cs-close,
-      .cs-back,
-      .cs-btn,
-      .cap-evidence-link {
-        cursor: pointer;
+      html.fine #cur {
+        display: block;
+      }
+      #cur-ring,
+      #cur-dot,
+      #cur-label {
+        pointer-events: none !important;
+        z-index: 99999999 !important;
+      }
+      #cur-ring {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 38px;
+        height: 38px;
+        border: 1.5px solid var(--bone);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        transition:
+          width 0.32s var(--ease),
+          height 0.32s var(--ease),
+          border-color 0.25s,
+          background 0.25s,
+          opacity 0.25s;
+      }
+      html.light #cur-ring {
+        border-color: #17140f;
+      }
+      #cur-dot {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 6px;
+        height: 6px;
+        background: var(--bone);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        box-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
+        transition: opacity 0.2s;
+      }
+      html.light #cur-dot {
+        background: #17140f;
+        box-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
+      }
+      #cur-label {
+        position: fixed;
+        top: 0;
+        left: 0;
+        transform: translate(16px, 16px);
+        font-family: var(--font-mono);
+        font-size: 0.62rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        font-weight: 600;
+        color: var(--ink);
+        background: var(--bone);
+        padding: 0.25rem 0.6rem;
+        border-radius: 40px;
+        opacity: 0;
+        transition: opacity 0.2s;
+        white-space: nowrap;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+      }
+      html.light #cur-label {
+        color: #f7f5f0;
+        background: #17140f;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+      }
+      html.cur-hot #cur-ring {
+        width: 58px;
+        height: 58px;
+        border-color: var(--bone);
+        background: rgba(236, 232, 225, 0.14);
+      }
+      html.light.cur-hot #cur-ring {
+        border-color: #17140f;
+        background: rgba(23, 20, 15, 0.1);
+      }
+      html.cur-media #cur-ring {
+        width: 82px;
+        height: 82px;
+        border: 2px solid var(--bone);
+        background: rgba(236, 232, 225, 0.08);
+      }
+      html.light.cur-media #cur-ring {
+        border-color: #17140f;
+        background: rgba(23, 20, 15, 0.08);
+      }
+      html.fine,
+      html.fine * {
+        cursor: none !important;
       }
 
       /* ─── LOADER ───────────────────────────────────────────── */
@@ -3144,11 +3224,12 @@
     <div class="orb orb-2" aria-hidden="true"></div>
     <div class="orb orb-3" aria-hidden="true"></div>
 
-    <div id="progress"></div>
-
-
-
-    <!-- loader -->
+    <!-- cursor -->
+    <div id="cur" aria-hidden="true">
+      <div id="cur-ring"></div>
+      <div id="cur-dot"></div>
+      <div id="cur-label"></div>
+    </div>
     <div id="loader" aria-hidden="true">
       <div class="l-glow"></div>
       <div class="l-inner">
@@ -13553,8 +13634,97 @@
           else el.scrollIntoView({ behavior: REDUCE ? "auto" : "smooth" });
         };
 
-        /* ============ CURSOR (Native standard) ============ */
-        function bindCursor() {}
+        /* ============ CURSOR (Premium custom, works everywhere) ============ */
+        var bindCursor = function () {};
+        if (FINE) {
+          var cd = document.getElementById("cur-dot"),
+            cr = document.getElementById("cur-ring"),
+            cl = document.getElementById("cur-label");
+          var cx = innerWidth / 2,
+            cy = innerHeight / 2,
+            rx = cx,
+            ry = cy;
+          var curVisible = false;
+
+          document.addEventListener("mouseleave", function () {
+            curVisible = false;
+            if (cd) cd.style.opacity = "0";
+            if (cr) cr.style.opacity = "0";
+            if (cl) cl.style.opacity = "0";
+          });
+
+          document.addEventListener("mouseenter", function () {
+            curVisible = true;
+            if (cd) cd.style.opacity = "1";
+            if (cr) cr.style.opacity = "1";
+          });
+
+          addEventListener(
+            "mousemove",
+            function (e) {
+              cx = e.clientX;
+              cy = e.clientY;
+              if (!curVisible) {
+                curVisible = true;
+                if (cd) cd.style.opacity = "1";
+                if (cr) cr.style.opacity = "1";
+              }
+              if (cd) {
+                cd.style.transform =
+                  "translate3d(" + cx + "px," + cy + "px,0) translate(-50%,-50%)";
+              }
+              if (cl) {
+                cl.style.transform =
+                  "translate3d(" + cx + "px," + cy + "px,0) translate(16px,16px)";
+              }
+            },
+            { passive: true },
+          );
+
+          (function ringLoop() {
+            rx += (cx - rx) * 0.18;
+            ry += (cy - ry) * 0.18;
+            if (cr) {
+              cr.style.transform =
+                "translate3d(" + rx + "px," + ry + "px,0) translate(-50%,-50%)";
+            }
+            requestAnimationFrame(ringLoop);
+          })();
+
+          /* Global event delegation: works on ALL sections, existing, new, and dynamically created */
+          var activeHoverEl = null;
+          var cursorSelector =
+            "a, button, [role='button'], .btn, .btn-case, .nav-cta, .nav-theme, .social, .metric-pill, .panel-visual, .cap-card, .cs-close-btn, .cs-back-btn, .cs-btn, .cs-next-card, [data-cursor], .cap-evidence-link";
+
+          document.addEventListener("mouseover", function (e) {
+            var target = e.target.closest(cursorSelector);
+            if (target) {
+              activeHoverEl = target;
+              var isMedia =
+                target.classList.contains("panel-visual") ||
+                target.classList.contains("proj-visual");
+              html.classList.add(isMedia ? "cur-media" : "cur-hot");
+              var lbl = target.getAttribute("data-cursor");
+              if (lbl && cl) {
+                cl.textContent = lbl;
+                cl.style.opacity = "1";
+              }
+            }
+          });
+
+          document.addEventListener("mouseout", function (e) {
+            if (
+              activeHoverEl &&
+              (!e.relatedTarget || !activeHoverEl.contains(e.relatedTarget))
+            ) {
+              html.classList.remove("cur-hot", "cur-media");
+              if (cl) cl.style.opacity = "0";
+              activeHoverEl = null;
+            }
+          });
+
+          bindCursor = function () {};
+        }
 
         /* ============ MAGNETIC BUTTONS / LINKS ============ */
         if (FINE && !REDUCE) {
