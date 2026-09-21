@@ -2403,73 +2403,472 @@
         gap: 0.6rem;
       }
 
-      .mini-head {
-        font-family: var(--font-mono);
-        font-size: 0.74rem;
-        color: var(--ash);
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-        margin: 0 0 1.5rem;
-        padding-top: clamp(3rem, 7vw, 5rem);
+      /* ─── BENTO SECONDARY PROJECTS ───────────────────────────────── */
+      .bento-projects-wrap {
+        margin-top: clamp(4rem, 8vw, 6.5rem);
+        padding-bottom: clamp(3.5rem, 7vw, 5.5rem);
       }
-      .mini-head::before {
-        content: "/";
-        color: var(--faint);
-        margin-right: 0.3em;
+      .bento-projects-head {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        margin-bottom: 2.25rem;
+        padding-bottom: 1.25rem;
+        border-bottom: 1px solid var(--line);
+        gap: 1.5rem;
+        flex-wrap: wrap;
       }
-      .mini-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1rem;
-        padding-bottom: clamp(3rem, 7vw, 5rem);
-        perspective: 900px;
-      }
-      .mini {
-        border: 1px solid var(--line);
-        border-radius: 4px;
-        padding: 1.75rem;
-        transition:
-          background 0.4s var(--ease),
-          border-color 0.4s;
-        transform-style: preserve-3d;
-        will-change: transform;
-      }
-      .mini:hover {
-        background: var(--ink-2);
-        border-color: var(--line-2);
-      }
-      .mini-num {
+      .bento-subtag {
+        display: inline-block;
         font-family: var(--font-mono);
         font-size: 0.72rem;
-        color: var(--faint);
-        margin-bottom: 1.25rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #38bdf8;
+        margin-bottom: 0.45rem;
       }
-      .mini-name {
+      .bento-subtag::before {
+        content: "// ";
+        color: var(--faint);
+      }
+      .bento-title {
         font-family: var(--font-display);
-        font-size: 1.25rem;
+        font-size: clamp(1.4rem, 2.8vw, 2.05rem);
         font-weight: 700;
         letter-spacing: -0.02em;
         color: var(--bone);
-        margin-bottom: 0.6rem;
+        line-height: 1.2;
       }
-      .mini-desc {
-        font-size: 0.86rem;
+      .bento-head-meta {
+        font-family: var(--font-mono);
+        font-size: 0.74rem;
         color: var(--ash);
-        line-height: 1.65;
-        margin-bottom: 1.1rem;
+        background: var(--ink-2);
+        border: 1px solid var(--line);
+        padding: 0.4rem 0.85rem;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
       }
-      .mini-tags {
+      .bento-head-meta::before {
+        content: "";
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #38bdf8;
+        box-shadow: 0 0 8px rgba(56, 189, 248, 0.7);
+      }
+
+      /* Bento Grid */
+      .bento-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.25rem;
+      }
+      .bento-card {
+        position: relative;
+        background: var(--ink-2);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 1.65rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        overflow: hidden;
+        transition:
+          transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+          border-color 0.35s ease,
+          box-shadow 0.35s ease,
+          background 0.35s ease;
+        will-change: transform;
+      }
+      .bento-card.bento-col-2 {
+        grid-column: span 2;
+      }
+      .bento-card.bento-col-1 {
+        grid-column: span 1;
+      }
+
+      /* Interactive radial glow on hover */
+      .bento-border-glow {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        border-radius: inherit;
+        background: radial-gradient(
+          420px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+          rgba(56, 189, 248, 0.12),
+          transparent 65%
+        );
+        z-index: 1;
+      }
+      .bento-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(56, 189, 248, 0.35);
+        box-shadow:
+          0 16px 36px -10px rgba(0, 0, 0, 0.55),
+          0 0 0 1px rgba(56, 189, 248, 0.2);
+      }
+      .bento-card:hover .bento-border-glow {
+        opacity: 1;
+      }
+      .bento-card:focus-within {
+        border-color: rgba(56, 189, 248, 0.5);
+      }
+
+      .bento-card-inner {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+      }
+
+      /* Card Top */
+      .bento-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.15rem;
+        gap: 0.8rem;
+      }
+      .bento-meta-left {
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+      }
+      .bento-num {
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        color: var(--faint);
+        letter-spacing: 0.05em;
+      }
+      .bento-type-badge {
+        font-family: var(--font-mono);
+        font-size: 0.63rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--ash);
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--line);
+        padding: 0.18rem 0.55rem;
+        border-radius: 4px;
+      }
+      .bento-status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-family: var(--font-mono);
+        font-size: 0.64rem;
+        padding: 0.18rem 0.55rem;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.03);
+      }
+      .bento-status-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        display: inline-block;
+      }
+      .status-active .bento-status-dot {
+        background: #10b981;
+        box-shadow: 0 0 6px rgba(16, 185, 129, 0.75);
+      }
+      .status-active {
+        color: #34d399;
+        border-color: rgba(16, 185, 129, 0.25);
+      }
+      .status-maintained .bento-status-dot {
+        background: #38bdf8;
+        box-shadow: 0 0 6px rgba(56, 189, 248, 0.75);
+      }
+      .status-maintained {
+        color: #7dd3fc;
+        border-color: rgba(56, 189, 248, 0.25);
+      }
+      .status-completed .bento-status-dot {
+        background: #059669;
+      }
+      .status-completed {
+        color: #6ee7b7;
+        border-color: rgba(5, 150, 105, 0.25);
+      }
+      .status-lab .bento-status-dot {
+        background: #a855f7;
+        box-shadow: 0 0 6px rgba(168, 85, 247, 0.75);
+      }
+      .status-lab {
+        color: #d8b4fe;
+        border-color: rgba(168, 85, 247, 0.25);
+      }
+      .status-archive .bento-status-dot {
+        background: #64748b;
+      }
+      .status-archive {
+        color: #94a3b8;
+        border-color: rgba(100, 116, 139, 0.25);
+      }
+
+      /* Card Heading */
+      .bento-heading-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.85rem;
+        margin-bottom: 0.85rem;
+      }
+      .bento-icon-box {
+        width: 38px;
+        height: 38px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--line);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #38bdf8;
+        flex-shrink: 0;
+        transition:
+          transform 0.3s ease,
+          border-color 0.3s ease,
+          background 0.3s ease;
+      }
+      .bento-card:hover .bento-icon-box {
+        transform: scale(1.06);
+        border-color: rgba(56, 189, 248, 0.4);
+        background: rgba(56, 189, 248, 0.09);
+      }
+      .bento-title-group {
+        flex: 1;
+        min-width: 0;
+      }
+      .bento-card-title {
+        font-family: var(--font-display);
+        font-size: 1.2rem;
+        font-weight: 700;
+        letter-spacing: -0.018em;
+        color: var(--bone);
+        line-height: 1.28;
+      }
+      .bento-col-2 .bento-card-title {
+        font-size: 1.35rem;
+      }
+      .bento-updated {
+        display: block;
+        font-family: var(--font-mono);
+        font-size: 0.65rem;
+        color: var(--faint);
+        margin-top: 0.25rem;
+      }
+
+      /* Description */
+      .bento-desc {
+        font-size: 0.85rem;
+        color: var(--ash);
+        line-height: 1.62;
+        margin-bottom: 1.35rem;
+        flex: 1;
+      }
+      .bento-col-2 .bento-desc {
+        font-size: 0.89rem;
+      }
+
+      /* Footer Specs & Actions */
+      .bento-footer {
+        margin-top: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 0.85rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        padding-top: 0.95rem;
+      }
+      .bento-specs-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.6rem;
+        flex-wrap: wrap;
+      }
+      .bento-lang {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        color: var(--ash);
+      }
+      .bento-lang-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        display: inline-block;
+      }
+      .bento-stars {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        font-family: var(--font-mono);
+        font-size: 0.7rem;
+        color: #fbbf24;
+      }
+      .bento-tags {
         display: flex;
         flex-wrap: wrap;
         gap: 0.35rem;
       }
-      .mini-tag {
+      .bento-tag {
         font-family: var(--font-mono);
-        font-size: 0.64rem;
+        font-size: 0.63rem;
         color: var(--faint);
-        padding: 0.22rem 0.6rem;
+        padding: 0.18rem 0.52rem;
         border: 1px solid var(--line);
-        border-radius: 40px;
+        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.02);
+        transition:
+          color 0.2s ease,
+          border-color 0.2s ease;
+      }
+      .bento-card:hover .bento-tag {
+        color: var(--ash);
+        border-color: rgba(255, 255, 255, 0.12);
+      }
+
+      .bento-actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 0.55rem;
+        margin-top: 0.2rem;
+      }
+      .bento-btn-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        color: var(--bone);
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--line);
+        padding: 0.38rem 0.78rem;
+        border-radius: 6px;
+        text-decoration: none;
+        transition:
+          background 0.25s ease,
+          border-color 0.25s ease,
+          color 0.25s ease,
+          transform 0.25s ease;
+      }
+      .bento-btn-link:hover {
+        background: rgba(56, 189, 248, 0.12);
+        border-color: rgba(56, 189, 248, 0.4);
+        color: #38bdf8;
+        transform: translateY(-1px);
+      }
+      .bento-btn-link:focus-visible {
+        outline: 2px solid #38bdf8;
+        outline-offset: 2px;
+      }
+      .bento-btn-link.secondary {
+        color: var(--ash);
+      }
+      .bento-btn-link.secondary:hover {
+        color: var(--bone);
+        border-color: var(--line-2);
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      /* Light mode support */
+      html.light .bento-projects-head {
+        border-bottom-color: rgba(0, 0, 0, 0.08);
+      }
+      html.light .bento-head-meta {
+        background: rgba(0, 0, 0, 0.03);
+        border-color: rgba(0, 0, 0, 0.08);
+        color: var(--ash);
+      }
+      html.light .bento-card {
+        background: #ffffff;
+        border-color: rgba(0, 0, 0, 0.08);
+        box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.04);
+      }
+      html.light .bento-card:hover {
+        background: #ffffff;
+        border-color: rgba(14, 165, 233, 0.4);
+        box-shadow:
+          0 16px 32px -8px rgba(14, 165, 233, 0.15),
+          0 0 0 1px rgba(14, 165, 233, 0.2);
+      }
+      html.light .bento-border-glow {
+        background: radial-gradient(
+          420px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+          rgba(14, 165, 233, 0.08),
+          transparent 65%
+        );
+      }
+      html.light .bento-type-badge {
+        background: rgba(0, 0, 0, 0.03);
+        border-color: rgba(0, 0, 0, 0.08);
+      }
+      html.light .bento-status-badge {
+        background: rgba(0, 0, 0, 0.02);
+        border-color: rgba(0, 0, 0, 0.08);
+      }
+      html.light .bento-icon-box {
+        background: rgba(0, 0, 0, 0.03);
+        border-color: rgba(0, 0, 0, 0.08);
+        color: #0284c7;
+      }
+      html.light .bento-card:hover .bento-icon-box {
+        background: rgba(14, 165, 233, 0.1);
+        border-color: rgba(14, 165, 233, 0.35);
+      }
+      html.light .bento-footer {
+        border-top-color: rgba(0, 0, 0, 0.06);
+      }
+      html.light .bento-tag {
+        background: rgba(0, 0, 0, 0.02);
+        border-color: rgba(0, 0, 0, 0.08);
+      }
+      html.light .bento-btn-link {
+        background: rgba(0, 0, 0, 0.03);
+        border-color: rgba(0, 0, 0, 0.1);
+        color: var(--ink);
+      }
+      html.light .bento-btn-link:hover {
+        background: rgba(14, 165, 233, 0.1);
+        border-color: rgba(14, 165, 233, 0.4);
+        color: #0284c7;
+      }
+
+      /* Responsive queries */
+      @media (max-width: 980px) {
+        .bento-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .bento-card.bento-col-2 {
+          grid-column: span 2;
+        }
+      }
+      @media (max-width: 680px) {
+        .bento-grid {
+          grid-template-columns: 1fr;
+        }
+        .bento-card.bento-col-2,
+        .bento-card.bento-col-1 {
+          grid-column: span 1;
+        }
+        .bento-card {
+          padding: 1.35rem;
+        }
+        .bento-projects-head {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.8rem;
+        }
       }
 
       /* ─── CONTACT ──────────────────────────────────────────── */
@@ -2994,7 +3393,8 @@
         }
 
         /* GRIDS */
-        .mini-grid {
+        .mini-grid,
+        .bento-grid {
           grid-template-columns: 1fr;
         }
         .f-row {
@@ -4679,52 +5079,23 @@
           </article>
         </div>
 
-        <div class="shell">
-          <div class="mini-head anim">Más proyectos y colaboraciones</div>
-          <div class="mini-grid">
-            <div class="mini anim">
-              <div class="mini-num">04</div>
-              <div class="mini-name">KiCord-DOOM-Plugin</div>
-              <p class="mini-desc">
-                Adaptación y plugin funcional en TypeScript que lleva DOOM al
-                entorno de KiCord, demostrando la extensibilidad de su sistema
-                de plugins y una forma distinta de explorar el cliente.
-              </p>
-              <div class="mini-tags">
-                <span class="mini-tag">TypeScript</span>
-                <span class="mini-tag">DOOM</span>
-                <span class="mini-tag">Plugins</span>
-              </div>
+        <div class="shell bento-projects-wrap">
+          <div class="bento-projects-head anim">
+            <div class="bento-head-left">
+              <span class="bento-subtag">Ecosistema &amp; Open Source</span>
+              <h3 class="bento-title">Más proyectos y colaboraciones</h3>
             </div>
-            <div class="mini anim">
-              <div class="mini-num">05</div>
-              <div class="mini-name">duolingo-streak-keeper</div>
-              <p class="mini-desc">
-                Script de automatización programado en TypeScript para
-                mantener una racha de Duolingo. Un proyecto pequeño, práctico
-                y centrado en resolver una necesidad concreta.
-              </p>
-              <div class="mini-tags">
-                <span class="mini-tag">TypeScript</span>
-                <span class="mini-tag">Automatización</span>
-                <span class="mini-tag">Scripts</span>
-              </div>
+            <div class="bento-head-meta" aria-label="Recuento de proyectos e iniciativas secundarias">
+              <span class="bento-repo-count">Ecosistema GitHub &amp; Iniciativas</span>
             </div>
-            <div class="mini anim">
-              <div class="mini-num">06</div>
-              <div class="mini-name">FNLB &amp; comunidades tech</div>
-              <p class="mini-desc">
-                Moderación y colaboración de producto para FNLB, además de
-                participación activa en comunidades de Nate Gentile, Edgar Pons
-                y ThiagoIUTU. Experiencia real conectando personas, procesos y
-                producto a escala.
-              </p>
-              <div class="mini-tags">
-                <span class="mini-tag">Moderación</span>
-                <span class="mini-tag">Producto</span>
-                <span class="mini-tag">Operaciones</span>
-              </div>
-            </div>
+          </div>
+          <div
+            class="bento-grid"
+            id="bento-projects-grid"
+            role="region"
+            aria-label="Cuadrícula Bento de proyectos secundarios y colaboraciones"
+          >
+            <!-- Generado dinámicamente desde window.SECONDARY_PROJECTS -->
           </div>
         </div>
       </section>
@@ -14615,7 +14986,337 @@
           gsap.set(".hero-top .mono,.hero-eyebrow", { y: -8 });
         }
 
+        /* ========================================================
+           SECONDARY PROJECTS (Bento Box - Configurable in one place)
+           ======================================================== */
+        window.SECONDARY_PROJECTS = [
+          {
+            id: "kicord-doom-plugin",
+            index: "04",
+            name: "KiCord-DOOM-Plugin",
+            badgeType: "Plugin Open Source",
+            status: { label: "Activo", type: "active" },
+            colSpan: 2,
+            category: "plugin",
+            description:
+              "Adaptación y plugin funcional en TypeScript que lleva el clásico DOOM al entorno de KiCord, demostrando la extensibilidad modular de su motor de plugins y una integración de bajo nivel en el cliente.",
+            language: { name: "TypeScript", color: "#3178c6" },
+            technologies: [
+              "TypeScript",
+              "DOOM Wasm",
+              "Discord Client",
+              "Plugin Architecture",
+            ],
+            githubUrl: "https://github.com/PapiGECode/KiCord-DOOM-Plugin",
+            webUrl: null,
+            stars: 1,
+            updatedAt: "Ago 2026",
+          },
+          {
+            id: "duolingo-streak-keeper",
+            index: "05",
+            name: "duolingo-streak-keeper",
+            badgeType: "Automatización",
+            status: { label: "Mantenido", type: "maintained" },
+            colSpan: 1,
+            category: "automation",
+            description:
+              "Script de automatización en TypeScript para la monitorización e interacción periódica programada, resolviendo la retención de rachas de forma desatendida y fiable.",
+            language: { name: "TypeScript", color: "#3178c6" },
+            technologies: [
+              "TypeScript",
+              "Node.js",
+              "Cron Tasks",
+              "API Client",
+            ],
+            githubUrl: "https://github.com/PapiGECode/duolingo-streak-keeper",
+            webUrl: null,
+            stars: 1,
+            updatedAt: "Sep 2026",
+          },
+          {
+            id: "fnlb-comunidades",
+            index: "06",
+            name: "FNLB & Comunidades Tech",
+            badgeType: "Gestión & Operaciones",
+            status: { label: "Activo", type: "active" },
+            colSpan: 1,
+            category: "community",
+            description:
+              "Moderación y colaboración de producto en FNLB, junto a participación activa y soporte técnico en comunidades de Nate Gentile, Edgar Pons y ThiagoIUTU a gran escala.",
+            language: { name: "Community Ops", color: "#10b981" },
+            technologies: [
+              "Moderación",
+              "Gestión de Producto",
+              "Discord Ops",
+              "Resolución Técnica",
+            ],
+            githubUrl: "https://github.com/PapiGECode",
+            webUrl: null,
+            stars: null,
+            updatedAt: "Actualidad",
+          },
+          {
+            id: "thiagoiutu-portfolio",
+            index: "07",
+            name: "thiagoiutu-portfolio",
+            badgeType: "Colaboración Web",
+            status: { label: "Completado", type: "completed" },
+            colSpan: 1,
+            category: "web",
+            description:
+              "Colaboración técnica y desarrollo frontend para el portfolio del creador ThiagoIUTU, enfocado en rendimiento web, maquetación responsive limpia y arquitectura visual atractiva.",
+            language: { name: "HTML / JS", color: "#e34c26" },
+            technologies: [
+              "HTML5",
+              "CSS Grid",
+              "JavaScript",
+              "Responsive UI",
+            ],
+            githubUrl: "https://github.com/PapiGECode/thiagoiutu-portfolio",
+            webUrl: null,
+            stars: 1,
+            updatedAt: "Sep 2026",
+          },
+          {
+            id: "github-achievements-lab",
+            index: "08",
+            name: "github-achievements-lab",
+            badgeType: "Research & CI/CD",
+            status: { label: "Laboratorio", type: "lab" },
+            colSpan: 1,
+            category: "lab",
+            description:
+              "Entorno de pruebas y laboratorio técnico para validar flujos colaborativos en GitHub: pull requests, resolución de issues, trazabilidad técnica y automatizaciones CI/CD.",
+            language: { name: "Git / CI", color: "#8957e5" },
+            technologies: [
+              "Git Workflows",
+              "CI/CD",
+              "PRs & Issues",
+              "Code Review",
+            ],
+            githubUrl: "https://github.com/PapiGECode/github-achievements-lab",
+            webUrl: null,
+            stars: 0,
+            updatedAt: "Sep 2026",
+          },
+          {
+            id: "project-vi-technical-archive",
+            index: "09",
+            name: "project-vi-technical-archive",
+            badgeType: "Investigación C++",
+            status: { label: "Archivo", type: "archive" },
+            colSpan: 2,
+            category: "systems",
+            description:
+              "Archivo y análisis técnico en C++ estructurado para la exploración de pipelines, ingeniería de sistemas y compilación orientada a rendimiento en arquitecturas de software complejas.",
+            language: { name: "C++", color: "#f34b7d" },
+            technologies: [
+              "C++",
+              "Sistemas",
+              "Low-level Analysis",
+              "Engine Tech",
+            ],
+            githubUrl:
+              "https://github.com/PapiGECode/project-vi-technical-archive",
+            webUrl: "https://www.rockstargames.com/VI",
+            stars: 1,
+            updatedAt: "Ago 2026",
+          },
+          {
+            id: "github-ecosystem",
+            index: "+",
+            name: "Ecosistema GitHub",
+            badgeType: "Código Abierto",
+            status: { label: "Público", type: "active" },
+            colSpan: 1,
+            category: "hub",
+            description:
+              "Explora el perfil completo de GitHub con todos los repositorios públicos, forks, contribuciones y actividad técnica de código abierto continua.",
+            language: { name: "GitHub Hub", color: "#38bdf8" },
+            technologies: [
+              "Open Source",
+              "Git",
+              "Commits",
+              "Developer Program",
+            ],
+            githubUrl: "https://github.com/PapiGECode?tab=repositories",
+            webUrl: null,
+            stars: "9 repos",
+            updatedAt: "Continuo",
+          },
+        ];
+
+        function renderSecondaryProjects() {
+          var container = document.getElementById("bento-projects-grid");
+          if (
+            !container ||
+            !window.SECONDARY_PROJECTS ||
+            !window.SECONDARY_PROJECTS.length
+          )
+            return;
+
+          var categoryIcons = {
+            plugin:
+              '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2"></rect><path d="M6 12h4m-2-2v4m10-2h.01m-3-1h.01"></path></svg>',
+            automation:
+              '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>',
+            community:
+              '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>',
+            web:
+              '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>',
+            lab:
+              '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"></path><path d="M8.5 2h7"></path><path d="M7 16h10"></path></svg>',
+            systems:
+              '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line></svg>',
+            hub:
+              '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>',
+          };
+
+          var githubIconSvg =
+            '<svg viewBox="0 0 16 16" width="13" height="13" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>';
+          var externalLinkSvg =
+            '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>';
+          var starIconSvg =
+            '<svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor" aria-hidden="true"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.75.75 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25z"></path></svg>';
+
+          var cardsHtml = window.SECONDARY_PROJECTS.map(function (item) {
+            var colClass = item.colSpan === 2 ? "bento-col-2" : "bento-col-1";
+            var icon = categoryIcons[item.category] || categoryIcons.plugin;
+            var statusClass =
+              "status-" +
+              (item.status && item.status.type ? item.status.type : "active");
+            var statusLabel =
+              item.status && item.status.label ? item.status.label : "Activo";
+
+            var tagsHtml = (item.technologies || [])
+              .map(function (t) {
+                return '<span class="bento-tag">' + t + "</span>";
+              })
+              .join("");
+
+            var starsHtml = "";
+            if (item.stars !== null && item.stars !== undefined) {
+              starsHtml =
+                '<div class="bento-stars" title="Stars en GitHub" aria-label="' +
+                item.stars +
+                '">' +
+                starIconSvg +
+                "<span>" +
+                item.stars +
+                "</span>" +
+                "</div>";
+            }
+
+            var webBtnHtml = "";
+            if (item.webUrl) {
+              webBtnHtml =
+                '<a href="' +
+                item.webUrl +
+                '" target="_blank" rel="noopener" class="bento-btn-link secondary" aria-label="Visitar web oficial de ' +
+                item.name +
+                '" data-cursor="VISIT">' +
+                externalLinkSvg +
+                "<span>Web</span>" +
+                "</a>";
+            }
+
+            var ghBtnHtml = "";
+            if (item.githubUrl) {
+              var ghText = item.category === "hub" ? "Explorar" : "Código";
+              ghBtnHtml =
+                '<a href="' +
+                item.githubUrl +
+                '" target="_blank" rel="noopener" class="bento-btn-link" aria-label="Ver ' +
+                item.name +
+                ' en GitHub" data-cursor="GITHUB">' +
+                githubIconSvg +
+                "<span>" +
+                ghText +
+                "</span>" +
+                "</a>";
+            }
+
+            return (
+              '<article class="bento-card ' +
+              colClass +
+              '" data-cursor="PROJECT">' +
+              '<div class="bento-border-glow" aria-hidden="true"></div>' +
+              '<div class="bento-card-inner">' +
+              '<div class="bento-top">' +
+              '<div class="bento-meta-left">' +
+              '<span class="bento-num">' +
+              item.index +
+              "</span>" +
+              '<span class="bento-type-badge">' +
+              item.badgeType +
+              "</span>" +
+              "</div>" +
+              '<div class="bento-status-badge ' +
+              statusClass +
+              '">' +
+              '<span class="bento-status-dot" aria-hidden="true"></span>' +
+              "<span>" +
+              statusLabel +
+              "</span>" +
+              "</div>" +
+              "</div>" +
+              '<div class="bento-heading-row">' +
+              '<div class="bento-icon-box" aria-hidden="true">' +
+              icon +
+              "</div>" +
+              '<div class="bento-title-group">' +
+              '<h4 class="bento-card-title">' +
+              item.name +
+              "</h4>" +
+              '<span class="bento-updated">Actualizado: ' +
+              item.updatedAt +
+              "</span>" +
+              "</div>" +
+              "</div>" +
+              '<p class="bento-desc">' +
+              item.description +
+              "</p>" +
+              '<div class="bento-footer">' +
+              '<div class="bento-specs-row">' +
+              '<div class="bento-lang">' +
+              '<span class="bento-lang-dot" style="background-color: ' +
+              item.language.color +
+              ';" aria-hidden="true"></span>' +
+              "<span>" +
+              item.language.name +
+              "</span>" +
+              "</div>" +
+              starsHtml +
+              "</div>" +
+              '<div class="bento-tags">' +
+              tagsHtml +
+              "</div>" +
+              '<div class="bento-actions">' +
+              webBtnHtml +
+              ghBtnHtml +
+              "</div>" +
+              "</div>" +
+              "</div>" +
+              "</article>"
+            );
+          }).join("");
+
+          container.innerHTML = cardsHtml;
+
+          // Wire mouse tracking on newly rendered cards
+          container.querySelectorAll(".bento-card").forEach(function (card) {
+            card.addEventListener("mousemove", function (e) {
+              var r = card.getBoundingClientRect();
+              card.style.setProperty("--mouse-x", e.clientX - r.left + "px");
+              card.style.setProperty("--mouse-y", e.clientY - r.top + "px");
+            });
+          });
+        }
+        renderSecondaryProjects();
+
         function startReveals() {
+          renderSecondaryProjects();
           revealHero();
           buildScroll();
         }
@@ -15052,20 +15753,20 @@
                   );
               });
 
-              /* mini projects + misc anim */
-              gsap.to(".mini", {
+              /* Bento projects & secondary grid anim */
+              gsap.to(".bento-card, .mini", {
                 opacity: 1,
                 y: 0,
                 duration: 0.7,
-                stagger: 0.1,
+                stagger: 0.08,
                 ease: "power3.out",
-                scrollTrigger: { trigger: ".mini-grid", start: "top 85%" },
+                scrollTrigger: { trigger: "#bento-projects-grid, .mini-grid", start: "top 85%" },
               });
-              gsap.set(".mini", { y: 30 });
-              gsap.to(".mini-head", {
+              gsap.set(".bento-card, .mini", { y: 30 });
+              gsap.to(".bento-projects-head, .mini-head", {
                 opacity: 1,
                 duration: 0.6,
-                scrollTrigger: { trigger: ".mini-head", start: "top 90%" },
+                scrollTrigger: { trigger: ".bento-projects-head, .mini-head", start: "top 90%" },
               });
 
               /* CONTACT */
@@ -15392,7 +16093,7 @@
               }
             });
           });
-          document.querySelectorAll(".mini").forEach(function (card) {
+          document.querySelectorAll(".mini, .bento-card").forEach(function (card) {
             var rY = gsap.quickTo(card, "rotationY", {
               duration: 0.5,
               ease: "power2.out",
@@ -15409,9 +16110,11 @@
               var r = card.getBoundingClientRect();
               var nx = (e.clientX - r.left) / r.width - 0.5,
                 ny = (e.clientY - r.top) / r.height - 0.5;
-              rY(nx * 9);
-              rX(-ny * 7);
-              yy(-6);
+              card.style.setProperty("--mouse-x", (e.clientX - r.left) + "px");
+              card.style.setProperty("--mouse-y", (e.clientY - r.top) + "px");
+              rY(nx * 6);
+              rX(-ny * 5);
+              yy(-5);
             });
             card.addEventListener("mouseleave", function () {
               rY(0);
