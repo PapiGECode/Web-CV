@@ -1597,6 +1597,68 @@
         color: var(--bone);
         margin-bottom: 1.1rem;
       }
+      /* ─── PANEL METRICS (Discreet, high-precision data chips) ─ */
+      .panel-metrics {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.45rem;
+        margin-bottom: 1.2rem;
+      }
+      .metric-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.38rem;
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.03em;
+        line-height: 1.3;
+        color: var(--bone);
+        background: rgba(236, 232, 225, 0.04);
+        border: 1px solid var(--line);
+        padding: 0.28rem 0.65rem;
+        border-radius: 6px;
+        transition:
+          background 0.25s,
+          border-color 0.25s,
+          transform 0.2s var(--ease);
+      }
+      .metric-pill:hover {
+        background: rgba(236, 232, 225, 0.07);
+        border-color: var(--line-2);
+        transform: translateY(-1px);
+      }
+      html.light .metric-pill {
+        background: rgba(23, 20, 15, 0.035);
+        border-color: rgba(23, 20, 15, 0.12);
+      }
+      html.light .metric-pill:hover {
+        background: rgba(23, 20, 15, 0.06);
+        border-color: rgba(23, 20, 15, 0.2);
+      }
+      .metric-val {
+        font-weight: 600;
+        color: var(--bone);
+      }
+      .metric-lbl {
+        color: var(--ash);
+        font-size: 0.68rem;
+      }
+      .metric-dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: var(--ash);
+        flex-shrink: 0;
+      }
+      .metric-dot.live {
+        background: #34d399;
+        box-shadow: 0 0 6px rgba(52, 211, 153, 0.6);
+      }
+      .metric-dot.oss {
+        background: #93c5fd;
+        box-shadow: 0 0 6px rgba(147, 197, 253, 0.5);
+      }
       .panel-desc {
         font-size: 1rem;
         color: var(--ash);
@@ -2659,6 +2721,20 @@
               <div class="panel-info">
                 <div class="panel-num">01 — Producto open source</div>
                 <h3 class="panel-title">KiCord</h3>
+                <div class="panel-metrics" aria-label="Métricas y datos de KiCord">
+                  <span class="metric-pill" title="Modelo de desarrollo">
+                    <span class="metric-dot oss" aria-hidden="true"></span>
+                    <span class="metric-val">Open Source</span>
+                  </span>
+                  <span class="metric-pill" title="Tipo de software">
+                    <span class="metric-lbl">Tipo</span>
+                    <span class="metric-val">Extensión Discord</span>
+                  </span>
+                  <span class="metric-pill" title="Arquitectura extensible">
+                    <span class="metric-lbl">Ecosistema</span>
+                    <span class="metric-val">Plugins modulares</span>
+                  </span>
+                </div>
                 <p class="panel-desc">
                   Creador y desarrollador principal de una extensión avanzada
                   para Discord. KiCord incorpora una arquitectura modular,
@@ -2718,6 +2794,20 @@
               <div class="panel-info">
                 <div class="panel-num">02 — Plataforma web</div>
                 <h3 class="panel-title">PapiGEGamer.com</h3>
+                <div class="panel-metrics" aria-label="Métricas y datos de PapiGEGamer.com">
+                  <span class="metric-pill" title="Estado del servicio">
+                    <span class="metric-dot live" aria-hidden="true"></span>
+                    <span class="metric-val">Activo</span>
+                  </span>
+                  <span class="metric-pill" title="Integraciones y APIs">
+                    <span class="metric-lbl">APIs</span>
+                    <span class="metric-val">Discord &amp; GitHub</span>
+                  </span>
+                  <span class="metric-pill" title="Asistente interactivo">
+                    <span class="metric-lbl">IA</span>
+                    <span class="metric-val">NEXO</span>
+                  </span>
+                </div>
                 <p class="panel-desc">
                   Portfolio interactivo desarrollado con React y TypeScript.
                   Centraliza telemetría en tiempo real de comunidades,
@@ -2782,6 +2872,21 @@
               <div class="panel-info">
                 <div class="panel-num">03 — Comunidad &amp; producto</div>
                 <h3 class="panel-title">KernelOS</h3>
+                <div class="panel-metrics" aria-label="Métricas y datos de KernelOS">
+                  <span class="metric-pill" title="Usuarios activos en la comunidad">
+                    <span class="metric-dot live" aria-hidden="true"></span>
+                    <span class="metric-val">50K+</span>
+                    <span class="metric-lbl">activos</span>
+                  </span>
+                  <span class="metric-pill" title="Usuarios históricos totales">
+                    <span class="metric-val">1.5M+</span>
+                    <span class="metric-lbl">históricos</span>
+                  </span>
+                  <span class="metric-pill" title="Enfoque del producto">
+                    <span class="metric-lbl">Enfoque</span>
+                    <span class="metric-val">CustomOS Gaming</span>
+                  </span>
+                </div>
                 <p class="panel-desc">
                   Soporte, comunidad y producto en un ecosistema de CustomOS
                   para gaming de baja latencia con más de 50.000 usuarios
@@ -13021,8 +13126,22 @@
                       ease: "power3.out",
                     },
                     "-=.2",
-                  )
-                  .from(
+                  );
+                var metrics = info.querySelectorAll(".metric-pill");
+                if (metrics && metrics.length) {
+                  tl.from(
+                    metrics,
+                    {
+                      opacity: 0,
+                      y: 10,
+                      duration: 0.4,
+                      stagger: 0.05,
+                      ease: "power2.out",
+                    },
+                    "-=.3",
+                  );
+                }
+                tl.from(
                     info.querySelector(".panel-desc"),
                     { opacity: 0, y: 18, duration: 0.6, ease: "power2.out" },
                     "-=.35",
