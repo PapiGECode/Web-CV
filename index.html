@@ -478,6 +478,7 @@
         background: var(--bone);
         border-radius: 50%;
         transform: translate(-50%, -50%);
+        transition: opacity 0.3s;
       }
       #cur-label {
         position: fixed;
@@ -507,11 +508,9 @@
         height: 84px;
         border-color: var(--bone);
       }
-      html.fine.fx a,
-      html.fine.fx button,
-      html.fine.fx .proj-visual,
-      html.fine.fx .mini {
-        cursor: none;
+      html.fine,
+      html.fine * {
+        cursor: none !important;
       }
 
       /* ─── LOADER ───────────────────────────────────────────── */
@@ -12398,11 +12397,22 @@
             cy = innerHeight / 2,
             rx = cx,
             ry = cy;
+          document.addEventListener("mouseleave", function () {
+            cd.style.opacity = "0";
+            cr.style.opacity = "0";
+            cl.style.opacity = "0";
+          });
+          document.addEventListener("mouseenter", function () {
+            cd.style.opacity = "1";
+            cr.style.opacity = "1";
+          });
           addEventListener(
             "mousemove",
             function (e) {
               cx = e.clientX;
               cy = e.clientY;
+              cd.style.opacity = "1";
+              cr.style.opacity = "1";
               cd.style.transform =
                 "translate(" + cx + "px," + cy + "px) translate(-50%,-50%)";
               cl.style.transform =
