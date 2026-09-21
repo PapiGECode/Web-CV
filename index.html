@@ -2522,8 +2522,8 @@
                 />
                 <div class="corner">
                   <div>
-                    <div class="portrait-stat" data-count="10" data-suffix="+">
-                      0
+                    <div class="portrait-stat" data-start-year="2015" data-suffix="+">
+                      11+
                     </div>
                     <div class="mono" style="margin-top: 0.3rem">
                       Años en comunidades tech
@@ -12359,6 +12359,19 @@
           gsap.registerPlugin(ScrollTrigger);
         }
 
+        /* ============ DYNAMIC YEARS / COUNTERS INIT ============ */
+        function initDynamicCounters() {
+          var currentYear = new Date().getFullYear();
+          document.querySelectorAll("[data-start-year]").forEach(function (el) {
+            var startYear = parseInt(el.dataset.startYear, 10) || 2015;
+            var years = Math.max(1, currentYear - startYear);
+            var suf = el.dataset.suffix || "";
+            el.dataset.count = years;
+            el.textContent = years + suf;
+          });
+        }
+        initDynamicCounters();
+
         /* ============ LENIS SMOOTH SCROLL ============ */
         var lenis = null;
         if (!REDUCE && typeof Lenis !== "undefined") {
@@ -12815,10 +12828,14 @@
                 });
               }
               /* counters */
-              gsap.utils.toArray("[data-count]").forEach(function (el) {
-                var end = +el.dataset.count,
-                  suf = el.dataset.suffix || "",
-                  o = { v: 0 };
+              gsap.utils.toArray("[data-count], [data-start-year]").forEach(function (el) {
+                var currentYear = new Date().getFullYear();
+                var startYear = el.dataset.startYear ? parseInt(el.dataset.startYear, 10) : null;
+                var end = startYear ? Math.max(1, currentYear - startYear) : (+el.dataset.count || 0);
+                var suf = el.dataset.suffix || "";
+                el.dataset.count = end;
+                var o = { v: 0 };
+                el.textContent = "0" + suf;
                 ScrollTrigger.create({
                   trigger: el,
                   start: "top 88%",
@@ -12832,6 +12849,18 @@
                         el.textContent = Math.round(o.v) + suf;
                       },
                     });
+                  },
+                  onRefresh: function (self) {
+                    if (self.progress > 0 && o.v === 0) {
+                      gsap.to(o, {
+                        v: end,
+                        duration: 1.6,
+                        ease: "power2.out",
+                        onUpdate: function () {
+                          el.textContent = Math.round(o.v) + suf;
+                        },
+                      });
+                    }
                   },
                 });
               });
