@@ -975,6 +975,51 @@
       .btn-ghost:hover::before {
         transform: translateY(0);
       }
+      .btn-case {
+        background: rgba(236, 232, 225, 0.07);
+        border: 1px solid var(--line-2);
+        color: var(--bone);
+        cursor: pointer;
+        transition:
+          background 0.3s var(--ease),
+          border-color 0.3s var(--ease),
+          color 0.3s var(--ease),
+          transform 0.2s var(--ease);
+      }
+      .btn-case::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: var(--bone);
+        transform: translateY(101%);
+        transition: transform 0.45s var(--ease);
+        z-index: 0;
+      }
+      .btn-case:hover {
+        color: var(--ink);
+        border-color: var(--bone);
+      }
+      .btn-case:hover::before {
+        transform: translateY(0);
+      }
+      html.light .btn-case {
+        background: rgba(23, 20, 15, 0.05);
+        border-color: rgba(23, 20, 15, 0.16);
+      }
+      html.light .btn-case:hover {
+        color: var(--ink);
+        border-color: var(--bone);
+      }
+      .panel-title[data-open-case] {
+        cursor: pointer;
+        transition: opacity 0.2s var(--ease);
+      }
+      .panel-title[data-open-case]:hover {
+        opacity: 0.82;
+      }
+      .panel-visual[data-open-case] {
+        cursor: pointer;
+      }
 
       /* ─── MARQUEE ──────────────────────────────────────────── */
       .marquee {
@@ -2318,6 +2363,608 @@
         .btn {
           padding: 0.8rem 1.2rem;
         }
+      /* ─── CASE STUDY FULLSCREEN CANVAS ────────────────────── */
+      .cs-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 10000;
+        display: flex;
+        flex-direction: column;
+        background: rgba(13, 12, 10, 0.94);
+        backdrop-filter: blur(28px);
+        -webkit-backdrop-filter: blur(28px);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition:
+          opacity 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+          visibility 0.32s;
+      }
+      .cs-modal.cs-open {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+      }
+      html.light .cs-modal {
+        background: rgba(247, 245, 240, 0.96);
+      }
+      .cs-topbar {
+        position: sticky;
+        top: 0;
+        z-index: 30;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 0.85rem clamp(1.2rem, 4vw, 3rem);
+        border-bottom: 1px solid var(--line);
+        background: rgba(13, 12, 10, 0.82);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+      }
+      html.light .cs-topbar {
+        background: rgba(247, 245, 240, 0.88);
+      }
+      .cs-back-btn,
+      .cs-close-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: transparent;
+        border: 1px solid var(--line);
+        border-radius: 30px;
+        padding: 0.45rem 0.95rem;
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--bone);
+        cursor: pointer;
+        transition:
+          background 0.2s,
+          border-color 0.2s,
+          color 0.2s,
+          transform 0.18s;
+      }
+      .cs-back-btn:hover,
+      .cs-close-btn:hover {
+        background: rgba(236, 232, 225, 0.08);
+        border-color: var(--line-2);
+        transform: translateY(-1px);
+      }
+      html.light .cs-back-btn:hover,
+      html.light .cs-close-btn:hover {
+        background: rgba(23, 20, 15, 0.06);
+      }
+      .cs-top-title {
+        font-family: var(--font-mono);
+        font-size: 0.74rem;
+        color: var(--ash);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .cs-top-title .cs-top-num {
+        color: var(--bone);
+        font-weight: 600;
+      }
+      .cs-scroller {
+        flex: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
+        overscroll-behavior: contain;
+        scroll-behavior: smooth;
+        padding-bottom: 5rem;
+      }
+      .cs-container {
+        max-width: 1060px;
+        margin: 0 auto;
+        padding: clamp(1.8rem, 4vw, 3rem) clamp(1.2rem, 3.5vw, 2.5rem);
+      }
+      /* Hero within case study */
+      .cs-hero {
+        margin-bottom: clamp(2.5rem, 5vw, 4rem);
+        padding-bottom: clamp(2rem, 4vw, 3rem);
+        border-bottom: 1px solid var(--line);
+      }
+      .cs-eyebrow-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.6rem;
+        margin-bottom: 1.2rem;
+      }
+      .cs-badge {
+        font-family: var(--font-mono);
+        font-size: 0.68rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 0.25rem 0.65rem;
+        border-radius: 4px;
+        border: 1px solid var(--line);
+        color: var(--ash);
+        background: rgba(236, 232, 225, 0.03);
+      }
+      .cs-status-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-family: var(--font-mono);
+        font-size: 0.7rem;
+        color: var(--bone);
+        padding: 0.25rem 0.65rem;
+        border-radius: 4px;
+        background: rgba(236, 232, 225, 0.05);
+        border: 1px solid var(--line);
+      }
+      .cs-title {
+        font-family: var(--font-display);
+        font-size: clamp(2.4rem, 6.5vw, 5rem);
+        font-weight: 800;
+        line-height: 0.95;
+        letter-spacing: -0.04em;
+        text-transform: uppercase;
+        color: var(--bone);
+        margin-bottom: 1rem;
+      }
+      .cs-tagline {
+        font-size: clamp(1.05rem, 2vw, 1.3rem);
+        color: var(--ash);
+        line-height: 1.5;
+        max-width: 58ch;
+        margin-bottom: 1.8rem;
+      }
+      .cs-hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        align-items: center;
+        margin-bottom: 2.2rem;
+      }
+      .cs-hero-card {
+        position: relative;
+        background: rgba(236, 232, 225, 0.025);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: clamp(2rem, 4vw, 3.5rem) 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+      html.light .cs-hero-card {
+        background: rgba(23, 20, 15, 0.025);
+      }
+      .cs-hero-card-glow {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: radial-gradient(
+          circle at 50% 50%,
+          var(--cs-tint, rgba(150, 170, 255, 0.12)),
+          transparent 72%
+        );
+      }
+      .cs-hero-mockup {
+        max-width: min(320px, 78vw);
+        height: auto;
+        display: block;
+        position: relative;
+        z-index: 1;
+        filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.5));
+        transition: transform 0.4s var(--ease);
+      }
+      .cs-hero-mockup:hover {
+        transform: translateY(-4px) scale(1.02);
+      }
+      /* Meta info grid */
+      .cs-meta-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+        gap: 1rem;
+        margin-bottom: clamp(2.5rem, 5vw, 4rem);
+      }
+      .cs-meta-card {
+        background: rgba(236, 232, 225, 0.025);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 1.25rem 1.4rem;
+      }
+      html.light .cs-meta-card {
+        background: rgba(23, 20, 15, 0.025);
+      }
+      .cs-meta-lbl {
+        font-family: var(--font-mono);
+        font-size: 0.68rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--ash);
+        margin-bottom: 0.4rem;
+      }
+      .cs-meta-val {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--bone);
+        line-height: 1.35;
+      }
+      /* Sections within case study */
+      .cs-sec {
+        margin-bottom: clamp(3rem, 6vw, 4.5rem);
+      }
+      .cs-sec-label {
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--ash);
+        margin-bottom: 0.4rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .cs-sec-label::before {
+        content: "/";
+        color: var(--faint);
+      }
+      .cs-sec-title {
+        font-family: var(--font-display);
+        font-size: clamp(1.5rem, 3.2vw, 2.2rem);
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        color: var(--bone);
+        margin-bottom: 1.3rem;
+        text-transform: uppercase;
+      }
+      .cs-prose {
+        font-size: 1.05rem;
+        color: var(--ash);
+        line-height: 1.75;
+        max-width: 68ch;
+      }
+      .cs-prose b,
+      .cs-prose strong {
+        color: var(--bone);
+        font-weight: 600;
+      }
+      /* Two columns: Problem & Solution */
+      .cs-compare-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.4rem;
+      }
+      @media (max-width: 768px) {
+        .cs-compare-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      .cs-compare-card {
+        border-radius: 12px;
+        padding: 1.8rem;
+        border: 1px solid var(--line);
+        background: rgba(236, 232, 225, 0.02);
+      }
+      html.light .cs-compare-card {
+        background: rgba(23, 20, 15, 0.02);
+      }
+      .cs-compare-card.problem {
+        border-left: 3px solid rgba(255, 120, 100, 0.6);
+      }
+      .cs-compare-card.solution {
+        border-left: 3px solid rgba(100, 220, 150, 0.7);
+      }
+      .cs-compare-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        margin-bottom: 0.75rem;
+        font-weight: 600;
+      }
+      .cs-compare-card.problem .cs-compare-badge {
+        color: #ff8e80;
+      }
+      .cs-compare-card.solution .cs-compare-badge {
+        color: #6ee7b7;
+      }
+      .cs-compare-sub {
+        font-size: 1.12rem;
+        font-weight: 700;
+        color: var(--bone);
+        margin-bottom: 0.75rem;
+        line-height: 1.35;
+      }
+      .cs-compare-desc {
+        font-size: 0.95rem;
+        color: var(--ash);
+        line-height: 1.65;
+      }
+      /* Technical Architecture Cards */
+      .cs-tech-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 1.25rem;
+      }
+      .cs-tech-card {
+        border-radius: 12px;
+        padding: 1.6rem;
+        border: 1px solid var(--line);
+        background: rgba(236, 232, 225, 0.025);
+        transition:
+          border-color 0.25s,
+          transform 0.2s;
+      }
+      .cs-tech-card:hover {
+        border-color: var(--line-2);
+        transform: translateY(-2px);
+      }
+      html.light .cs-tech-card {
+        background: rgba(23, 20, 15, 0.025);
+      }
+      .cs-tech-tag {
+        font-family: var(--font-mono);
+        font-size: 0.68rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--ash);
+        padding: 0.2rem 0.5rem;
+        border-radius: 4px;
+        background: rgba(236, 232, 225, 0.05);
+        display: inline-block;
+        margin-bottom: 0.9rem;
+      }
+      .cs-tech-h {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--bone);
+        margin-bottom: 0.6rem;
+        line-height: 1.3;
+      }
+      .cs-tech-p {
+        font-size: 0.92rem;
+        color: var(--ash);
+        line-height: 1.6;
+      }
+      /* Tech Stack categorized pills */
+      .cs-stack-cat-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1.25rem;
+      }
+      .cs-stack-cat {
+        border-radius: 10px;
+        padding: 1.3rem;
+        border: 1px solid var(--line);
+        background: rgba(236, 232, 225, 0.02);
+      }
+      html.light .cs-stack-cat {
+        background: rgba(23, 20, 15, 0.02);
+      }
+      .cs-stack-cat-title {
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--ash);
+        margin-bottom: 0.8rem;
+      }
+      .cs-stack-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+      }
+      .cs-stack-pill {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        padding: 0.3rem 0.65rem;
+        border-radius: 6px;
+        background: rgba(236, 232, 225, 0.05);
+        border: 1px solid var(--line);
+        color: var(--bone);
+      }
+      html.light .cs-stack-pill {
+        background: rgba(23, 20, 15, 0.04);
+      }
+      /* Metrics in case study */
+      .cs-metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1rem;
+      }
+      .cs-metric-card {
+        border-radius: 12px;
+        padding: 1.4rem;
+        border: 1px solid var(--line);
+        background: rgba(236, 232, 225, 0.025);
+      }
+      html.light .cs-metric-card {
+        background: rgba(23, 20, 15, 0.025);
+      }
+      .cs-metric-head {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.4rem;
+      }
+      .cs-metric-val {
+        font-size: 1.35rem;
+        font-weight: 700;
+        font-family: var(--font-display);
+        color: var(--bone);
+      }
+      .cs-metric-lbl {
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        color: var(--ash);
+        line-height: 1.4;
+      }
+      /* Media & Gallery */
+      .cs-gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+        gap: 1.4rem;
+      }
+      .cs-gallery-item {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        overflow: hidden;
+        background: rgba(236, 232, 225, 0.02);
+        display: flex;
+        flex-direction: column;
+      }
+      html.light .cs-gallery-item {
+        background: rgba(23, 20, 15, 0.02);
+      }
+      .cs-gallery-media {
+        padding: 2.5rem 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.2);
+      }
+      html.light .cs-gallery-media {
+        background: rgba(0, 0, 0, 0.03);
+      }
+      .cs-gallery-media img {
+        max-width: 190px;
+        height: auto;
+        filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.45));
+      }
+      .cs-gallery-foot {
+        padding: 1rem 1.2rem;
+        border-top: 1px solid var(--line);
+      }
+      .cs-gallery-caption {
+        font-size: 0.86rem;
+        color: var(--bone);
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+      }
+      .cs-gallery-tag {
+        font-family: var(--font-mono);
+        font-size: 0.68rem;
+        color: var(--ash);
+      }
+      .cs-gallery-placeholder {
+        border: 1px dashed var(--line-2);
+        border-radius: 12px;
+        padding: 3rem 1.5rem;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+        background: rgba(236, 232, 225, 0.015);
+      }
+      .cs-gallery-placeholder .badge {
+        font-family: var(--font-mono);
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        color: var(--ash);
+      }
+      .cs-gallery-placeholder .title {
+        font-weight: 600;
+        color: var(--bone);
+        font-size: 0.95rem;
+      }
+      .cs-gallery-placeholder .desc {
+        font-size: 0.82rem;
+        color: var(--ash);
+        max-width: 36ch;
+        line-height: 1.5;
+      }
+      /* Video container / placeholder */
+      .cs-video-box {
+        border: 1px dashed var(--line-2);
+        border-radius: 12px;
+        padding: 3.5rem 1.5rem;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+        background: rgba(236, 232, 225, 0.015);
+      }
+      .cs-video-box .icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        border: 1px solid var(--line-2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--bone);
+        margin-bottom: 0.5rem;
+      }
+      .cs-video-box .title {
+        font-weight: 600;
+        color: var(--bone);
+        font-size: 1rem;
+      }
+      .cs-video-box .desc {
+        font-size: 0.85rem;
+        color: var(--ash);
+        max-width: 44ch;
+        line-height: 1.5;
+      }
+      /* Next project footer card */
+      .cs-next-card {
+        margin-top: 3.5rem;
+        padding: 2.2rem clamp(1.5rem, 4vw, 3rem);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: rgba(236, 232, 225, 0.03);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        cursor: pointer;
+        transition:
+          border-color 0.25s,
+          transform 0.25s,
+          background 0.25s;
+      }
+      .cs-next-card:hover {
+        border-color: var(--line-2);
+        transform: translateY(-2px);
+        background: rgba(236, 232, 225, 0.06);
+      }
+      html.light .cs-next-card {
+        background: rgba(23, 20, 15, 0.03);
+      }
+      html.light .cs-next-card:hover {
+        background: rgba(23, 20, 15, 0.06);
+      }
+      .cs-next-sub {
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        color: var(--ash);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.35rem;
+      }
+      .cs-next-title {
+        font-family: var(--font-display);
+        font-size: clamp(1.5rem, 3.5vw, 2.4rem);
+        font-weight: 700;
+        color: var(--bone);
+        text-transform: uppercase;
+        letter-spacing: -0.03em;
+      }
+      .cs-next-arr {
+        font-size: 1.8rem;
+        color: var(--bone);
+        transition: transform 0.3s var(--ease);
+      }
+      .cs-next-card:hover .cs-next-arr {
+        transform: translateX(6px);
       }
 
       /* ─── REDUCED MOTION ───────────────────────────────────── */
@@ -2708,7 +3355,7 @@
           <!-- Panel 2 -->
           <article class="panel" style="--tint: rgba(150, 170, 255, 0.06)">
             <div class="shell panel-grid">
-              <div class="panel-visual" data-cursor="VIEW">
+              <div class="panel-visual" data-cursor="CASE" data-open-case="kicord">
                 <span class="panel-bgmark">K</span>
                 <div class="ph-stage">
                   <div class="phone-float">
@@ -2720,7 +3367,7 @@
               </div>
               <div class="panel-info">
                 <div class="panel-num">01 — Producto open source</div>
-                <h3 class="panel-title">KiCord</h3>
+                <h3 class="panel-title" data-open-case="kicord" data-cursor="CASE" title="Ver caso de estudio de KiCord">KiCord</h3>
                 <div class="panel-metrics" aria-label="Métricas y datos de KiCord">
                   <span class="metric-pill" title="Modelo de desarrollo">
                     <span class="metric-dot oss" aria-hidden="true"></span>
@@ -2749,12 +3396,33 @@
                   ><span class="panel-tag">Open Source</span>
                 </div>
                 <div class="panel-links">
+                  <button
+                    type="button"
+                    class="btn btn-case"
+                    data-open-case="kicord"
+                    data-cursor="CASE"
+                    ><span class="btn-t"
+                      >Case Study<svg
+                        width="12"
+                        height="12"
+                        viewBox="0 0 12 12"
+                        fill="none"
+                      >
+                        <path
+                          d="M1 11L11 1M11 1H4M11 1V8"
+                          stroke="currentColor"
+                          stroke-width="1.4"
+                          stroke-linecap="round"
+                        /></svg></span
+                  ></button>
                   <a
                     href="https://kicord.es"
+                    target="_blank"
+                    rel="noopener"
                     class="btn btn-solid"
                     data-cursor="OPEN"
                     ><span class="btn-t"
-                      >Ver proyecto
+                      >Web
                       <svg
                         width="12"
                         height="12"
@@ -2770,6 +3438,8 @@
                   ></a>
                   <a
                     href="https://github.com/PapiGECode"
+                    target="_blank"
+                    rel="noopener"
                     class="btn btn-ghost"
                     data-cursor="VISIT"
                     ><span class="btn-t">GitHub</span></a
@@ -2781,7 +3451,7 @@
 
           <article class="panel flip" style="--tint: rgba(150, 255, 190, 0.05)">
             <div class="shell panel-grid">
-              <div class="panel-visual" data-cursor="VIEW">
+              <div class="panel-visual" data-cursor="CASE" data-open-case="papige">
                 <span class="panel-bgmark">P</span>
                 <div class="ph-stage">
                   <div class="phone-float">
@@ -2793,7 +3463,7 @@
               </div>
               <div class="panel-info">
                 <div class="panel-num">02 — Plataforma web</div>
-                <h3 class="panel-title">PapiGEGamer.com</h3>
+                <h3 class="panel-title" data-open-case="papige" data-cursor="CASE" title="Ver caso de estudio de PapiGEGamer.com">PapiGEGamer.com</h3>
                 <div class="panel-metrics" aria-label="Métricas y datos de PapiGEGamer.com">
                   <span class="metric-pill" title="Estado del servicio">
                     <span class="metric-dot live" aria-hidden="true"></span>
@@ -2822,6 +3492,25 @@
                   ><span class="panel-tag">NEXO</span>
                 </div>
                 <div class="panel-links">
+                  <button
+                    type="button"
+                    class="btn btn-case"
+                    data-open-case="papige"
+                    data-cursor="CASE"
+                    ><span class="btn-t"
+                      >Case Study<svg
+                        width="12"
+                        height="12"
+                        viewBox="0 0 12 12"
+                        fill="none"
+                      >
+                        <path
+                          d="M1 11L11 1M11 1H4M11 1V8"
+                          stroke="currentColor"
+                          stroke-width="1.4"
+                          stroke-linecap="round"
+                        /></svg></span
+                  ></button>
                   <a
                     href="https://papigegamer.com"
                     target="_blank"
@@ -2829,7 +3518,7 @@
                     class="btn btn-solid"
                     data-cursor="OPEN"
                     ><span class="btn-t"
-                      >Visitar web
+                      >Web
                       <svg
                         width="12"
                         height="12"
@@ -2845,6 +3534,8 @@
                   ></a>
                   <a
                     href="https://github.com/PapiGECode"
+                    target="_blank"
+                    rel="noopener"
                     class="btn btn-ghost"
                     data-cursor="VISIT"
                     ><span class="btn-t">GitHub</span></a
@@ -2859,7 +3550,7 @@
           <!-- Panel 3 -->
           <article class="panel" style="--tint: rgba(255, 180, 140, 0.05)">
             <div class="shell panel-grid">
-              <div class="panel-visual" data-cursor="VIEW">
+              <div class="panel-visual" data-cursor="CASE" data-open-case="kernelos">
                 <span class="panel-bgmark">KOS</span>
                 <div class="ph-stage">
                   <div class="phone-float">
@@ -2871,7 +3562,7 @@
               </div>
               <div class="panel-info">
                 <div class="panel-num">03 — Comunidad &amp; producto</div>
-                <h3 class="panel-title">KernelOS</h3>
+                <h3 class="panel-title" data-open-case="kernelos" data-cursor="CASE" title="Ver caso de estudio de KernelOS">KernelOS</h3>
                 <div class="panel-metrics" aria-label="Métricas y datos de KernelOS">
                   <span class="metric-pill" title="Usuarios activos en la comunidad">
                     <span class="metric-dot live" aria-hidden="true"></span>
@@ -2901,12 +3592,34 @@
                   ><span class="panel-tag">Rendimiento</span>
                 </div>
                 <div class="panel-links">
+                  <button
+                    type="button"
+                    class="btn btn-case"
+                    data-open-case="kernelos"
+                    data-cursor="CASE"
+                    ><span class="btn-t"
+                      >Case Study<svg
+                        width="12"
+                        height="12"
+                        viewBox="0 0 12 12"
+                        fill="none"
+                      >
+                        <path
+                          d="M1 11L11 1M11 1H4M11 1V8"
+                          stroke="currentColor"
+                          stroke-width="1.4"
+                          stroke-linecap="round"
+                        /></svg></span
+                  ></button>
                   <a
                     href="https://kernelos.org/"
+                    target="_blank"
+                    rel="noopener"
                     class="btn btn-solid"
                     data-cursor="OPEN"
                     ><span class="btn-t"
-                      >Ver perfil<svg
+                      >Web
+                      <svg
                         width="12"
                         height="12"
                         viewBox="0 0 12 12"
@@ -2921,6 +3634,8 @@
                   ></a>
                   <a
                     href="https://github.com/PapiGECode"
+                    target="_blank"
+                    rel="noopener"
                     class="btn btn-ghost"
                     data-cursor="VISIT"
                     ><span class="btn-t">GitHub</span></a
@@ -12450,6 +13165,55 @@
       //# sourceMappingURL=lenis.min.js.map
     </script>
 
+    <!-- ─── CASE STUDY FULLSCREEN MODAL / CANVAS ───────────────── -->
+    <div
+      id="case-study-modal"
+      class="cs-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-hidden="true"
+      aria-labelledby="cs-top-name"
+    >
+      <header class="cs-topbar">
+        <button
+          type="button"
+          class="cs-back-btn"
+          id="cs-btn-back"
+          aria-label="Volver a proyectos"
+          data-cursor="CLOSE"
+        >
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <path d="M11 6H1M1 6L6 1M1 6L6 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Volver (ESC)</span>
+        </button>
+        <div class="cs-top-title" aria-hidden="true">
+          <span>Case Study</span>
+          <span>/</span>
+          <span class="cs-top-num" id="cs-top-num">01</span>
+          <span id="cs-top-name">KiCord</span>
+        </div>
+        <button
+          type="button"
+          class="cs-close-btn"
+          id="cs-btn-close"
+          aria-label="Cerrar vista de caso de estudio"
+          data-cursor="CLOSE"
+        >
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <path d="M1 1L11 11M11 1L1 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <span>Cerrar</span>
+        </button>
+      </header>
+
+      <div class="cs-scroller" id="cs-scroller" data-lenis-prevent>
+        <div class="cs-container" id="cs-content">
+          <!-- Injected dynamically by renderCaseStudy(id) -->
+        </div>
+      </div>
+    </div>
+
     <script>
       (function () {
         "use strict";
@@ -12545,27 +13309,32 @@
               "translate(" + rx + "px," + ry + "px) translate(-50%,-50%)";
             requestAnimationFrame(ring);
           })();
-          document
-            .querySelectorAll(
-              "a,button,.proj-visual,.panel-visual,.mini,[data-cursor]",
-            )
-            .forEach(function (el) {
-              var lbl = el.getAttribute("data-cursor");
-              var media =
-                el.classList.contains("panel-visual") ||
-                el.classList.contains("proj-visual");
-              el.addEventListener("mouseenter", function () {
-                html.classList.add(media ? "cur-media" : "cur-hot");
-                if (lbl) {
-                  cl.textContent = lbl;
-                  cl.style.opacity = "1";
-                }
+          function bindCursor(root) {
+            (root || document)
+              .querySelectorAll(
+                "a,button,.proj-visual,.panel-visual,.mini,[data-cursor]",
+              )
+              .forEach(function (el) {
+                if (el._curBound) return;
+                el._curBound = true;
+                var lbl = el.getAttribute("data-cursor");
+                var media =
+                  el.classList.contains("panel-visual") ||
+                  el.classList.contains("proj-visual");
+                el.addEventListener("mouseenter", function () {
+                  html.classList.add(media ? "cur-media" : "cur-hot");
+                  if (lbl) {
+                    cl.textContent = lbl;
+                    cl.style.opacity = "1";
+                  }
+                });
+                el.addEventListener("mouseleave", function () {
+                  html.classList.remove("cur-hot", "cur-media");
+                  cl.style.opacity = "0";
+                });
               });
-              el.addEventListener("mouseleave", function () {
-                html.classList.remove("cur-hot", "cur-media");
-                cl.style.opacity = "0";
-              });
-            });
+          }
+          bindCursor();
         }
 
         /* ============ MAGNETIC BUTTONS / LINKS ============ */
@@ -13608,6 +14377,814 @@
               );
           }
         });
+
+        /* ============ CASE STUDY EXPERIENCES ENGINE ============ */
+        var CASE_STUDIES = {
+          kicord: {
+            id: "kicord",
+            number: "01",
+            badge: "Producto Open Source",
+            title: "KiCord",
+            tagline:
+              "Extensión avanzada para Discord con arquitectura modular de plugins y mejoras de UX",
+            statusDot: "oss",
+            statusText: "Open Source · En desarrollo activo",
+            heroVisual: "assets/phone-kicord.png",
+            heroAlt: "KiCord en iPhone",
+            tint: "rgba(150, 170, 255, 0.12)",
+            meta: [
+              { label: "Mi Papel", value: "Creador y Desarrollador Principal" },
+              { label: "Cronología", value: "2023 — Presente" },
+              {
+                label: "Ecosistema",
+                value: "Plugins desacoplados / Modding seguro",
+              },
+              { label: "Estado", value: "Open Source Activo" },
+            ],
+            links: [
+              {
+                label: "Visitar web oficial",
+                url: "https://kicord.es",
+                isPrimary: true,
+              },
+              {
+                label: "Repositorio GitHub",
+                url: "https://github.com/PapiGECode",
+                isPrimary: false,
+              },
+            ],
+            overview:
+              "<b>KiCord</b> es una extensión avanzada y marco de extensibilidad para Discord desarrollada íntegramente en <b>TypeScript</b>. Nació de la necesidad de dotar a los usuarios y comunidades de herramientas reales de personalización, ergonomía y mejoras funcionales sin penalizar la velocidad, la estabilidad ni la seguridad del cliente oficial.",
+            problem: {
+              subtitle:
+                "Rigidez funcional, falta de extensibilidad nativa y sobrecarga de recursos",
+              description:
+                "El cliente oficial de Discord no ofrece mecanismos nativos para personalizar la interfaz ni para cargar extensiones modulares. Las herramientas comunitarias tradicionales solían ser complejas, inestables o consumir demasiada memoria con cada actualización, provocando bloqueos o cierres inesperados en los clientes de los usuarios.",
+            },
+            solution: {
+              subtitle:
+                "Núcleo modular ligero, carga en caliente y tipado estricto",
+              description:
+                "Desarrollé KiCord implementando un núcleo ultraligero y desacoplado que gestiona el ciclo de vida completo de los plugins (inicialización, inyección controlada, desmontaje limpio y destrucción). Los usuarios pueden habilitar funciones según su flujo de trabajo sin reiniciar el cliente ni comprometer la estabilidad del sistema.",
+            },
+            technicalHighlights: [
+              {
+                tag: "Arquitectura Core",
+                title: "Sistema de Plugins Desacoplados",
+                text: "Cada funcionalidad vive como un plugin aislado con ciclo de vida predecible. Si un módulo experimenta una excepción, el núcleo lo intercepta y aísla sin interrumpir el funcionamiento general de Discord.",
+              },
+              {
+                tag: "Type Safety",
+                title: "Desarrollo en TypeScript Estricto",
+                text: "Definición rigurosa de interfaces, contratos de eventos y tipos para interceptar el DOM y las APIs internas del cliente con total seguridad en tiempo de compilación.",
+              },
+              {
+                tag: "PoC Avanzada",
+                title: "Extensibilidad Extrema (KiCord DOOM)",
+                text: "Creación del plugin KiCord-DOOM-Plugin en TypeScript, ejecutando el clásico juego dentro del entorno de Discord como prueba de concepto de la versatilidad y rendimiento de la API de plugins.",
+              },
+              {
+                tag: "Ergonomía & UX",
+                title: "Diseño & Microinteracciones",
+                text: "Integración estética no intrusiva que complementa la identidad nativa de Discord, con microinteracciones fluidas, atajos de teclado y mínimo impacto en el rendimiento.",
+              },
+            ],
+            stack: [
+              {
+                category: "Lenguaje & Núcleo",
+                items: ["TypeScript", "JavaScript (ESNext)", "Node.js"],
+              },
+              {
+                category: "Plataforma & APIs",
+                items: [
+                  "Discord Internal APIs",
+                  "DOM & Event Interception",
+                  "Electron Runtime",
+                ],
+              },
+              {
+                category: "Estilos & UI",
+                items: ["CSS Modular", "Theming Adaptativo", "Microinteracciones"],
+              },
+              {
+                category: "Herramientas & Despliegue",
+                items: ["Git", "GitHub OSS", "Vercel", "CI/CD"],
+              },
+            ],
+            metrics: [
+              {
+                val: "Open Source",
+                lbl: "Código libre y transparente",
+                dot: "oss",
+              },
+              { val: "Modular", lbl: "Arquitectura basada en plugins", dot: "" },
+              {
+                val: "TypeScript",
+                lbl: "Tipado estricto en el 100% del core",
+                dot: "",
+              },
+              {
+                val: "Activo",
+                lbl: "Mantenimiento y evolución continua",
+                dot: "live",
+              },
+            ],
+            gallery: [
+              {
+                type: "image",
+                src: "assets/phone-kicord.png",
+                caption: "KiCord interfaz móvil y visualización conceptual",
+                label: "Mockup de Producto",
+              },
+              {
+                type: "placeholder",
+                title: "Panel de configuración y gestor de plugins",
+                badge: "Galería Técnica",
+                note: "Estructura preparada para capturas en alta resolución del gestor interno de plugins.",
+              },
+            ],
+            video: {
+              title: "Demostración en vídeo",
+              note: "Estructura preparada para demo interactiva o walkthrough en vídeo del funcionamiento de KiCord.",
+            },
+            nextId: "papige",
+            nextTitle: "PapiGEGamer.com",
+          },
+          papige: {
+            id: "papige",
+            number: "02",
+            badge: "Plataforma Web",
+            title: "PapiGEGamer.com",
+            tagline:
+              "Portfolio interactivo y telemetría de comunidades en tiempo real",
+            statusDot: "live",
+            statusText: "Activo · En Producción",
+            heroVisual: "assets/phone-papige.png",
+            heroAlt: "PapiGEGamer.com en iPhone",
+            tint: "rgba(150, 255, 190, 0.1)",
+            meta: [
+              { label: "Mi Papel", value: "Diseño & Desarrollo Full-Stack" },
+              { label: "Cronología", value: "2024 — Presente" },
+              {
+                label: "Enfoque",
+                value: "Telemetría en tiempo real & Asistente interactivo",
+              },
+              { label: "Estado", value: "Activo en Producción" },
+            ],
+            links: [
+              {
+                label: "Visitar web oficial",
+                url: "https://papigegamer.com",
+                isPrimary: true,
+              },
+              {
+                label: "Repositorio GitHub",
+                url: "https://github.com/PapiGECode",
+                isPrimary: false,
+              },
+            ],
+            overview:
+              "<b>PapiGEGamer.com</b> es una plataforma web desarrollada con <b>React y TypeScript</b> concebida como hub interactivo. Centraliza la actividad técnica de proyectos personales, métricas en vivo de servidores de Discord y repositorios de GitHub, integrando además a <b>NEXO</b>, un asistente conversacional interactivo.",
+            problem: {
+              subtitle:
+                "Portfolios estáticos sin conexión con la actividad real",
+              description:
+                "La mayoría de portfolios técnicos son páginas planas que quedan desactualizadas rápidamente y no reflejan la actividad cotidiana en comunidades ni el ritmo real de commits o despliegues. Se requería una plataforma viva con telemetría en tiempo real y una experiencia interactiva guiada.",
+            },
+            solution: {
+              subtitle:
+                "Conexión reactiva a APIs externas y asistente inteligente NEXO",
+              description:
+                "Desarrollé una arquitectura web reactiva que consume las APIs de Discord y GitHub para mostrar estado y estadísticas en vivo. Además, implementé a NEXO, un asistente guiado que facilita a los visitantes formular preguntas sobre la trayectoria, proyectos y stack del desarrollador de forma ágil.",
+            },
+            technicalHighlights: [
+              {
+                tag: "Asistente Virtual",
+                title: "Motor de NEXO",
+                text: "Módulo interactivo diseñado para responder consultas frecuentes, guiar la navegación del usuario y ofrecer un recorrido interactivo por el portafolio.",
+              },
+              {
+                tag: "Integraciones",
+                title: "Telemetría de APIs (Discord & GitHub)",
+                text: "Sincronización de actividad, presencia en línea, estado de servidores y conteo de repositorios mediante llamadas seguras a APIs de terceros.",
+              },
+              {
+                tag: "Frontend",
+                title: "React + TypeScript Moderno",
+                text: "Componentes funcionales modulares, renderizado condicional optimizado y separación limpia de la lógica de negocio y presentación.",
+              },
+              {
+                tag: "Infraestructura",
+                title: "Despliegue Continuo en Vercel",
+                text: "Integración continua vinculada al repositorio Git para despliegues instantáneos con CDN global y latencia de carga ultra-reducida.",
+              },
+            ],
+            stack: [
+              {
+                category: "Frontend & UI",
+                items: ["React", "TypeScript", "HTML5 Semántico", "CSS3 Moderno"],
+              },
+              {
+                category: "APIs & Servicios",
+                items: [
+                  "Discord REST API",
+                  "GitHub REST API",
+                  "Webhooks",
+                ],
+              },
+              {
+                category: "Lógica & Estado",
+                items: [
+                  "Motor Asistente NEXO",
+                  "Gestión de Estado React",
+                  "Custom Hooks",
+                ],
+              },
+              {
+                category: "DevOps & Dominio",
+                items: ["Vercel", "Git", "GitHub", "Gestión DNS"],
+              },
+            ],
+            metrics: [
+              { val: "Activo", lbl: "Servicio en línea 24/7", dot: "live" },
+              {
+                val: "React + TS",
+                lbl: "Frontend reactivo y fuertemente tipado",
+                dot: "",
+              },
+              {
+                val: "NEXO",
+                lbl: "Asistente conversacional propio",
+                dot: "",
+              },
+              {
+                val: "APIs en vivo",
+                lbl: "Conexión directa con Discord y GitHub",
+                dot: "",
+              },
+            ],
+            gallery: [
+              {
+                type: "image",
+                src: "assets/phone-papige.png",
+                caption: "PapiGEGamer.com vista móvil y experiencia interactiva",
+                label: "Mockup de Plataforma",
+              },
+              {
+                type: "placeholder",
+                title: "Capturas de la interfaz de NEXO y telemetría",
+                badge: "Galería Técnica",
+                note: "Estructura preparada para capturas del asistente NEXO y los paneles de telemetría.",
+              },
+            ],
+            video: {
+              title: "Demostración en vídeo",
+              note: "Estructura lista para vídeo interactivo mostrando la interacción en vivo con NEXO.",
+            },
+            nextId: "kernelos",
+            nextTitle: "KernelOS",
+          },
+          kernelos: {
+            id: "kernelos",
+            number: "03",
+            badge: "Comunidad & Producto",
+            title: "KernelOS",
+            tagline:
+              "Ecosistema de CustomOS para gaming de baja latencia y soporte masivo",
+            statusDot: "live",
+            statusText: "50.000+ usuarios activos · Escala masiva",
+            heroVisual: "assets/phone-kernelos.png",
+            heroAlt: "KernelOS en iPhone",
+            tint: "rgba(255, 180, 140, 0.1)",
+            meta: [
+              {
+                label: "Mi Papel",
+                value: "Soporte Técnico, Comunidad & Producto",
+              },
+              { label: "Cronología", value: "2022 — Presente" },
+              {
+                label: "Enfoque",
+                value: "Gaming de baja latencia, triaje de fallos y soporte",
+              },
+              { label: "Comunidad", value: "+50K activos / +1.5M históricos" },
+            ],
+            links: [
+              {
+                label: "Ver perfil en KernelOS",
+                url: "https://kernelos.org/",
+                isPrimary: true,
+              },
+              {
+                label: "GitHub",
+                url: "https://github.com/PapiGECode",
+                isPrimary: false,
+              },
+            ],
+            overview:
+              "<b>KernelOS</b> es un ecosistema de CustomOS optimizado para gaming competitivo y ultra-baja latencia. Con más de <b>50.000 usuarios activos</b> y más de <b>1,5 millones de usuarios históricos</b>, mi labor abarca el soporte técnico avanzado, la prevención de incidencias a gran escala y la canalización de necesidades de la comunidad hacia el equipo de desarrollo de producto.",
+            problem: {
+              subtitle:
+                "Diversidad extrema de hardware y fallos críticos en sistemas modificados",
+              description:
+                "La optimización agresiva del kernel y servicios de Windows provoca conflictos con configuraciones atípicas de placas base, drivers de audio USB y procesadores. Atender a decenas de miles de gamers exige identificar rápidamente patrones de error entre miles de mensajes diarios sin colapsar al equipo principal de desarrollo.",
+            },
+            solution: {
+              subtitle:
+                "Triaje estructurado, diagnóstico de latencia y retroalimentación directa",
+              description:
+                "Establecí protocolos de atención técnica, documentación de solución de problemas (troubleshooting) y análisis de logs/volcados de memoria. Este flujo transforma incidencias aisladas en recomendaciones técnicas y ajustes preventivos para las siguientes compilaciones de KernelOS.",
+            },
+            technicalHighlights: [
+              {
+                tag: "Soporte a Escala",
+                title: "Triaje y Atención a +50.000 Miembros",
+                text: "Resolución de incidencias complejas de instalación, dependencias de software y rendimiento en Discord con guías técnicas de autoayuda.",
+              },
+              {
+                tag: "Diagnóstico",
+                title: "Análisis de Latencia DPC / ISR",
+                text: "Identificación y resolución de picos de micro-stuttering, problemas de interrupciones de drivers y asignación de afinidad de CPU.",
+              },
+              {
+                tag: "Voz de Producto",
+                title: "Canalización de Feedback",
+                text: "Filtrado y priorización de peticiones comunitarias para la hoja de ruta de nuevas versiones del sistema operativo.",
+              },
+              {
+                tag: "Prevención",
+                title: "Seguridad y Moderación Técnica",
+                text: "Supervisión de seguridad de herramientas complementarias compartidas por la comunidad para evitar malware o scripts dañinos.",
+              },
+            ],
+            stack: [
+              {
+                category: "Sistemas & Kernel",
+                items: [
+                  "Windows Internals",
+                  "Registro de Windows",
+                  "Optimización de Kernel",
+                  "PowerShell / Batch",
+                ],
+              },
+              {
+                category: "Diagnóstico",
+                items: [
+                  "LatencyMon",
+                  "Visor de Eventos",
+                  "MSI Utility",
+                  "DPC Latency Checker",
+                ],
+              },
+              {
+                category: "Comunidad & Operaciones",
+                items: [
+                  "Discord a Gran Escala",
+                  "KernelOS Portal",
+                  "Sistemas de Tickets",
+                ],
+              },
+              {
+                category: "Metodologías",
+                items: [
+                  "Triaje de incidencias",
+                  "Documentación técnica",
+                  "Control de calidad (QA)",
+                ],
+              },
+            ],
+            metrics: [
+              {
+                val: "50K+",
+                lbl: "Usuarios activos en la comunidad",
+                dot: "live",
+              },
+              {
+                val: "1.5M+",
+                lbl: "Descargas y usuarios históricos",
+                dot: "",
+              },
+              {
+                val: "CustomOS",
+                lbl: "Enfoque en latencia mínima y gaming",
+                dot: "",
+              },
+              {
+                val: "Soporte",
+                lbl: "Gestión técnica, comunidad y producto",
+                dot: "oss",
+              },
+            ],
+            gallery: [
+              {
+                type: "image",
+                src: "assets/phone-kernelos.png",
+                caption: "KernelOS visualización conceptual y alcance",
+                label: "Mockup de Comunidad",
+              },
+              {
+                type: "placeholder",
+                title: "Documentación y guías de soporte de KernelOS",
+                badge: "Galería Operativa",
+                note: "Estructura preparada para manuales técnicos y registros de soporte a usuarios.",
+              },
+            ],
+            video: {
+              title: "Demostración en vídeo",
+              note: "Estructura lista para benchmarks y análisis de latencia comparativa de KernelOS.",
+            },
+            nextId: "kicord",
+            nextTitle: "KiCord",
+          },
+        };
+
+        var csModal = document.getElementById("case-study-modal");
+        var csScroller = document.getElementById("cs-scroller");
+        var csContent = document.getElementById("cs-content");
+        var csTopNum = document.getElementById("cs-top-num");
+        var csTopName = document.getElementById("cs-top-name");
+        var csBtnBack = document.getElementById("cs-btn-back");
+        var csBtnClose = document.getElementById("cs-btn-close");
+
+        function renderCaseStudy(data) {
+          var metaHtml = data.meta
+            .map(function (m) {
+              return (
+                '<div class="cs-meta-card">' +
+                '<div class="cs-meta-lbl">' +
+                m.label +
+                "</div>" +
+                '<div class="cs-meta-val">' +
+                m.value +
+                "</div>" +
+                "</div>"
+              );
+            })
+            .join("");
+
+          var linksHtml = data.links
+            .map(function (l) {
+              var cls = l.isPrimary ? "btn btn-solid" : "btn btn-ghost";
+              return (
+                '<a href="' +
+                l.url +
+                '" target="_blank" rel="noopener" class="' +
+                cls +
+                '" data-cursor="OPEN">' +
+                '<span class="btn-t">' +
+                l.label +
+                '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">' +
+                '<path d="M1 11L11 1M11 1H4M11 1V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>' +
+                "</svg>" +
+                "</span>" +
+                "</a>"
+              );
+            })
+            .join("");
+
+          var highlightsHtml = data.technicalHighlights
+            .map(function (h) {
+              return (
+                '<div class="cs-tech-card">' +
+                '<span class="cs-tech-tag">' +
+                h.tag +
+                "</span>" +
+                '<h4 class="cs-tech-h">' +
+                h.title +
+                "</h4>" +
+                '<p class="cs-tech-p">' +
+                h.text +
+                "</p>" +
+                "</div>"
+              );
+            })
+            .join("");
+
+          var stackHtml = data.stack
+            .map(function (s) {
+              var pills = s.items
+                .map(function (it) {
+                  return '<span class="cs-stack-pill">' + it + "</span>";
+                })
+                .join("");
+              return (
+                '<div class="cs-stack-cat">' +
+                '<div class="cs-stack-cat-title">' +
+                s.category +
+                "</div>" +
+                '<div class="cs-stack-pills">' +
+                pills +
+                "</div>" +
+                "</div>"
+              );
+            })
+            .join("");
+
+          var metricsHtml = data.metrics
+            .map(function (m) {
+              var dotHtml = m.dot
+                ? '<span class="metric-dot ' +
+                  m.dot +
+                  '" aria-hidden="true"></span>'
+                : "";
+              return (
+                '<div class="cs-metric-card">' +
+                '<div class="cs-metric-head">' +
+                dotHtml +
+                '<span class="cs-metric-val">' +
+                m.val +
+                "</span>" +
+                "</div>" +
+                '<div class="cs-metric-lbl">' +
+                m.lbl +
+                "</div>" +
+                "</div>"
+              );
+            })
+            .join("");
+
+          var galleryHtml = data.gallery
+            .map(function (g) {
+              if (g.type === "image") {
+                return (
+                  '<div class="cs-gallery-item">' +
+                  '<div class="cs-gallery-media">' +
+                  '<img src="' +
+                  g.src +
+                  '" alt="' +
+                  (g.caption || "") +
+                  '" draggable="false" />' +
+                  "</div>" +
+                  '<div class="cs-gallery-foot">' +
+                  '<div class="cs-gallery-caption">' +
+                  g.caption +
+                  "</div>" +
+                  '<div class="cs-gallery-tag">' +
+                  g.label +
+                  "</div>" +
+                  "</div>" +
+                  "</div>"
+                );
+              } else {
+                return (
+                  '<div class="cs-gallery-placeholder">' +
+                  '<span class="badge">' +
+                  g.badge +
+                  "</span>" +
+                  '<div class="title">' +
+                  g.title +
+                  "</div>" +
+                  '<p class="desc">' +
+                  g.note +
+                  "</p>" +
+                  "</div>"
+                );
+              }
+            })
+            .join("");
+
+          return (
+            '<div class="cs-hero">' +
+            '<div class="cs-eyebrow-row">' +
+            '<span class="cs-badge">' +
+            data.number +
+            " — " +
+            data.badge +
+            "</span>" +
+            '<span class="cs-status-chip">' +
+            '<span class="metric-dot ' +
+            data.statusDot +
+            '" aria-hidden="true"></span>' +
+            "<span>" +
+            data.statusText +
+            "</span>" +
+            "</span>" +
+            "</div>" +
+            '<h1 class="cs-title">' +
+            data.title +
+            "</h1>" +
+            '<p class="cs-tagline">' +
+            data.tagline +
+            "</p>" +
+            '<div class="cs-hero-actions">' +
+            linksHtml +
+            "</div>" +
+            '<div class="cs-hero-card" style="--cs-tint: ' +
+            data.tint +
+            '">' +
+            '<div class="cs-hero-card-glow" aria-hidden="true"></div>' +
+            '<img class="cs-hero-mockup" src="' +
+            data.heroVisual +
+            '" alt="' +
+            data.heroAlt +
+            '" draggable="false" />' +
+            "</div>" +
+            "</div>" +
+            '<div class="cs-sec">' +
+            '<div class="cs-sec-label">Ficha Técnica</div>' +
+            '<div class="cs-meta-grid">' +
+            metaHtml +
+            "</div>" +
+            "</div>" +
+            '<div class="cs-sec">' +
+            '<div class="cs-sec-label">Visión General</div>' +
+            '<h2 class="cs-sec-title">Descripción del Proyecto</h2>' +
+            '<p class="cs-prose">' +
+            data.overview +
+            "</p>" +
+            "</div>" +
+            '<div class="cs-sec">' +
+            '<div class="cs-sec-label">Reto &amp; Solución</div>' +
+            '<h2 class="cs-sec-title">Problema y Enfoque Desarrollado</h2>' +
+            '<div class="cs-compare-grid">' +
+            '<div class="cs-compare-card problem">' +
+            '<div class="cs-compare-badge">' +
+            '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>' +
+            "<span>El Problema</span>" +
+            "</div>" +
+            '<div class="cs-compare-sub">' +
+            data.problem.subtitle +
+            "</div>" +
+            '<div class="cs-compare-desc">' +
+            data.problem.description +
+            "</div>" +
+            "</div>" +
+            '<div class="cs-compare-card solution">' +
+            '<div class="cs-compare-badge">' +
+            '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>' +
+            "<span>Solución Desarrollada</span>" +
+            "</div>" +
+            '<div class="cs-compare-sub">' +
+            data.solution.subtitle +
+            "</div>" +
+            '<div class="cs-compare-desc">' +
+            data.solution.description +
+            "</div>" +
+            "</div>" +
+            "</div>" +
+            "</div>" +
+            '<div class="cs-sec">' +
+            '<div class="cs-sec-label">Ingeniería &amp; Core</div>' +
+            '<h2 class="cs-sec-title">Arquitectura &amp; Aspectos Técnicos</h2>' +
+            '<div class="cs-tech-grid">' +
+            highlightsHtml +
+            "</div>" +
+            "</div>" +
+            '<div class="cs-sec">' +
+            '<div class="cs-sec-label">Tecnologías</div>' +
+            '<h2 class="cs-sec-title">Stack Tecnológico</h2>' +
+            '<div class="cs-stack-cat-grid">' +
+            stackHtml +
+            "</div>" +
+            "</div>" +
+            '<div class="cs-sec">' +
+            '<div class="cs-sec-label">Impacto</div>' +
+            '<h2 class="cs-sec-title">Métricas &amp; Datos Clave</h2>' +
+            '<div class="cs-metrics-grid">' +
+            metricsHtml +
+            "</div>" +
+            "</div>" +
+            '<div class="cs-sec">' +
+            '<div class="cs-sec-label">Multimedia</div>' +
+            '<h2 class="cs-sec-title">Galería de Capturas &amp; Mockups</h2>' +
+            '<div class="cs-gallery-grid">' +
+            galleryHtml +
+            "</div>" +
+            "</div>" +
+            '<div class="cs-sec">' +
+            '<div class="cs-sec-label">Demostración</div>' +
+            '<h2 class="cs-sec-title">Vídeo &amp; Demo Interactiva</h2>' +
+            '<div class="cs-video-box">' +
+            '<div class="icon" aria-hidden="true">' +
+            '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>' +
+            "</div>" +
+            '<div class="title">' +
+            data.video.title +
+            "</div>" +
+            '<div class="desc">' +
+            data.video.note +
+            "</div>" +
+            "</div>" +
+            "</div>" +
+            '<div class="cs-next-card" data-next-case="' +
+            data.nextId +
+            '" data-cursor="CASE STUDY">' +
+            "<div>" +
+            '<div class="cs-next-sub">Siguiente caso de estudio</div>' +
+            '<div class="cs-next-title">' +
+            data.nextTitle +
+            "</div>" +
+            "</div>" +
+            '<div class="cs-next-arr" aria-hidden="true">→</div>' +
+            "</div>"
+          );
+        }
+
+        function openCaseStudy(id, pushState) {
+          if (!csModal) return;
+          var data = CASE_STUDIES[id];
+          if (!data) return;
+
+          csTopNum.textContent = data.number;
+          csTopName.textContent = data.title;
+          csContent.innerHTML = renderCaseStudy(data);
+          csScroller.scrollTop = 0;
+
+          csModal.classList.add("cs-open");
+          csModal.setAttribute("aria-hidden", "false");
+          document.body.style.overflow = "hidden";
+
+          if (lenis) lenis.stop();
+
+          if (pushState !== false) {
+            try {
+              history.pushState({ caseStudy: id }, "", "#case-study-" + id);
+            } catch (e) {}
+          }
+
+          if (typeof bindCursor === "function") {
+            bindCursor(csContent);
+          }
+
+          if (hasGSAP && !REDUCE) {
+            gsap.fromTo(
+              csContent,
+              { opacity: 0, y: 22 },
+              { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" },
+            );
+          }
+        }
+
+        function closeCaseStudy(popState) {
+          if (!csModal || !csModal.classList.contains("cs-open")) return;
+          csModal.classList.remove("cs-open");
+          csModal.setAttribute("aria-hidden", "true");
+          document.body.style.overflow = "";
+
+          if (lenis) lenis.start();
+
+          if (popState !== false && location.hash.indexOf("#case-study") === 0) {
+            try {
+              history.pushState(null, "", location.pathname + location.search);
+            } catch (e) {}
+          }
+        }
+
+        document.addEventListener("click", function (e) {
+          var openTrigger = e.target.closest("[data-open-case]");
+          if (openTrigger) {
+            e.preventDefault();
+            var id = openTrigger.getAttribute("data-open-case");
+            openCaseStudy(id);
+            return;
+          }
+          var nextTrigger = e.target.closest("[data-next-case]");
+          if (nextTrigger) {
+            e.preventDefault();
+            var nextId = nextTrigger.getAttribute("data-next-case");
+            openCaseStudy(nextId);
+            return;
+          }
+        });
+
+        if (csBtnBack) {
+          csBtnBack.addEventListener("click", function () {
+            closeCaseStudy();
+          });
+        }
+        if (csBtnClose) {
+          csBtnClose.addEventListener("click", function () {
+            closeCaseStudy();
+          });
+        }
+
+        addEventListener("keydown", function (e) {
+          if (
+            e.key === "Escape" &&
+            csModal &&
+            csModal.classList.contains("cs-open")
+          ) {
+            closeCaseStudy();
+          }
+        });
+
+        window.addEventListener("popstate", function () {
+          var match = location.hash.match(/^#case-study-([a-z0-9_-]+)/i);
+          if (match && CASE_STUDIES[match[1]]) {
+            openCaseStudy(match[1], false);
+          } else if (csModal && csModal.classList.contains("cs-open")) {
+            closeCaseStudy(false);
+          }
+        });
+
+        // Check hash on initial load
+        (function checkInitialHash() {
+          var match = location.hash.match(/^#case-study-([a-z0-9_-]+)/i);
+          if (match && CASE_STUDIES[match[1]]) {
+            setTimeout(function () {
+              openCaseStudy(match[1], false);
+            }, 500);
+          }
+        })();
 
         // refresh ST after fonts load (layout shift guard)
         if (document.fonts && document.fonts.ready) {
