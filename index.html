@@ -983,8 +983,7 @@
         transition:
           background 0.3s var(--ease),
           border-color 0.3s var(--ease),
-          color 0.3s var(--ease),
-          transform 0.2s var(--ease);
+          color 0.3s var(--ease);
       }
       .btn-case::before {
         content: "";
@@ -1728,6 +1727,8 @@
       }
       .panel-links {
         display: flex;
+        align-items: center;
+        flex-wrap: wrap;
         gap: 0.6rem;
       }
 
@@ -2363,6 +2364,8 @@
         .btn {
           padding: 0.8rem 1.2rem;
         }
+      }
+
       /* ─── CASE STUDY FULLSCREEN CANVAS ────────────────────── */
       .cs-modal {
         position: fixed;
@@ -3396,17 +3399,19 @@
                   ><span class="panel-tag">Open Source</span>
                 </div>
                 <div class="panel-links">
-                  <button
-                    type="button"
+                  <a
+                    href="#case-study-kicord"
+                    role="button"
                     class="btn btn-case"
                     data-open-case="kicord"
-                    data-cursor="CASE"
+                    data-cursor="CASE STUDY"
                     ><span class="btn-t"
                       >Case Study<svg
                         width="12"
                         height="12"
                         viewBox="0 0 12 12"
                         fill="none"
+                        aria-hidden="true"
                       >
                         <path
                           d="M1 11L11 1M11 1H4M11 1V8"
@@ -3414,7 +3419,7 @@
                           stroke-width="1.4"
                           stroke-linecap="round"
                         /></svg></span
-                  ></button>
+                  ></a>
                   <a
                     href="https://kicord.es"
                     target="_blank"
@@ -3492,17 +3497,19 @@
                   ><span class="panel-tag">NEXO</span>
                 </div>
                 <div class="panel-links">
-                  <button
-                    type="button"
+                  <a
+                    href="#case-study-papige"
+                    role="button"
                     class="btn btn-case"
                     data-open-case="papige"
-                    data-cursor="CASE"
+                    data-cursor="CASE STUDY"
                     ><span class="btn-t"
                       >Case Study<svg
                         width="12"
                         height="12"
                         viewBox="0 0 12 12"
                         fill="none"
+                        aria-hidden="true"
                       >
                         <path
                           d="M1 11L11 1M11 1H4M11 1V8"
@@ -3510,7 +3517,7 @@
                           stroke-width="1.4"
                           stroke-linecap="round"
                         /></svg></span
-                  ></button>
+                  ></a>
                   <a
                     href="https://papigegamer.com"
                     target="_blank"
@@ -3592,17 +3599,19 @@
                   ><span class="panel-tag">Rendimiento</span>
                 </div>
                 <div class="panel-links">
-                  <button
-                    type="button"
+                  <a
+                    href="#case-study-kernelos"
+                    role="button"
                     class="btn btn-case"
                     data-open-case="kernelos"
-                    data-cursor="CASE"
+                    data-cursor="CASE STUDY"
                     ><span class="btn-t"
                       >Case Study<svg
                         width="12"
                         height="12"
                         viewBox="0 0 12 12"
                         fill="none"
+                        aria-hidden="true"
                       >
                         <path
                           d="M1 11L11 1M11 1H4M11 1V8"
@@ -3610,7 +3619,7 @@
                           stroke-width="1.4"
                           stroke-linecap="round"
                         /></svg></span
-                  ></button>
+                  ></a>
                   <a
                     href="https://kernelos.org/"
                     target="_blank"
@@ -13427,7 +13436,9 @@
 
         // smooth anchors (delegate)
         document
-          .querySelectorAll('a[href^="#"]:not([data-close])')
+          .querySelectorAll(
+            'a[href^="#"]:not([data-close]):not([data-open-case])',
+          )
           .forEach(function (a) {
             if (a.getAttribute("onclick")) return;
             a.addEventListener("click", function (e) {
@@ -13935,6 +13946,7 @@
                       duration: 0.45,
                       stagger: 0.08,
                       ease: "power2.out",
+                      clearProps: "transform",
                     },
                     "-=.2",
                   );
