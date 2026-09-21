@@ -162,9 +162,6 @@
           transparent 60%
         );
       }
-      html.light.cur-hot #cur-ring {
-        background: rgba(23, 20, 15, 0.09);
-      }
       html.light #loader .l-glow {
         background: radial-gradient(
           circle,
@@ -432,7 +429,6 @@
       main,
       footer,
       #loader,
-      #cur,
       #grid,
       #egg {
         position: relative;
@@ -442,75 +438,27 @@
         display: block;
       }
 
-      /* ─── CURSOR ───────────────────────────────────────────── */
+      /* ─── CURSOR (Standard native) ─────────────────────────── */
       #cur {
-        position: fixed;
-        inset: 0;
-        pointer-events: none;
-        z-index: 9000;
-        display: none;
+        display: none !important;
       }
-      html.fine #cur {
-        display: block;
-      }
-      #cur-ring {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 38px;
-        height: 38px;
-        border: 1px solid var(--line-2);
-        border-radius: 50%;
-        transform: translate(-50%, -50%);
-        transition:
-          width 0.35s var(--ease),
-          height 0.35s var(--ease),
-          border-color 0.3s,
-          background 0.3s,
-          opacity 0.3s;
-      }
-      #cur-dot {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 5px;
-        height: 5px;
-        background: var(--bone);
-        border-radius: 50%;
-        transform: translate(-50%, -50%);
-        transition: opacity 0.3s;
-      }
-      #cur-label {
-        position: fixed;
-        top: 0;
-        left: 0;
-        transform: translate(14px, 14px);
-        font-family: var(--font-mono);
-        font-size: 0.6rem;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        color: var(--ink);
-        background: var(--bone);
-        padding: 0.25rem 0.55rem;
-        border-radius: 40px;
-        opacity: 0;
-        transition: opacity 0.25s;
-        white-space: nowrap;
-      }
-      html.cur-hot #cur-ring {
-        width: 64px;
-        height: 64px;
-        border-color: transparent;
-        background: rgba(236, 232, 225, 0.1);
-      }
-      html.cur-media #cur-ring {
-        width: 84px;
-        height: 84px;
-        border-color: var(--bone);
-      }
-      html.fine,
-      html.fine * {
-        cursor: none !important;
+      a,
+      button,
+      [role="button"],
+      .btn,
+      .btn-case,
+      .nav-cta,
+      .nav-theme,
+      .nav-link,
+      .social,
+      .metric-pill,
+      .panel-visual,
+      .cap-card,
+      .cs-close,
+      .cs-back,
+      .cs-btn,
+      .cap-evidence-link {
+        cursor: pointer;
       }
 
       /* ─── LOADER ───────────────────────────────────────────── */
@@ -3198,12 +3146,7 @@
 
     <div id="progress"></div>
 
-    <!-- cursor -->
-    <div id="cur" aria-hidden="true">
-      <div id="cur-ring"></div>
-      <div id="cur-dot"></div>
-      <div id="cur-label"></div>
-    </div>
+
 
     <!-- loader -->
     <div id="loader" aria-hidden="true">
@@ -13610,72 +13553,8 @@
           else el.scrollIntoView({ behavior: REDUCE ? "auto" : "smooth" });
         };
 
-        /* ============ CURSOR ============ */
-        if (FINE) {
-          var cd = document.getElementById("cur-dot"),
-            cr = document.getElementById("cur-ring"),
-            cl = document.getElementById("cur-label");
-          var cx = innerWidth / 2,
-            cy = innerHeight / 2,
-            rx = cx,
-            ry = cy;
-          document.addEventListener("mouseleave", function () {
-            cd.style.opacity = "0";
-            cr.style.opacity = "0";
-            cl.style.opacity = "0";
-          });
-          document.addEventListener("mouseenter", function () {
-            cd.style.opacity = "1";
-            cr.style.opacity = "1";
-          });
-          addEventListener(
-            "mousemove",
-            function (e) {
-              cx = e.clientX;
-              cy = e.clientY;
-              cd.style.opacity = "1";
-              cr.style.opacity = "1";
-              cd.style.transform =
-                "translate(" + cx + "px," + cy + "px) translate(-50%,-50%)";
-              cl.style.transform =
-                "translate(" + cx + "px," + cy + "px) translate(14px,14px)";
-            },
-            { passive: true },
-          );
-          (function ring() {
-            rx += (cx - rx) * 0.18;
-            ry += (cy - ry) * 0.18;
-            cr.style.transform =
-              "translate(" + rx + "px," + ry + "px) translate(-50%,-50%)";
-            requestAnimationFrame(ring);
-          })();
-          function bindCursor(root) {
-            (root || document)
-              .querySelectorAll(
-                "a,button,.proj-visual,.panel-visual,.mini,[data-cursor]",
-              )
-              .forEach(function (el) {
-                if (el._curBound) return;
-                el._curBound = true;
-                var lbl = el.getAttribute("data-cursor");
-                var media =
-                  el.classList.contains("panel-visual") ||
-                  el.classList.contains("proj-visual");
-                el.addEventListener("mouseenter", function () {
-                  html.classList.add(media ? "cur-media" : "cur-hot");
-                  if (lbl) {
-                    cl.textContent = lbl;
-                    cl.style.opacity = "1";
-                  }
-                });
-                el.addEventListener("mouseleave", function () {
-                  html.classList.remove("cur-hot", "cur-media");
-                  cl.style.opacity = "0";
-                });
-              });
-          }
-          bindCursor();
-        }
+        /* ============ CURSOR (Native standard) ============ */
+        function bindCursor() {}
 
         /* ============ MAGNETIC BUTTONS / LINKS ============ */
         if (FINE && !REDUCE) {
