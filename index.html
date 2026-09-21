@@ -801,128 +801,15 @@
       }
 
       /* ─── HERO ─────────────────────────────────────────────── */
-      /* ─── HERO ─────────────────────────────────────────────── */
       #hero {
         min-height: 100vh;
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
-        padding: 8.5rem 0 clamp(2.5rem, 7vh, 4.5rem);
+        padding: 8rem 0 clamp(2rem, 6vh, 4rem);
         position: relative;
-        overflow: hidden;
       }
-
-      /* ─── TECH BACKGROUND (Grid, Ambient Glow & Micro-Particles) ─ */
-      .hero-bg {
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        overflow: hidden;
-        z-index: 0;
-        opacity: 1;
-      }
-      .hero-bg-grid {
-        position: absolute;
-        inset: -10%;
-        width: 120%;
-        height: 120%;
-        background-image:
-          linear-gradient(to right, rgba(236, 232, 225, 0.035) 1px, transparent 1px),
-          linear-gradient(to bottom, rgba(236, 232, 225, 0.035) 1px, transparent 1px);
-        background-size: 54px 54px;
-        mask-image: radial-gradient(ellipse 75% 65% at 50% 42%, black 15%, transparent 80%);
-        -webkit-mask-image: radial-gradient(ellipse 75% 65% at 50% 42%, black 15%, transparent 80%);
-        will-change: transform;
-      }
-      .hero-bg-glow {
-        position: absolute;
-        top: 38%;
-        left: 50%;
-        width: clamp(340px, 48vw, 720px);
-        height: clamp(280px, 38vw, 540px);
-        transform: translate(-50%, -50%);
-        border-radius: 50%;
-        background: radial-gradient(
-          ellipse at center,
-          rgba(236, 232, 225, 0.048) 0%,
-          rgba(236, 232, 225, 0.018) 45%,
-          transparent 70%
-        );
-        filter: blur(60px);
-        pointer-events: none;
-        will-change: transform;
-      }
-      .hero-bg-particles {
-        position: absolute;
-        inset: 0;
-      }
-      .hero-cross {
-        position: absolute;
-        width: 9px;
-        height: 9px;
-        opacity: 0.16;
-      }
-      .hero-cross::before {
-        content: "";
-        position: absolute;
-        left: 4px;
-        top: 0;
-        bottom: 0;
-        width: 1px;
-        background: var(--bone);
-      }
-      .hero-cross::after {
-        content: "";
-        position: absolute;
-        top: 4px;
-        left: 0;
-        right: 0;
-        height: 1px;
-        background: var(--bone);
-      }
-      .hero-spark {
-        position: absolute;
-        width: 2px;
-        height: 2px;
-        border-radius: 50%;
-        background: var(--bone);
-        opacity: 0.22;
-        box-shadow: 0 0 6px var(--bone);
-        animation: spark-breathe 4.5s ease-in-out infinite alternate;
-      }
-      @keyframes spark-breathe {
-        0% {
-          opacity: 0.08;
-          transform: scale(0.6);
-        }
-        100% {
-          opacity: 0.38;
-          transform: scale(1.2);
-        }
-      }
-
-      /* Light mode adaptation for hero background */
-      html.light .hero-bg-grid {
-        background-image:
-          linear-gradient(to right, rgba(23, 20, 15, 0.038) 1px, transparent 1px),
-          linear-gradient(to bottom, rgba(23, 20, 15, 0.038) 1px, transparent 1px);
-      }
-      html.light .hero-bg-glow {
-        background: radial-gradient(
-          ellipse at center,
-          rgba(23, 20, 15, 0.038) 0%,
-          transparent 70%
-        );
-      }
-      html.light .hero-cross::before,
-      html.light .hero-cross::after,
-      html.light .hero-spark {
-        background: var(--bone);
-      }
-
       .hero-inner {
-        position: relative;
-        z-index: 1;
         will-change: transform, opacity;
       }
       .hero-top {
@@ -934,12 +821,11 @@
         justify-content: space-between;
         align-items: flex-start;
         padding: 0 var(--pad);
-        z-index: 2;
       }
       .hero-eyebrow {
         display: flex;
         align-items: center;
-        gap: 0.65rem;
+        gap: 0.6rem;
       }
       .hero-eyebrow .dot {
         width: 7px;
@@ -964,137 +850,22 @@
         text-align: right;
         line-height: 1.5;
       }
-
-      /* ─── HERO PILL BADGE / ROTATING CONCEPT LINE ─────────── */
-      .hero-pill-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.65rem;
-        padding: 0.36rem 0.95rem 0.36rem 0.65rem;
-        border-radius: 999px;
-        background: rgba(236, 232, 225, 0.035);
-        border: 1px solid var(--line);
-        backdrop-filter: blur(14px);
-        -webkit-backdrop-filter: blur(14px);
-        margin-bottom: clamp(1.2rem, 2.5vw, 1.9rem);
-        width: fit-content;
-        font-family: var(--font-mono);
-        font-size: 0.72rem;
-        letter-spacing: 0.04em;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-        will-change: transform, opacity;
-      }
-      html.light .hero-pill-badge {
-        background: rgba(23, 20, 15, 0.035);
-        border-color: rgba(23, 20, 15, 0.12);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-      }
-      .badge-status-ring {
-        position: relative;
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: var(--bone);
-        flex-shrink: 0;
-      }
-      .badge-status-ring::after {
-        content: "";
-        position: absolute;
-        inset: -3px;
-        border-radius: 50%;
-        border: 1px solid var(--bone);
-        opacity: 0.4;
-        animation: pulse-ring 2.6s ease-out infinite;
-      }
-      @keyframes pulse-ring {
-        0% {
-          transform: scale(0.75);
-          opacity: 0.6;
-        }
-        100% {
-          transform: scale(2.3);
-          opacity: 0;
-        }
-      }
-      .badge-tag {
-        color: var(--faint);
-        text-transform: uppercase;
-        font-size: 0.68rem;
-        letter-spacing: 0.08em;
-      }
-      .badge-sep {
-        color: var(--line-2);
-        font-size: 0.75rem;
-      }
-      .badge-rotator {
-        position: relative;
-        display: inline-block;
-        height: 1.35em;
-        overflow: hidden;
-        vertical-align: middle;
-        min-width: 175px;
-      }
-      .rotator-item {
-        position: absolute;
-        left: 0;
-        top: 0;
-        white-space: nowrap;
-        color: var(--bone);
-        font-weight: 500;
-        opacity: 0;
-        transform: translateY(110%);
-        filter: blur(4px);
-        transition:
-          transform 0.55s var(--ease),
-          opacity 0.55s ease,
-          filter 0.55s ease;
-        pointer-events: none;
-      }
-      .rotator-item.active {
-        opacity: 1;
-        transform: translateY(0%);
-        filter: blur(0px);
-        pointer-events: auto;
-      }
-      .rotator-item.exit {
-        opacity: 0;
-        transform: translateY(-110%);
-        filter: blur(4px);
-      }
-
-      /* ─── HERO TYPOGRAPHY (Stronger Hierarchy & Liquid Light) ─ */
       .hero-name {
         font-family: var(--font-display);
         font-weight: 800;
-        letter-spacing: -0.05em;
-        line-height: 0.83;
+        letter-spacing: -0.045em;
+        line-height: 0.86;
         text-transform: uppercase;
         color: var(--bone);
       }
       .hero-line {
         display: block;
         overflow: hidden;
-        padding-bottom: 0.05em;
+        padding-bottom: 0.04em;
       }
       .hero-line span {
         display: block;
-        font-size: clamp(3.7rem, 16.2vw, 13.5rem);
-        background: linear-gradient(
-          180deg,
-          var(--bone) 25%,
-          rgba(236, 232, 225, 0.74) 100%
-        );
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-      html.light .hero-line span {
-        background: linear-gradient(
-          180deg,
-          #17140f 25%,
-          rgba(23, 20, 15, 0.75) 100%
-        );
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        font-size: clamp(3.4rem, 15.5vw, 13rem);
       }
       .hero-name .char {
         display: inline-block;
@@ -1106,24 +877,27 @@
         align-items: flex-end;
         flex-wrap: wrap;
         gap: 2rem;
-        margin-top: clamp(1.8rem, 4vw, 3.2rem);
+        margin-top: clamp(1.75rem, 4vw, 3rem);
         border-top: 1px solid var(--line);
-        padding-top: 1.85rem;
+        padding-top: 1.75rem;
       }
       .hero-sub {
-        font-size: clamp(1.02rem, 2vw, 1.32rem);
+        font-size: clamp(1rem, 2vw, 1.3rem);
         color: var(--ash);
-        max-width: 32ch;
-        line-height: 1.48;
+        max-width: 30ch;
+        line-height: 1.45;
+      }
+      .hero-role {
+        color: var(--bone);
+        transition: opacity 0.35s var(--ease);
       }
       .hero-actions {
         display: flex;
-        gap: 0.85rem;
+        gap: 0.75rem;
         align-items: center;
         flex-wrap: wrap;
       }
 
-      /* ─── BUTTONS & MICRO-INTERACTIONS ─────────────────────── */
       .btn {
         position: relative;
         display: inline-flex;
@@ -1133,16 +907,10 @@
         font-size: 0.78rem;
         letter-spacing: 0.03em;
         text-transform: uppercase;
-        padding: 0.92rem 1.6rem;
+        padding: 0.9rem 1.5rem;
         border-radius: 44px;
         overflow: hidden;
         will-change: transform;
-        transition:
-          transform 0.35s var(--ease),
-          box-shadow 0.35s var(--ease),
-          background 0.3s,
-          border-color 0.3s,
-          color 0.3s;
       }
       .btn .btn-t {
         position: relative;
@@ -1172,18 +940,6 @@
       }
       .btn-solid:hover {
         color: var(--bone);
-        transform: translateY(-2px);
-        box-shadow:
-          0 0 0 1px rgba(236, 232, 225, 0.35),
-          0 14px 28px -6px rgba(0, 0, 0, 0.45);
-      }
-      html.light .btn-solid:hover {
-        box-shadow:
-          0 0 0 1px rgba(23, 20, 15, 0.25),
-          0 14px 28px -6px rgba(23, 20, 15, 0.12);
-      }
-      .btn-solid:active {
-        transform: translateY(0px) scale(0.98);
       }
       .btn-solid:hover::before {
         transform: translateY(0);
@@ -1215,15 +971,6 @@
       }
       .btn-ghost:hover {
         color: var(--ink);
-        transform: translateY(-2px);
-        border-color: var(--bone);
-        box-shadow: 0 10px 24px -8px rgba(0, 0, 0, 0.35);
-      }
-      html.light .btn-ghost:hover {
-        box-shadow: 0 10px 24px -8px rgba(23, 20, 15, 0.08);
-      }
-      .btn-ghost:active {
-        transform: translateY(0px) scale(0.98);
       }
       .btn-ghost:hover::before {
         transform: translateY(0);
@@ -2413,14 +2160,6 @@
           font-size: 1.02rem;
           max-width: 34ch;
         }
-        .hero-pill-badge {
-          margin-bottom: 1.1rem;
-          font-size: 0.68rem;
-          padding: 0.32rem 0.8rem 0.32rem 0.55rem;
-        }
-        .badge-rotator {
-          min-width: 155px;
-        }
         .hero-actions {
           width: 100%;
         }
@@ -2651,19 +2390,6 @@
     <main id="main">
       <!-- HERO -->
       <section id="hero">
-        <!-- Tech background elements (subtle grid, ambient glow & micro-particles) -->
-        <div class="hero-bg" aria-hidden="true">
-          <div class="hero-bg-grid"></div>
-          <div class="hero-bg-glow"></div>
-          <div class="hero-bg-particles">
-            <span class="hero-cross" style="top: 24%; left: 16%;"></span>
-            <span class="hero-cross" style="top: 36%; right: 19%;"></span>
-            <span class="hero-cross" style="bottom: 26%; left: 34%;"></span>
-            <span class="hero-spark" style="top: 28%; left: 62%;"></span>
-            <span class="hero-spark" style="bottom: 32%; right: 30%;"></span>
-          </div>
-        </div>
-
         <div class="hero-top">
           <div class="hero-eyebrow">
             <span class="dot" id="dot" title="psst…"></span
@@ -2675,16 +2401,6 @@
           </div>
         </div>
         <div class="shell hero-inner">
-          <div class="hero-pill-badge anim">
-            <span class="badge-status-ring"></span>
-            <span class="badge-tag">Especialidades</span>
-            <span class="badge-sep">/</span>
-            <div class="badge-rotator" id="hero-rotator">
-              <span class="rotator-item active">Full-Stack Development</span>
-              <span class="rotator-item">Cybersecurity</span>
-              <span class="rotator-item">Open Source</span>
-            </div>
-          </div>
           <h1 class="hero-name" aria-label="Pablo Schefer">
             <span class="hero-line"><span>Pablo</span></span>
             <span class="hero-line"><span>Schefer</span></span>
@@ -12922,30 +12638,9 @@
             document.querySelectorAll(".anim").forEach(function (e) {
               e.style.opacity = "1";
             });
-            var bg = document.querySelector(".hero-bg");
-            if (bg) bg.style.opacity = "1";
             return;
           }
           var tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-
-          // Ambient tech background fade
-          tl.fromTo(
-            ".hero-bg",
-            { opacity: 0 },
-            { opacity: 1, duration: 1.6, ease: "power2.out" },
-            0,
-          );
-
-          // Top eyebrow + copyright
-          tl.to(
-            ".hero-top .mono,.hero-eyebrow",
-            { opacity: 1, y: 0, duration: 0.75, stagger: 0.06 },
-            0.15,
-          );
-
-          // Concept pill badge
-          tl.to(".hero-pill-badge", { opacity: 1, y: 0, duration: 0.8 }, 0.25);
-
           // SplitText name reveal
           if (typeof SplitText !== "undefined") {
             var sp = new SplitText(".hero-line > span", {
@@ -12953,9 +12648,9 @@
               charsClass: "char",
             });
             gsap.set(sp.chars, {
-              yPercent: 115,
+              yPercent: 120,
               opacity: 0,
-              filter: "blur(14px)",
+              filter: "blur(12px)",
             });
             tl.to(
               sp.chars,
@@ -12963,23 +12658,26 @@
                 yPercent: 0,
                 opacity: 1,
                 filter: "blur(0px)",
-                duration: 1.05,
-                stagger: 0.03,
+                duration: 1,
+                stagger: 0.035,
               },
-              0.32,
+              0,
             );
           } else {
             tl.from(
               ".hero-line > span",
-              { yPercent: 115, opacity: 0, duration: 1, stagger: 0.1 },
-              0.32,
+              { yPercent: 120, opacity: 0, duration: 1, stagger: 0.1 },
+              0,
             );
           }
-          tl.to(".hero-sub", { opacity: 1, y: 0, duration: 0.8 }, 0.65)
-            .to(".hero-actions", { opacity: 1, y: 0, duration: 0.8 }, 0.8);
-
+          tl.to(".hero-sub", { opacity: 1, y: 0, duration: 0.8 }, 0.5)
+            .to(".hero-actions", { opacity: 1, y: 0, duration: 0.8 }, 0.65)
+            .to(
+              ".hero-top .mono,.hero-eyebrow",
+              { opacity: 1, y: 0, duration: 0.7, stagger: 0.05 },
+              0.4,
+            );
           gsap.set(".hero-sub,.hero-actions", { y: 18 });
-          gsap.set(".hero-pill-badge", { y: 14 });
           gsap.set(".hero-top .mono,.hero-eyebrow", { y: -8 });
         }
 
@@ -13791,86 +13489,6 @@
               );
           }
         });
-
-        /* ============ HERO CONCEPT ROTATOR ============ */
-        (function () {
-          var rotator = document.getElementById("hero-rotator");
-          if (!rotator) return;
-          var items = rotator.querySelectorAll(".rotator-item");
-          if (items.length < 2) return;
-          var idx = 0;
-
-          function updateRotatorWidth() {
-            var maxW = 0;
-            items.forEach(function (it) {
-              var w = it.scrollWidth || it.offsetWidth;
-              if (w > maxW) maxW = w;
-            });
-            if (maxW > 0) rotator.style.width = maxW + 4 + "px";
-          }
-          updateRotatorWidth();
-          setTimeout(updateRotatorWidth, 250);
-          window.addEventListener("resize", updateRotatorWidth, { passive: true });
-
-          setInterval(function () {
-            var cur = items[idx];
-            idx = (idx + 1) % items.length;
-            var next = items[idx];
-
-            cur.classList.remove("active");
-            cur.classList.add("exit");
-
-            next.classList.remove("exit");
-            next.classList.add("active");
-
-            setTimeout(function () {
-              cur.classList.remove("exit");
-            }, 600);
-          }, 2800);
-        })();
-
-        /* ============ HERO SUBTLE MOUSE PARALLAX ============ */
-        if (FINE && !REDUCE) {
-          var heroEl = document.getElementById("hero");
-          var heroGrid = document.querySelector(".hero-bg-grid");
-          var heroGlow = document.querySelector(".hero-bg-glow");
-          if (heroEl && heroGrid) {
-            var hx = 0,
-              hy = 0,
-              targetHx = 0,
-              targetHy = 0;
-            heroEl.addEventListener(
-              "mousemove",
-              function (e) {
-                var r = heroEl.getBoundingClientRect();
-                var nx = (e.clientX - r.left) / r.width - 0.5;
-                var ny = (e.clientY - r.top) / r.height - 0.5;
-                targetHx = nx * 14;
-                targetHy = ny * 10;
-              },
-              { passive: true },
-            );
-            heroEl.addEventListener("mouseleave", function () {
-              targetHx = 0;
-              targetHy = 0;
-            });
-            (function loopHeroParallax() {
-              hx += (targetHx - hx) * 0.08;
-              hy += (targetHy - hy) * 0.08;
-              heroGrid.style.transform =
-                "translate3d(" + hx + "px," + hy + "px, 0)";
-              if (heroGlow) {
-                heroGlow.style.transform =
-                  "translate3d(calc(-50% + " +
-                  hx * 1.6 +
-                  "px), calc(-50% + " +
-                  hy * 1.6 +
-                  "px), 0)";
-              }
-              requestAnimationFrame(loopHeroParallax);
-            })();
-          }
-        }
 
         // refresh ST after fonts load (layout shift guard)
         if (document.fonts && document.fonts.ready) {
