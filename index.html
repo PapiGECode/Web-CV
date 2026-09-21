@@ -1104,6 +1104,242 @@
         font-size: 0.7em;
       }
 
+      /* ─── NOW / LIVE STATUS PANEL ───────────────────────────── */
+      .now-section {
+        padding: clamp(2.5rem, 5vw, 4.5rem) 0 clamp(1rem, 2.5vw, 2rem);
+      }
+      .now-panel {
+        position: relative;
+        background: rgba(236, 232, 225, 0.025);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: clamp(1.4rem, 2.8vw, 2.2rem);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      }
+      html.light .now-panel {
+        background: rgba(23, 20, 15, 0.025);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+      }
+      .now-panel:hover {
+        border-color: rgba(236, 232, 225, 0.2);
+      }
+      html.light .now-panel:hover {
+        border-color: rgba(23, 20, 15, 0.2);
+      }
+      .now-head-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+        padding-bottom: 1.15rem;
+        margin-bottom: 1.4rem;
+        border-bottom: 1px solid var(--line);
+      }
+      .now-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--bone);
+        font-weight: 600;
+      }
+      .now-live-dot {
+        position: relative;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #22c55e;
+        box-shadow: 0 0 10px rgba(34, 197, 94, 0.8);
+      }
+      .now-live-dot::after {
+        content: "";
+        position: absolute;
+        inset: -3px;
+        border-radius: 50%;
+        border: 1px solid #22c55e;
+        animation: nowPulse 2s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+      }
+      @keyframes nowPulse {
+        0% { transform: scale(0.9); opacity: 0.9; }
+        100% { transform: scale(2.2); opacity: 0; }
+      }
+      .now-timestamp {
+        font-family: var(--font-mono);
+        font-size: 0.7rem;
+        color: var(--faint);
+        letter-spacing: 0.03em;
+      }
+      .now-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 1.3fr 1fr;
+        gap: clamp(1.4rem, 2.5vw, 2.2rem);
+      }
+      @media (max-width: 960px) {
+        .now-grid {
+          grid-template-columns: 1fr;
+          gap: 1.6rem;
+        }
+      }
+      .now-col {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .now-eyebrow {
+        font-family: var(--font-mono);
+        font-size: 0.68rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--faint);
+        margin-bottom: 0.65rem;
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+      }
+      .now-title {
+        font-family: var(--font-display);
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--bone);
+        letter-spacing: -0.02em;
+        line-height: 1.2;
+        margin-bottom: 0.45rem;
+      }
+      .now-desc {
+        font-size: 0.88rem;
+        color: var(--ash);
+        line-height: 1.55;
+        margin-bottom: 0.85rem;
+      }
+      .now-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        font-family: var(--font-mono);
+        font-size: 0.74rem;
+        color: var(--bone);
+        text-decoration: none;
+        border-bottom: 1px dashed var(--ash);
+        transition: color 0.2s, border-color 0.2s;
+        width: fit-content;
+      }
+      .now-link:hover {
+        color: #fff;
+        border-bottom-color: #fff;
+      }
+      html.light .now-link:hover {
+        color: #000;
+        border-bottom-color: #000;
+      }
+      .now-commit-box {
+        background: rgba(236, 232, 225, 0.03);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 0.85rem 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+      }
+      html.light .now-commit-box {
+        background: rgba(23, 20, 15, 0.03);
+      }
+      .now-commit-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+      }
+      .now-repo-name {
+        font-family: var(--font-mono);
+        font-size: 0.76rem;
+        font-weight: 600;
+        color: var(--bone);
+      }
+      .now-commit-time {
+        font-family: var(--font-mono);
+        font-size: 0.65rem;
+        color: var(--faint);
+        white-space: nowrap;
+      }
+      .now-commit-msg {
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        color: var(--ash);
+        line-height: 1.45;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+      }
+      .now-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem;
+        margin-top: 0.75rem;
+      }
+      .now-tag {
+        font-family: var(--font-mono);
+        font-size: 0.66rem;
+        color: var(--ash);
+        padding: 0.2rem 0.55rem;
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        background: rgba(236, 232, 225, 0.02);
+      }
+      html.light .now-tag {
+        background: rgba(23, 20, 15, 0.02);
+      }
+      .now-status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        color: var(--bone);
+        padding: 0.3rem 0.7rem;
+        border-radius: 6px;
+        background: rgba(34, 197, 94, 0.08);
+        border: 1px solid rgba(34, 197, 94, 0.25);
+        margin-bottom: 0.85rem;
+        width: fit-content;
+      }
+      .now-collab-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        font-family: var(--font-mono);
+        font-size: 0.74rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--ink);
+        background: var(--bone);
+        padding: 0.6rem 1.1rem;
+        border-radius: 6px;
+        text-decoration: none;
+        transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease), opacity 0.25s;
+        width: fit-content;
+        margin-top: auto;
+      }
+      .now-collab-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+        opacity: 0.94;
+      }
+      html.light .now-collab-btn {
+        background: #17140f;
+        color: #f7f5f0;
+      }
+
       /* ─── ABOUT ────────────────────────────────────────────── */
       #about {
         padding: clamp(5rem, 11vw, 9rem) 0;
@@ -3614,6 +3850,118 @@
           <span class="marquee-item">Open Source</span>
         </div>
       </div>
+
+      <!-- LIVE STATUS / ACTUALMENTE -->
+      <section id="now" class="now-section" aria-label="Estado actual de proyectos y actividad">
+        <div class="shell">
+          <div class="now-panel anim">
+            <div class="now-head-row">
+              <div class="now-badge">
+                <span class="now-live-dot" aria-hidden="true"></span>
+                <span>Actualmente</span>
+                <span style="opacity: 0.4;">/</span>
+                <span style="color: var(--ash); font-weight: 400;">Now</span>
+              </div>
+              <div class="now-timestamp" id="now-updated-text">
+                Actualizado en tiempo real
+              </div>
+            </div>
+
+            <div class="now-grid">
+              <!-- Col 1: Enfoque y Proyecto Principal -->
+              <div class="now-col">
+                <div>
+                  <div class="now-eyebrow">
+                    <span>Enfoque principal</span>
+                  </div>
+                  <h3 class="now-title" id="now-project-title">KiCord &amp; PapiGEGamer</h3>
+                  <p class="now-desc" id="now-project-desc">
+                    Iterando arquitectura modular en TypeScript, sistema de plugins dinámicos y telemetría reactiva en tiempo real.
+                  </p>
+                </div>
+                <a
+                  href="https://kicord.es"
+                  target="_blank"
+                  rel="noopener"
+                  class="now-link"
+                  id="now-project-link"
+                  data-cursor="VISIT"
+                >
+                  <span>Explorar KiCord</span>
+                  <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                    <path d="M1 11L11 1M11 1H3M11 1V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </a>
+              </div>
+
+              <!-- Col 2: Telemetría GitHub en vivo -->
+              <div class="now-col">
+                <div>
+                  <div class="now-eyebrow">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" style="opacity: 0.8;">
+                      <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+                    </svg>
+                    <span>Actividad pública GitHub</span>
+                  </div>
+                  <div class="now-commit-box" id="now-github-box">
+                    <div class="now-commit-head">
+                      <span class="now-repo-name" id="now-github-repo">PapiGECode/Web-CV</span>
+                      <span class="now-commit-time" id="now-github-time">Reciente</span>
+                    </div>
+                    <p class="now-commit-msg" id="now-github-msg">
+                      Cargando última actividad pública...
+                    </p>
+                  </div>
+                </div>
+                <a
+                  href="https://github.com/PapiGECode"
+                  target="_blank"
+                  rel="noopener"
+                  class="now-link"
+                  id="now-github-link"
+                  data-cursor="GITHUB"
+                  style="margin-top: 0.75rem;"
+                >
+                  <span>github.com/PapiGECode</span>
+                  <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                    <path d="M1 11L11 1M11 1H3M11 1V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </a>
+              </div>
+
+              <!-- Col 3: Disponibilidad y Stack Activo -->
+              <div class="now-col">
+                <div>
+                  <div class="now-eyebrow">
+                    <span>Disponibilidad &amp; Stack</span>
+                  </div>
+                  <div class="now-status-pill" id="now-status-badge">
+                    <span class="now-live-dot" style="width: 6px; height: 6px;"></span>
+                    <span id="now-status-text">Disponible para colaborar</span>
+                  </div>
+                  <div class="now-tags" id="now-focus-tags">
+                    <span class="now-tag">TypeScript</span>
+                    <span class="now-tag">React / Next.js</span>
+                    <span class="now-tag">Kernel &amp; Sistemas</span>
+                    <span class="now-tag">Open Source</span>
+                  </div>
+                </div>
+                <a
+                  href="#contact"
+                  class="now-collab-btn"
+                  data-cursor="SEND"
+                  onclick="goTo('#contact'); return false;"
+                >
+                  <span>Contactar</span>
+                  <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                    <path d="M1 6H11M11 6L6 1M11 6L6 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <!-- ABOUT -->
       <section id="about">
@@ -15949,6 +16297,177 @@
             }, 500);
           }
         })();
+
+        /* ========================================================
+           NOW STATUS PANEL (Configurable in one single place)
+           ======================================================== */
+        window.NOW_CONFIG = {
+          project: {
+            title: "KiCord & PapiGEGamer",
+            url: "https://kicord.es",
+            linkText: "Explorar KiCord",
+            desc: "Iterando arquitectura modular en TypeScript, sistema de plugins dinámicos y telemetría reactiva en tiempo real.",
+          },
+          status: {
+            text: "Disponible para colaborar",
+            updated: "Actualizado en tiempo real",
+          },
+          github: {
+            username: "PapiGECode",
+            fetchLive: true,
+            fallback: {
+              repo: "PapiGECode/Web-CV",
+              msg: "feat: visual premium timeline & live status integration",
+              time: "Reciente",
+            },
+          },
+          focusTags: [
+            "TypeScript",
+            "React / Next.js",
+            "Kernel & Sistemas",
+            "Open Source",
+          ],
+        };
+
+        function initNowPanel() {
+          var cfg = window.NOW_CONFIG;
+          if (!cfg) return;
+
+          // Render static config immediately
+          var pTitle = document.getElementById("now-project-title");
+          var pDesc = document.getElementById("now-project-desc");
+          var pLink = document.getElementById("now-project-link");
+          var sText = document.getElementById("now-status-text");
+          var uText = document.getElementById("now-updated-text");
+          var tagsContainer = document.getElementById("now-focus-tags");
+
+          if (pTitle && cfg.project) pTitle.textContent = cfg.project.title;
+          if (pDesc && cfg.project) pDesc.textContent = cfg.project.desc;
+          if (pLink && cfg.project) {
+            pLink.href = cfg.project.url;
+            var linkSpan = pLink.querySelector("span");
+            if (linkSpan) linkSpan.textContent = cfg.project.linkText;
+          }
+          if (sText && cfg.status) sText.textContent = cfg.status.text;
+          if (uText && cfg.status) uText.textContent = cfg.status.updated;
+
+          if (tagsContainer && cfg.focusTags && cfg.focusTags.length) {
+            tagsContainer.innerHTML = cfg.focusTags
+              .map(function (t) {
+                return '<span class="now-tag">' + t + "</span>";
+              })
+              .join("");
+          }
+
+          // Render GitHub fallback initially
+          var ghRepo = document.getElementById("now-github-repo");
+          var ghTime = document.getElementById("now-github-time");
+          var ghMsg = document.getElementById("now-github-msg");
+          var ghLink = document.getElementById("now-github-link");
+
+          if (ghRepo && cfg.github && cfg.github.fallback)
+            ghRepo.textContent = cfg.github.fallback.repo;
+          if (ghTime && cfg.github && cfg.github.fallback)
+            ghTime.textContent = cfg.github.fallback.time;
+          if (ghMsg && cfg.github && cfg.github.fallback)
+            ghMsg.textContent = cfg.github.fallback.msg;
+
+          // Live GitHub API fetch if enabled
+          if (cfg.github && cfg.github.fetchLive && cfg.github.username) {
+            var endpoint =
+              "https://api.github.com/users/" +
+              encodeURIComponent(cfg.github.username) +
+              "/events/public";
+
+            fetch(endpoint, { cache: "no-cache" })
+              .then(function (res) {
+                if (!res.ok) throw new Error("GitHub API status " + res.status);
+                return res.json();
+              })
+              .then(function (events) {
+                if (!Array.isArray(events) || !events.length) return;
+
+                // Find latest PushEvent, ReleaseEvent, or CreateEvent
+                var relevantEvent =
+                  events.find(function (ev) {
+                    return (
+                      ev.type === "PushEvent" ||
+                      ev.type === "ReleaseEvent" ||
+                      ev.type === "CreateEvent"
+                    );
+                  }) || events[0];
+
+                if (!relevantEvent) return;
+
+                var repoName = relevantEvent.repo
+                  ? relevantEvent.repo.name
+                  : cfg.github.username;
+
+                var commitMsg = "";
+                if (
+                  relevantEvent.payload &&
+                  relevantEvent.payload.commits &&
+                  relevantEvent.payload.commits.length
+                ) {
+                  commitMsg =
+                    relevantEvent.payload.commits[
+                      relevantEvent.payload.commits.length - 1
+                    ].message;
+                } else if (
+                  relevantEvent.type === "ReleaseEvent" &&
+                  relevantEvent.payload.release
+                ) {
+                  commitMsg =
+                    "Release " +
+                    (relevantEvent.payload.release.name ||
+                      relevantEvent.payload.release.tag_name);
+                } else if (relevantEvent.type === "CreateEvent") {
+                  commitMsg =
+                    "Created " +
+                    (relevantEvent.payload.ref_type || "repository") +
+                    " " +
+                    (relevantEvent.payload.ref || "");
+                } else {
+                  commitMsg = "Actividad reciente en " + repoName;
+                }
+
+                // Format relative time
+                var timeAgo = "Reciente";
+                if (relevantEvent.created_at) {
+                  var diffSec = Math.floor(
+                    (Date.now() -
+                      new Date(relevantEvent.created_at).getTime()) /
+                      1000,
+                  );
+                  if (diffSec < 60) timeAgo = "Hace un momento";
+                  else if (diffSec < 3600)
+                    timeAgo = "Hace " + Math.floor(diffSec / 60) + " min";
+                  else if (diffSec < 86400)
+                    timeAgo = "Hace " + Math.floor(diffSec / 3600) + " h";
+                  else if (diffSec < 2592000)
+                    timeAgo = "Hace " + Math.floor(diffSec / 86400) + " d";
+                  else
+                    timeAgo = new Date(
+                      relevantEvent.created_at,
+                    ).toLocaleDateString("es-ES");
+                }
+
+                if (ghRepo) ghRepo.textContent = repoName;
+                if (ghTime) ghTime.textContent = timeAgo;
+                if (ghMsg) ghMsg.textContent = commitMsg.split("\n")[0];
+                if (ghLink) {
+                  ghLink.href = "https://github.com/" + repoName;
+                  var ghSpan = ghLink.querySelector("span");
+                  if (ghSpan) ghSpan.textContent = "github.com/" + repoName;
+                }
+              })
+              .catch(function (err) {
+                // Graceful fallback to preconfigured data
+                console.info("GitHub live telemetry fallback:", err.message);
+              });
+          }
+        }
+        initNowPanel();
 
         // refresh ST after fonts load (layout shift guard)
         if (document.fonts && document.fonts.ready) {
