@@ -1227,38 +1227,261 @@
         letter-spacing: -0.03em;
         line-height: 1;
       }
-      .timeline {
-        margin-top: 2.5rem;
+      /* ─── TIMELINE (Visual Premium) ─────────────────────────── */
+      .about-timeline-wrap {
+        margin-top: clamp(4.5rem, 8vw, 7rem);
+        padding-top: clamp(2.5rem, 5vw, 4rem);
         border-top: 1px solid var(--line);
       }
-      .t-row {
+      .tl-subhead {
+        margin-bottom: clamp(2rem, 4vw, 3.5rem);
+        max-width: 62ch;
+      }
+      .tl-subhead p {
+        font-size: clamp(0.95rem, 1.5vw, 1.12rem);
+        color: var(--ash);
+        line-height: 1.65;
+      }
+      .timeline-v2 {
+        position: relative;
+        padding: 1.5rem 0;
+      }
+      .tl-track {
+        position: absolute;
+        top: 24px;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 2px;
+        background: var(--line);
+        border-radius: 2px;
+        z-index: 1;
+      }
+      .tl-track-progress {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 0%;
+        background: linear-gradient(180deg, var(--bone), #38bdf8);
+        box-shadow: 0 0 12px rgba(56, 189, 248, 0.6);
+        border-radius: 2px;
+        transform-origin: top;
+      }
+      .tl-item {
+        position: relative;
         display: grid;
-        grid-template-columns: 90px 1fr;
-        gap: 1.25rem;
-        padding: 1.15rem 0;
-        border-bottom: 1px solid var(--line);
-        transition: padding-left 0.35s var(--ease);
+        grid-template-columns: 1fr 48px 1fr;
+        align-items: center;
+        gap: clamp(1.5rem, 3vw, 2.75rem);
+        margin-bottom: clamp(3rem, 5vw, 4.5rem);
       }
-      .t-row:hover {
-        padding-left: 0.5rem;
+      .tl-item:last-child {
+        margin-bottom: 0;
       }
-      .t-year {
+      .tl-node {
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        z-index: 2;
+        margin: 0 auto;
+      }
+      .tl-node-pulse {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: rgba(236, 232, 225, 0.05);
+        border: 1px solid var(--line);
+        position: absolute;
+        transition:
+          transform 0.4s var(--ease),
+          border-color 0.4s,
+          background 0.4s,
+          box-shadow 0.4s;
+      }
+      html.light .tl-node-pulse {
+        background: rgba(23, 20, 15, 0.05);
+      }
+      .tl-node-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--ash);
+        transition:
+          background 0.35s,
+          transform 0.35s,
+          box-shadow 0.35s;
+        z-index: 1;
+      }
+      .tl-item.is-active .tl-node-dot {
+        background: var(--bone);
+        box-shadow: 0 0 10px var(--bone), 0 0 20px rgba(56, 189, 248, 0.5);
+        transform: scale(1.25);
+      }
+      html.light .tl-item.is-active .tl-node-dot {
+        background: #17140f;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.4), 0 0 20px rgba(56, 189, 248, 0.4);
+      }
+      .tl-item.is-active .tl-node-pulse {
+        border-color: rgba(236, 232, 225, 0.45);
+        background: rgba(236, 232, 225, 0.12);
+        transform: scale(1.15);
+      }
+      html.light .tl-item.is-active .tl-node-pulse {
+        border-color: rgba(23, 20, 15, 0.35);
+        background: rgba(23, 20, 15, 0.08);
+      }
+      .tl-col-meta {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        text-align: right;
+        gap: 0.45rem;
+      }
+      .tl-big-year {
+        font-family: var(--font-display);
+        font-size: clamp(2rem, 3.8vw, 3.2rem);
+        font-weight: 800;
+        line-height: 0.95;
+        letter-spacing: -0.04em;
+        text-transform: uppercase;
+        color: var(--bone);
+        transition: color 0.3s;
+      }
+      .tl-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        font-family: var(--font-mono);
+        font-size: 0.68rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--ash);
+        padding: 0.25rem 0.65rem;
+        border-radius: 4px;
+        border: 1px solid var(--line);
+        background: rgba(236, 232, 225, 0.03);
+      }
+      html.light .tl-chip {
+        background: rgba(23, 20, 15, 0.03);
+      }
+      .tl-chip-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--ash);
+      }
+      .tl-chip-dot.active {
+        background: #22c55e;
+        box-shadow: 0 0 8px rgba(34, 197, 94, 0.7);
+      }
+      .tl-chip-dot.blue {
+        background: #38bdf8;
+        box-shadow: 0 0 8px rgba(56, 189, 248, 0.7);
+      }
+      .tl-chip-dot.purple {
+        background: #c084fc;
+        box-shadow: 0 0 8px rgba(192, 132, 252, 0.7);
+      }
+      .tl-chip-dot.amber {
+        background: #fbbf24;
+        box-shadow: 0 0 8px rgba(251, 191, 36, 0.7);
+      }
+      .tl-col-card {
+        width: 100%;
+      }
+      .tl-card {
+        background: rgba(236, 232, 225, 0.022);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: clamp(1.4rem, 2.5vw, 2.1rem);
+        transition:
+          border-color 0.35s ease,
+          background 0.35s ease,
+          transform 0.35s ease,
+          box-shadow 0.35s ease;
+        backdrop-filter: blur(8px);
+      }
+      html.light .tl-card {
+        background: rgba(23, 20, 15, 0.022);
+      }
+      .tl-card:hover,
+      .tl-item.is-active .tl-card {
+        border-color: rgba(236, 232, 225, 0.22);
+        background: rgba(236, 232, 225, 0.04);
+        transform: translateY(-2px);
+        box-shadow: 0 16px 36px rgba(0, 0, 0, 0.25);
+      }
+      html.light .tl-card:hover,
+      html.light .tl-item.is-active .tl-card {
+        border-color: rgba(23, 20, 15, 0.22);
+        background: rgba(23, 20, 15, 0.04);
+        box-shadow: 0 16px 36px rgba(0, 0, 0, 0.06);
+      }
+      .tl-role {
+        font-family: var(--font-display);
+        font-size: clamp(1.15rem, 1.8vw, 1.4rem);
+        font-weight: 700;
+        color: var(--bone);
+        letter-spacing: -0.02em;
+        margin-bottom: 0.6rem;
+        line-height: 1.25;
+      }
+      .tl-place {
         font-family: var(--font-mono);
         font-size: 0.78rem;
         color: var(--ash);
-        padding-top: 0.15rem;
+        line-height: 1.55;
+        margin-bottom: 0.95rem;
       }
-      .t-role {
-        font-size: 0.98rem;
-        font-weight: 500;
-        color: var(--bone);
-        margin-bottom: 0.2rem;
+      .tl-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
       }
-      .t-place {
+      .tl-tag {
         font-family: var(--font-mono);
-        font-size: 0.74rem;
-        color: var(--faint);
-        letter-spacing: 0.02em;
+        font-size: 0.68rem;
+        letter-spacing: 0.03em;
+        color: var(--ash);
+        padding: 0.24rem 0.6rem;
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        background: rgba(236, 232, 225, 0.02);
+      }
+      html.light .tl-tag {
+        background: rgba(23, 20, 15, 0.02);
+      }
+      @media (max-width: 880px) {
+        .tl-track {
+          left: 20px;
+          transform: none;
+        }
+        .tl-item {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          padding-left: 54px;
+          margin-bottom: 2.75rem;
+          gap: 0.8rem;
+        }
+        .tl-node {
+          position: absolute;
+          left: -4px;
+          top: 0;
+          margin: 0;
+        }
+        .tl-col-meta {
+          align-items: flex-start;
+          text-align: left;
+          gap: 0.35rem;
+        }
+        .tl-big-year {
+          font-size: clamp(1.6rem, 6vw, 2.2rem);
+        }
       }
       .certs {
         display: flex;
@@ -2526,8 +2749,9 @@
           padding: 2.5rem 0 !important;
           min-height: auto;
         }
-        .timeline {
-          margin-top: 1.75rem;
+        .about-timeline-wrap {
+          margin-top: 3rem;
+          padding-top: 2rem;
         }
         .certs {
           margin-top: 1.4rem;
@@ -3451,39 +3675,136 @@
                   </div>
                 </div>
               </div>
-              <div class="timeline">
-                <div class="t-row anim">
-                  <div class="t-year">Actualidad</div>
-                  <div>
-                    <div class="t-role">Full-Stack &amp; OSS Maintainer</div>
-                    <div class="t-place">
+            </div>
+          </div>
+
+          <!-- TIMELINE (Visual Premium) -->
+          <div class="about-timeline-wrap">
+            <div class="sec-head">
+              <span class="tag">Trayectoria</span><span class="sec-line"></span
+              ><span class="sec-title">Evolución y etapas</span>
+            </div>
+            <div class="tl-subhead">
+              <p>
+                Recorrido cronológico: desarrollo web en producción, mantenimiento de código abierto, especialización técnica e impacto en comunidades desde 2015.
+              </p>
+            </div>
+
+            <div class="timeline-v2" id="timeline">
+              <div class="tl-track" aria-hidden="true">
+                <div class="tl-track-progress" id="tl-progress"></div>
+              </div>
+
+              <!-- Item 01: Actualidad -->
+              <div class="tl-item anim">
+                <div class="tl-col-meta">
+                  <div class="tl-big-year">Actualidad</div>
+                  <span class="tl-chip">
+                    <span class="tl-chip-dot active"></span>En curso
+                  </span>
+                </div>
+                <div class="tl-node" aria-hidden="true">
+                  <div class="tl-node-pulse"></div>
+                  <div class="tl-node-dot"></div>
+                </div>
+                <div class="tl-col-card">
+                  <article class="tl-card" data-cursor="ETAPA">
+                    <h3 class="tl-role">Full-Stack &amp; OSS Maintainer</h3>
+                    <p class="tl-place">
                       React · Next.js · TypeScript · GitHub · Vercel
+                    </p>
+                    <div class="tl-tags">
+                      <span class="tl-tag">React</span>
+                      <span class="tl-tag">Next.js</span>
+                      <span class="tl-tag">TypeScript</span>
+                      <span class="tl-tag">GitHub</span>
+                      <span class="tl-tag">Vercel</span>
                     </div>
-                  </div>
+                  </article>
                 </div>
+              </div>
 
-                <div class="t-row anim">
-                  <div class="t-year">2025</div>
-                  <div>
-                    <div class="t-role">Técnico de Telecomunicaciones</div>
-                    <div class="t-place">DualRed · Electron · Redes y soporte IT</div>
-                  </div>
+              <!-- Item 02: 2025 -->
+              <div class="tl-item anim">
+                <div class="tl-col-meta">
+                  <div class="tl-big-year">2025</div>
+                  <span class="tl-chip">
+                    <span class="tl-chip-dot blue"></span>Graduación
+                  </span>
                 </div>
-
-                <div class="t-row anim">
-                  <div class="t-year">2023–2025</div>
-                  <div>
-                    <div class="t-role">Automatización y Robótica Industrial</div>
-                    <div class="t-place">FP Superior · Automatización · Cuadros eléctricos</div>
-                  </div>
+                <div class="tl-node" aria-hidden="true">
+                  <div class="tl-node-pulse"></div>
+                  <div class="tl-node-dot"></div>
                 </div>
+                <div class="tl-col-card">
+                  <article class="tl-card" data-cursor="ETAPA">
+                    <h3 class="tl-role">Técnico de Telecomunicaciones</h3>
+                    <p class="tl-place">
+                      DualRed · Electron · Redes y soporte IT
+                    </p>
+                    <div class="tl-tags">
+                      <span class="tl-tag">DualRed</span>
+                      <span class="tl-tag">Electron</span>
+                      <span class="tl-tag">Redes LAN</span>
+                      <span class="tl-tag">Soporte IT</span>
+                    </div>
+                  </article>
+                </div>
+              </div>
 
-                <div class="t-row anim">
-                  <div class="t-year">Desde 2015</div>
-                  <div>
-                    <div class="t-role">Gestión de comunidades técnicas</div>
-                    <div class="t-place">Moderación · Producto · Prevención técnica</div>
-                  </div>
+              <!-- Item 03: 2023–2025 -->
+              <div class="tl-item anim">
+                <div class="tl-col-meta">
+                  <div class="tl-big-year">2023–2025</div>
+                  <span class="tl-chip">
+                    <span class="tl-chip-dot purple"></span>Formación
+                  </span>
+                </div>
+                <div class="tl-node" aria-hidden="true">
+                  <div class="tl-node-pulse"></div>
+                  <div class="tl-node-dot"></div>
+                </div>
+                <div class="tl-col-card">
+                  <article class="tl-card" data-cursor="ETAPA">
+                    <h3 class="tl-role">Automatización y Robótica Industrial</h3>
+                    <p class="tl-place">
+                      FP Superior · Automatización · Cuadros eléctricos
+                    </p>
+                    <div class="tl-tags">
+                      <span class="tl-tag">FP Superior</span>
+                      <span class="tl-tag">Robótica Industrial</span>
+                      <span class="tl-tag">Automatización</span>
+                      <span class="tl-tag">Cuadros Eléctricos</span>
+                    </div>
+                  </article>
+                </div>
+              </div>
+
+              <!-- Item 04: Desde 2015 -->
+              <div class="tl-item anim">
+                <div class="tl-col-meta">
+                  <div class="tl-big-year">Desde 2015</div>
+                  <span class="tl-chip">
+                    <span class="tl-chip-dot amber"></span>11+ Años Activo
+                  </span>
+                </div>
+                <div class="tl-node" aria-hidden="true">
+                  <div class="tl-node-pulse"></div>
+                  <div class="tl-node-dot"></div>
+                </div>
+                <div class="tl-col-card">
+                  <article class="tl-card" data-cursor="ETAPA">
+                    <h3 class="tl-role">Gestión de comunidades técnicas</h3>
+                    <p class="tl-place">
+                      Moderación · Producto · Prevención técnica
+                    </p>
+                    <div class="tl-tags">
+                      <span class="tl-tag">Comunidades Tech</span>
+                      <span class="tl-tag">Moderación</span>
+                      <span class="tl-tag">Producto</span>
+                      <span class="tl-tag">Prevención Técnica</span>
+                    </div>
+                  </article>
                 </div>
               </div>
             </div>
@@ -14129,19 +14450,74 @@
                   },
                 });
               });
-              /* timeline rows */
-              gsap.fromTo(
-                ".t-row",
-                { x: -24, opacity: 0 },
-                {
-                  x: 0,
-                  opacity: 1,
-                  duration: 0.7,
-                  ease: "power3.out",
-                  stagger: 0.08,
-                  scrollTrigger: { trigger: ".timeline", start: "top 82%" },
-                },
-              );
+              /* Timeline progress line filling with scroll */
+              var tlTrack = document.getElementById("tl-progress");
+              if (tlTrack) {
+                gsap.to(tlTrack, {
+                  height: "100%",
+                  ease: "none",
+                  scrollTrigger: {
+                    trigger: "#timeline",
+                    start: "top 75%",
+                    end: "bottom 75%",
+                    scrub: 0.3,
+                  },
+                });
+              }
+
+              /* Timeline items illumination and entrance */
+              gsap.utils.toArray(".tl-item").forEach(function (item) {
+                var meta = item.querySelector(".tl-col-meta");
+                var card = item.querySelector(".tl-card");
+                var node = item.querySelector(".tl-node");
+
+                var tl = gsap.timeline({
+                  scrollTrigger: {
+                    trigger: item,
+                    start: "top 82%",
+                    onEnter: function () {
+                      item.classList.add("is-active");
+                    },
+                    onLeaveBack: function () {
+                      item.classList.remove("is-active");
+                    },
+                  },
+                });
+
+                tl.to(item, { opacity: 1, duration: 0.1 })
+                  .from(
+                    node,
+                    {
+                      scale: 0.5,
+                      opacity: 0,
+                      duration: 0.5,
+                      ease: "back.out(1.7)",
+                    },
+                    0,
+                  )
+                  .from(
+                    meta,
+                    {
+                      x: -24,
+                      opacity: 0,
+                      duration: 0.6,
+                      ease: "power3.out",
+                      clearProps: "transform",
+                    },
+                    0.05,
+                  )
+                  .from(
+                    card,
+                    {
+                      x: 24,
+                      opacity: 0,
+                      duration: 0.6,
+                      ease: "power3.out",
+                      clearProps: "transform",
+                    },
+                    0.1,
+                  );
+              });
               /* about body + certs */
               gsap.to(".about-body", {
                 opacity: 1,
