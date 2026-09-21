@@ -2206,9 +2206,6 @@
         background: radial-gradient(circle at 38% 32%, #40404e, #08080b 72%);
         box-shadow: 0 0 0 1px rgba(120, 120, 140, 0.22);
       }
-      .ph-glare {
-        display: none;
-      }
       .ph-shot {
         position: absolute;
         inset: 0;
@@ -2478,7 +2475,7 @@
         justify-content: space-between;
         overflow: hidden;
         transition:
-          transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+          transform 0.35s var(--ease-premium),
           border-color 0.35s ease,
           box-shadow 0.35s ease,
           background 0.35s ease;
@@ -3393,7 +3390,6 @@
         }
 
         /* GRIDS */
-        .mini-grid,
         .bento-grid {
           grid-template-columns: 1fr;
         }
@@ -15313,7 +15309,6 @@
             });
           });
         }
-        renderSecondaryProjects();
 
         function startReveals() {
           renderSecondaryProjects();
@@ -15753,20 +15748,20 @@
                   );
               });
 
-              /* Bento projects & secondary grid anim */
-              gsap.to(".bento-card, .mini", {
+              /* Bento projects anim — cards rendered dynamically, triggered by bento-projects-grid */
+              gsap.to(".bento-card", {
                 opacity: 1,
                 y: 0,
                 duration: 0.7,
                 stagger: 0.08,
                 ease: "power3.out",
-                scrollTrigger: { trigger: "#bento-projects-grid, .mini-grid", start: "top 85%" },
+                scrollTrigger: { trigger: "#bento-projects-grid", start: "top 85%" },
               });
-              gsap.set(".bento-card, .mini", { y: 30 });
-              gsap.to(".bento-projects-head, .mini-head", {
+              gsap.set(".bento-card", { y: 30 });
+              gsap.to(".bento-projects-head", {
                 opacity: 1,
                 duration: 0.6,
-                scrollTrigger: { trigger: ".bento-projects-head, .mini-head", start: "top 90%" },
+                scrollTrigger: { trigger: ".bento-projects-head", start: "top 90%" },
               });
 
               /* CONTACT */
@@ -16093,7 +16088,7 @@
               }
             });
           });
-          document.querySelectorAll(".mini, .bento-card").forEach(function (card) {
+          document.querySelectorAll(".bento-card").forEach(function (card) {
             var rY = gsap.quickTo(card, "rotationY", {
               duration: 0.5,
               ease: "power2.out",
