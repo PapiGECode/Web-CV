@@ -1255,65 +1255,249 @@
         color: var(--bone);
       }
 
-      /* ─── SERVICES ─────────────────────────────────────────── */
+      /* ─── CAPABILITIES & EVIDENCE ────────────────────────────── */
       #skills {
         padding: clamp(5rem, 11vw, 9rem) 0;
         border-top: 1px solid var(--line);
       }
-      .svc-row {
+      .cap-intro {
+        margin-bottom: clamp(2rem, 4vw, 3rem);
+        max-width: 65ch;
+      }
+      .cap-intro p {
+        font-size: clamp(1rem, 1.5vw, 1.15rem);
+        color: var(--ash);
+        line-height: 1.65;
+      }
+      .cap-grid {
         display: grid;
-        grid-template-columns: 60px 1fr auto;
+        grid-template-columns: repeat(2, 1fr);
         gap: 1.5rem;
-        align-items: center;
-        padding: clamp(1.5rem, 3vw, 2.25rem) 0;
-        border-top: 1px solid var(--line);
-        transition: background 0.4s var(--ease);
       }
-      .svc-row:last-child {
-        border-bottom: 1px solid var(--line);
+      @media (max-width: 900px) {
+        .cap-grid {
+          grid-template-columns: 1fr;
+        }
       }
-      .svc-row:hover {
-        background: linear-gradient(
-          90deg,
-          transparent,
-          var(--ink-2) 50%,
-          transparent
-        );
+      .cap-card {
+        background: rgba(236, 232, 225, 0.02);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: clamp(1.5rem, 3vw, 2.25rem);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: relative;
+        transition: border-color 0.3s ease, background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
       }
-      .svc-num {
+      html.light .cap-card {
+        background: rgba(23, 20, 15, 0.02);
+      }
+      .cap-card:hover {
+        border-color: rgba(236, 232, 225, 0.22);
+        background: rgba(236, 232, 225, 0.038);
+        transform: translateY(-2px);
+        box-shadow: 0 16px 36px rgba(0, 0, 0, 0.3);
+      }
+      html.light .cap-card:hover {
+        border-color: rgba(23, 20, 15, 0.22);
+        background: rgba(23, 20, 15, 0.038);
+        box-shadow: 0 16px 36px rgba(0, 0, 0, 0.06);
+      }
+      .cap-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        margin-bottom: 1.2rem;
+      }
+      .cap-num-title {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+      }
+      .cap-num {
         font-family: var(--font-mono);
-        font-size: 0.78rem;
+        font-size: 0.72rem;
         color: var(--faint);
+        letter-spacing: 0.08em;
       }
-      .svc-name {
+      .cap-title {
         font-family: var(--font-display);
+        font-size: clamp(1.35rem, 2.4vw, 1.8rem);
         font-weight: 700;
-        font-size: clamp(1.5rem, 3.4vw, 2.4rem);
         letter-spacing: -0.03em;
         text-transform: uppercase;
         color: var(--bone);
-        line-height: 1;
-        transition: transform 0.4s var(--ease);
+        line-height: 1.1;
       }
-      .svc-row:hover .svc-name {
-        transform: translateX(10px);
+      .cap-badge {
+        font-family: var(--font-mono);
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 0.25rem 0.65rem;
+        border-radius: 4px;
+        border: 1px solid var(--line);
+        color: var(--ash);
+        background: rgba(236, 232, 225, 0.04);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        white-space: nowrap;
+        flex-shrink: 0;
       }
-      .svc-tags {
+      html.light .cap-badge {
+        background: rgba(23, 20, 15, 0.04);
+      }
+      .cap-badge-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #22c55e;
+        box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
+      }
+      .cap-badge-dot.blue {
+        background: #38bdf8;
+        box-shadow: 0 0 8px rgba(56, 189, 248, 0.6);
+      }
+      .cap-badge-dot.purple {
+        background: #c084fc;
+        box-shadow: 0 0 8px rgba(192, 132, 252, 0.6);
+      }
+      .cap-badge-dot.amber {
+        background: #fbbf24;
+        box-shadow: 0 0 8px rgba(251, 191, 36, 0.6);
+      }
+      .cap-lead {
+        font-size: 0.92rem;
+        line-height: 1.6;
+        color: var(--ash);
+        margin-bottom: 1.4rem;
+      }
+      .cap-sec-label {
+        font-family: var(--font-mono);
+        font-size: 0.68rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--faint);
+        margin-bottom: 0.7rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .cap-sec-label::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--line);
+        opacity: 0.6;
+      }
+      .cap-evidence-list {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 1.4rem 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.65rem;
+      }
+      .cap-evidence-item {
+        display: flex;
+        align-items: baseline;
+        gap: 0.6rem;
+        font-size: 0.85rem;
+        color: var(--bone);
+        line-height: 1.45;
+      }
+      .cap-evidence-icon {
+        font-family: var(--font-mono);
+        color: var(--faint);
+        font-size: 0.72rem;
+        flex-shrink: 0;
+      }
+      .cap-evidence-link {
+        color: var(--bone);
+        text-decoration: none;
+        border-bottom: 1px dashed var(--ash);
+        transition: border-color 0.2s, color 0.2s;
+      }
+      .cap-evidence-link:hover {
+        color: #fff;
+        border-bottom-color: #fff;
+      }
+      html.light .cap-evidence-link:hover {
+        color: #000;
+        border-bottom-color: #000;
+      }
+      .cap-stat-box {
+        background: rgba(236, 232, 225, 0.03);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 0.85rem 1.1rem;
+        margin-bottom: 1.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+      }
+      html.light .cap-stat-box {
+        background: rgba(23, 20, 15, 0.03);
+      }
+      .cap-stat-val {
+        font-family: var(--font-display);
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--bone);
+        letter-spacing: -0.02em;
+        white-space: nowrap;
+      }
+      .cap-stat-desc {
+        font-family: var(--font-mono);
+        font-size: 0.7rem;
+        color: var(--ash);
+        text-align: right;
+        line-height: 1.35;
+      }
+      .cap-tags {
         display: flex;
         flex-wrap: wrap;
         gap: 0.4rem;
-        justify-content: flex-end;
-        max-width: 420px;
+        margin-top: auto;
+        padding-top: 1.1rem;
+        border-top: 1px solid var(--line);
       }
-      .svc-tag {
+      .cap-tag {
         font-family: var(--font-mono);
         font-size: 0.68rem;
         letter-spacing: 0.03em;
         color: var(--ash);
-        padding: 0.3rem 0.7rem;
+        padding: 0.26rem 0.6rem;
         border: 1px solid var(--line);
-        border-radius: 40px;
-        white-space: nowrap;
+        border-radius: 4px;
+        background: rgba(236, 232, 225, 0.02);
+      }
+      html.light .cap-tag {
+        background: rgba(23, 20, 15, 0.02);
+      }
+      .cap-slot {
+        font-family: var(--font-mono);
+        font-size: 0.68rem;
+        color: var(--faint);
+        border: 1px dashed var(--line);
+        border-radius: 6px;
+        padding: 0.5rem 0.75rem;
+        margin-top: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        letter-spacing: 0.02em;
+      }
+      .cap-slot-dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: var(--faint);
+        flex-shrink: 0;
       }
 
       /* ─── WORK (sticky stack) ──────────────────────────────── */
@@ -2196,12 +2380,9 @@
           position: relative;
           top: auto;
         }
-        .svc-row {
-          grid-template-columns: 40px 1fr;
-          gap: 1rem;
-        }
-        .svc-tags {
-          display: none;
+        .cap-grid {
+          grid-template-columns: 1fr;
+          gap: 1.25rem;
         }
         .contact-grid {
           grid-template-columns: 1fr;
@@ -2287,8 +2468,8 @@
         .about-body {
           font-size: 0.96rem;
         }
-        .svc-name {
-          font-size: clamp(1.55rem, 7.5vw, 2.2rem);
+        .cap-title {
+          font-size: clamp(1.25rem, 6vw, 1.6rem);
         }
         .panel-title {
           font-size: clamp(1.9rem, 8.5vw, 2.7rem);
@@ -3286,61 +3467,211 @@
         </div>
       </section>
 
-      <!-- SERVICES -->
+      <!-- CAPABILITIES & EVIDENCE -->
       <section id="skills">
         <div class="shell">
           <div class="sec-head">
-            <span class="tag">Stack</span><span class="sec-line"></span
-            ><span class="sec-title">Tecnología y enfoque</span>
+            <span class="tag">Capacidades</span><span class="sec-line"></span
+            ><span class="sec-title">Especialidades y evidencia técnica</span>
           </div>
-          <div class="svc-row anim">
-            <div class="svc-num">01</div>
-            <div class="svc-name">Frontend &amp; Producto Web</div>
-            <div class="svc-tags">
-              <span class="svc-tag">React</span>
-              <span class="svc-tag">Next.js</span>
-              <span class="svc-tag">TypeScript</span>
-              <span class="svc-tag">JavaScript</span>
-              <span class="svc-tag">HTML5 / CSS3</span>
-              <span class="svc-tag">Tailwind</span>
-            </div>
+          <div class="cap-intro">
+            <p>
+              Respaldo práctico de ingeniería: proyectos en producción, análisis forense de sistemas, desarrollo de código abierto y gestión técnica comunitaria a gran escala.
+            </p>
           </div>
 
-          <div class="svc-row anim">
-            <div class="svc-num">02</div>
-            <div class="svc-name">Sistemas &amp; Automatización</div>
-            <div class="svc-tags">
-              <span class="svc-tag">Python</span>
-              <span class="svc-tag">C++</span>
-              <span class="svc-tag">Lua</span>
-              <span class="svc-tag">HLSL</span>
-              <span class="svc-tag">APIs</span>
-              <span class="svc-tag">Scripts</span>
-            </div>
-          </div>
+          <div class="cap-grid">
+            <!-- 01: Full-Stack Development -->
+            <article class="cap-card anim">
+              <div class="cap-head">
+                <div class="cap-num-title">
+                  <span class="cap-num">01 / ÁREA TÉCNICA</span>
+                  <h3 class="cap-title">Full-Stack Development</h3>
+                </div>
+                <span class="cap-badge">
+                  <span class="cap-badge-dot"></span>Producción
+                </span>
+              </div>
+              <p class="cap-lead">
+                Arquitectura de aplicaciones modernas con foco en rendimiento, telemetría reactiva en tiempo real e interfaces cinematográficas.
+              </p>
+              <div class="cap-evidence-sec">
+                <div class="cap-sec-label">Proyectos &amp; Evidencias</div>
+                <ul class="cap-evidence-list">
+                  <li class="cap-evidence-item">
+                    <span class="cap-evidence-icon">›</span>
+                    <span><strong>PapiGEGamer.com:</strong> SPA interactiva en TypeScript con telemetría en vivo de Discord/GitHub API y asistente inteligente NEXO.</span>
+                  </li>
+                  <li class="cap-evidence-item">
+                    <span class="cap-evidence-icon">›</span>
+                    <span><strong>KiCord:</strong> Cliente y extensión modular en TypeScript con inyección en runtime y arquitectura desacoplada.</span>
+                  </li>
+                  <li class="cap-evidence-item">
+                    <span class="cap-evidence-icon">›</span>
+                    <span><strong>Web CV:</strong> Single-page fluida a 60fps con GSAP, Lenis Smooth Scroll y diseño adaptativo sin dependencias pesadas.</span>
+                  </li>
+                </ul>
+              </div>
+              <div class="cap-stat-box">
+                <span class="cap-stat-val">SPA + APIs</span>
+                <span class="cap-stat-desc">Telemetría reactiva &amp;<br />Integraciones REST en vivo</span>
+              </div>
+              <div class="cap-tags">
+                <span class="cap-tag">React</span>
+                <span class="cap-tag">Next.js</span>
+                <span class="cap-tag">TypeScript</span>
+                <span class="cap-tag">JavaScript ESNext</span>
+                <span class="cap-tag">Tailwind CSS</span>
+                <span class="cap-tag">GSAP</span>
+                <span class="cap-tag">Vercel CI/CD</span>
+              </div>
+              <div class="cap-slot">
+                <span class="cap-slot-dot"></span>Microservicios y nuevas integraciones en preparación
+              </div>
+            </article>
 
-          <div class="svc-row anim">
-            <div class="svc-num">03</div>
-            <div class="svc-name">Entrega &amp; Ciberseguridad</div>
-            <div class="svc-tags">
-              <span class="svc-tag">Git / GitHub</span>
-              <span class="svc-tag">Vercel</span>
-              <span class="svc-tag">CI/CD</span>
-              <span class="svc-tag">Seguridad</span>
-              <span class="svc-tag">Redes LAN</span>
-              <span class="svc-tag">Diagnóstico</span>
-            </div>
-          </div>
+            <!-- 02: Cybersecurity & Systems -->
+            <article class="cap-card anim">
+              <div class="cap-head">
+                <div class="cap-num-title">
+                  <span class="cap-num">02 / ÁREA TÉCNICA</span>
+                  <h3 class="cap-title">Cybersecurity &amp; Systems</h3>
+                </div>
+                <span class="cap-badge">
+                  <span class="cap-badge-dot blue"></span>Sistemas &amp; Redes
+                </span>
+              </div>
+              <p class="cap-lead">
+                Diagnóstico de bajo nivel, análisis forense de fallos en el kernel y seguridad operativa en entornos masivos de usuarios.
+              </p>
+              <div class="cap-evidence-sec">
+                <div class="cap-sec-label">Práctica &amp; Análisis</div>
+                <ul class="cap-evidence-list">
+                  <li class="cap-evidence-item">
+                    <span class="cap-evidence-icon">›</span>
+                    <span><strong>Soporte IT &amp; Redes LAN:</strong> Resolución técnica e infraestructura de red local en DualRed Telecomunicaciones (2025).</span>
+                  </li>
+                  <li class="cap-evidence-item">
+                    <span class="cap-evidence-icon">›</span>
+                    <span><strong>Análisis Forense &amp; Kernel:</strong> Diagnóstico de BSOD, conflictos de drivers, colas MSI y latencia DPC/ISR con LatencyMon.</span>
+                  </li>
+                  <li class="cap-evidence-item">
+                    <span class="cap-evidence-icon">›</span>
+                    <span><strong>Seguridad en Comunidades:</strong> Mitigación de scripts maliciosos, control de integridad de software y auditoría para +50.000 usuarios.</span>
+                  </li>
+                </ul>
+              </div>
+              <div class="cap-stat-box">
+                <span class="cap-stat-val">Forense &amp; LAN</span>
+                <span class="cap-stat-desc">Diagnóstico de kernel, drivers<br />y redes operativas</span>
+              </div>
+              <div class="cap-tags">
+                <span class="cap-tag">Redes LAN</span>
+                <span class="cap-tag">LatencyMon</span>
+                <span class="cap-tag">Windows Internals</span>
+                <span class="cap-tag">BSOD Debugging</span>
+                <span class="cap-tag">Robótica Industrial</span>
+                <span class="cap-tag">Telecomunicaciones</span>
+              </div>
+              <div class="cap-slot">
+                <span class="cap-slot-dot"></span>Slot preparado para certificaciones (CompTIA / CEH)
+              </div>
+            </article>
 
-          <div class="svc-row anim">
-            <div class="svc-num">04</div>
-            <div class="svc-name">Hardware &amp; Infraestructura</div>
-            <div class="svc-tags">
-              <span class="svc-tag">Robótica industrial</span>
-              <span class="svc-tag">Autómatas</span>
-              <span class="svc-tag">Telecomunicaciones</span>
-              <span class="svc-tag">Esquemas eléctricos</span>
-            </div>
+            <!-- 03: Open Source & Tooling -->
+            <article class="cap-card anim">
+              <div class="cap-head">
+                <div class="cap-num-title">
+                  <span class="cap-num">03 / ÁREA TÉCNICA</span>
+                  <h3 class="cap-title">Open Source &amp; Tooling</h3>
+                </div>
+                <span class="cap-badge">
+                  <span class="cap-badge-dot purple"></span>GitHub Partner
+                </span>
+              </div>
+              <p class="cap-lead">
+                Construcción de herramientas públicas, extensiones modulares y scripts de automatización con estándares abiertos y versionado riguroso.
+              </p>
+              <div class="cap-evidence-sec">
+                <div class="cap-sec-label">Ecosistema &amp; Repositorios</div>
+                <ul class="cap-evidence-list">
+                  <li class="cap-evidence-item">
+                    <span class="cap-evidence-icon">›</span>
+                    <span><strong>GitHub Developer Program:</strong> Miembro acreditado con actividad en <a href="https://github.com/PapiGECode" target="_blank" rel="noopener" class="cap-evidence-link">github.com/PapiGECode</a>.</span>
+                  </li>
+                  <li class="cap-evidence-item">
+                    <span class="cap-evidence-icon">›</span>
+                    <span><strong>KiCord OSS:</strong> Proyecto open-source con arquitectura de plugins dinámicos en <a href="https://kicord.es" target="_blank" rel="noopener" class="cap-evidence-link">kicord.es</a>.</span>
+                  </li>
+                  <li class="cap-evidence-item">
+                    <span class="cap-evidence-icon">›</span>
+                    <span><strong>Plugins &amp; Tooling:</strong> KiCord-DOOM-Plugin (PoC en cliente) y automatización con duolingo-streak-keeper.</span>
+                  </li>
+                </ul>
+              </div>
+              <div class="cap-stat-box">
+                <span class="cap-stat-val">Dev Program</span>
+                <span class="cap-stat-desc">Miembro oficial acreditado<br />GitHub Developer Program</span>
+              </div>
+              <div class="cap-tags">
+                <span class="cap-tag">Git</span>
+                <span class="cap-tag">GitHub CLI</span>
+                <span class="cap-tag">TypeScript</span>
+                <span class="cap-tag">Plugins &amp; Modding</span>
+                <span class="cap-tag">Reverse Engineering</span>
+                <span class="cap-tag">CI/CD</span>
+              </div>
+              <div class="cap-slot">
+                <span class="cap-slot-dot"></span>Nuevos repositorios públicos y colaboraciones en curso
+              </div>
+            </article>
+
+            <!-- 04: Community & Tech Projects -->
+            <article class="cap-card anim">
+              <div class="cap-head">
+                <div class="cap-num-title">
+                  <span class="cap-num">04 / ÁREA TÉCNICA</span>
+                  <h3 class="cap-title">Community &amp; Projects</h3>
+                </div>
+                <span class="cap-badge">
+                  <span class="cap-badge-dot amber"></span>11+ Años Activo
+                </span>
+              </div>
+              <p class="cap-lead">
+                Liderazgo técnico en comunidades masivas, resolución de incidencias en primera línea y retroalimentación directa a desarrollo.
+              </p>
+              <div class="cap-evidence-sec">
+                <div class="cap-sec-label">Impacto &amp; Comunidades</div>
+                <ul class="cap-evidence-list">
+                  <li class="cap-evidence-item">
+                    <span class="cap-evidence-icon">›</span>
+                    <span><strong>KernelOS:</strong> Rol activo en soporte, producto y comunidad atendiendo a <strong>+50.000 miembros activos</strong> (+1,5M histórico).</span>
+                  </li>
+                  <li class="cap-evidence-item">
+                    <span class="cap-evidence-icon">›</span>
+                    <span><strong>FNLB:</strong> Moderación de producto, soporte directo a usuarios y prevención técnica de incidencias.</span>
+                  </li>
+                  <li class="cap-evidence-item">
+                    <span class="cap-evidence-icon">›</span>
+                    <span><strong>Comunidades Tech:</strong> Participación activa y soporte técnico en comunidades de Nate Gentile, Edgar Pons y ThiagoIUTU.</span>
+                  </li>
+                </ul>
+              </div>
+              <div class="cap-stat-box">
+                <span class="cap-stat-val">+50K / +1.5M</span>
+                <span class="cap-stat-desc">Miembros activos / Alcance<br />histórico en comunidades</span>
+              </div>
+              <div class="cap-tags">
+                <span class="cap-tag">Soporte Técnico L1/L2</span>
+                <span class="cap-tag">Triaje de Errores</span>
+                <span class="cap-tag">Feedback de Producto</span>
+                <span class="cap-tag">Gestión Masiva</span>
+                <span class="cap-tag">Desde 2015</span>
+              </div>
+              <div class="cap-slot">
+                <span class="cap-slot-dot"></span>Iniciativas y mentorías comunitarias en preparación
+              </div>
+            </article>
           </div>
         </div>
       </section>
@@ -13789,38 +14120,34 @@
                 scrollTrigger: { trigger: "#portrait", start: "top 85%" },
               });
 
-              /* SERVICES rows */
-              gsap.utils.toArray(".svc-row").forEach(function (row) {
+              /* CAPABILITIES cards */
+              gsap.utils.toArray(".cap-card").forEach(function (card) {
                 var tl = gsap.timeline({
-                  scrollTrigger: { trigger: row, start: "top 86%" },
+                  scrollTrigger: { trigger: card, start: "top 88%" },
                 });
-                tl.to(row, { opacity: 1, duration: 0.1 })
+                tl.to(card, { opacity: 1, duration: 0.1 })
                   .from(
-                    row.querySelector(".svc-name"),
+                    card,
                     {
-                      xPercent: -4,
+                      y: 28,
                       opacity: 0,
-                      skewX: 4,
-                      duration: 0.8,
+                      duration: 0.7,
                       ease: "power3.out",
+                      clearProps: "transform",
                     },
                     0,
                   )
                   .from(
-                    row.querySelectorAll(".svc-tag"),
+                    card.querySelectorAll(".cap-tag"),
                     {
-                      y: 14,
+                      y: 10,
                       opacity: 0,
-                      duration: 0.5,
-                      stagger: 0.05,
+                      duration: 0.4,
+                      stagger: 0.03,
                       ease: "power2.out",
+                      clearProps: "transform",
                     },
-                    0.15,
-                  )
-                  .from(
-                    row.querySelector(".svc-num"),
-                    { opacity: 0, duration: 0.5 },
-                    0,
+                    0.2,
                   );
               });
 
