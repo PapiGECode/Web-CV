@@ -361,7 +361,7 @@
             tt.setAttribute("aria-pressed", light);
             tt.setAttribute(
               "aria-label",
-              light ? "Switch to dark mode" : "Switch to light mode",
+              light ? "Cambiar a modo oscuro" : "Cambiar a modo claro",
             );
             var fav = document.getElementById("favicon");
             if (fav) {
