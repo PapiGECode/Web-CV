@@ -17,6 +17,19 @@
           }
         } catch (e) {}
       })();
+      window.setTimeout(function () {
+        var loader = document.getElementById("loader");
+        if (loader) {
+          loader.style.opacity = "0";
+          loader.style.pointerEvents = "none";
+          window.setTimeout(function () {
+            if (loader && loader.parentNode) loader.parentNode.removeChild(loader);
+          }, 350);
+        }
+        document.querySelectorAll(".anim").forEach(function (el) {
+          if (getComputedStyle(el).opacity === "0") el.style.opacity = "1";
+        });
+      }, 7000);
     </script>
     <title>Pablo Schefer Orduña — Full-Stack Developer &amp; OSS Maintainer</title>
     <link
@@ -99,6 +112,12 @@
         ]
       }
     </script>
+      <noscript>
+      <style>
+        #loader { display: none !important; }
+        .anim { opacity: 1 !important; }
+      </style>
+    </noscript>
   </head>
   <body>
     <a href="#main" class="skip-link">Saltar al contenido principal</a>
