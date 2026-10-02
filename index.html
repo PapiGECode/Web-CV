@@ -18,20 +18,20 @@
         } catch (e) {}
       })();
     </script>
-    <title>Pablo Schefer Orduña</title>
+    <title>Pablo Schefer Orduña — Full-Stack Developer &amp; OSS Maintainer</title>
     <link
       id="favicon"
       rel="icon"
       type="image/png"
-      href="assets/favicon-dark.png"
+      href="assets/favicon-dark-32.png"
     />
-    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon-180.png" />
     <script>
       (function () {
         try {
           var fav = document.getElementById("favicon");
           if (fav && document.documentElement.classList.contains("light")) {
-            fav.href = "assets/favicon-light.png";
+            fav.href = "assets/favicon-light-32.png";
           }
         } catch (e) {}
       })();
@@ -49,6 +49,23 @@
       content="Desarrollo full-stack, ciberseguridad y proyectos open source."
     />
     <meta property="og:type" content="website" />
+    <link rel="canonical" href="https://www.pabloschefer.com/" />
+    <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
+    <meta name="theme-color" content="#0c0c0d" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#efeae1" media="(prefers-color-scheme: light)" />
+    <meta property="og:url" content="https://www.pabloschefer.com/" />
+    <meta property="og:site_name" content="Pablo Schefer Orduña" />
+    <meta property="og:locale" content="es_ES" />
+    <meta property="og:image" content="https://www.pabloschefer.com/assets/preview-og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Portfolio de Pablo Schefer Orduña" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Pablo Schefer Orduña — Full-Stack Developer" />
+    <meta name="twitter:description" content="Desarrollo full-stack, ciberseguridad, automatización y proyectos open source." />
+    <meta name="twitter:image" content="https://www.pabloschefer.com/assets/preview-og.jpg" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="preload" as="image" href="assets/pablo-casual.webp" type="image/webp" fetchpriority="high" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -57,6 +74,31 @@
     />
 
     <link rel="stylesheet" href="css/styles.css" />
+      <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Pablo Schefer Orduña",
+        "url": "https://www.pabloschefer.com/",
+        "image": "https://www.pabloschefer.com/assets/pablo-profesional.webp",
+        "email": "mailto:pablopme50@gmail.com",
+        "jobTitle": "Full-Stack Developer",
+        "sameAs": [
+          "https://github.com/PapiGECode",
+          "https://papigegamer.com",
+          "https://kicord.es"
+        ],
+        "knowsAbout": [
+          "Full-stack web development",
+          "Cybersecurity",
+          "Open source software",
+          "TypeScript",
+          "React",
+          "Next.js",
+          "Automation"
+        ]
+      }
+    </script>
   </head>
   <body>
     <a href="#main" class="skip">Skip to content</a>
@@ -137,12 +179,12 @@
         <button class="nav-cta" data-cursor="SEND" onclick="goTo('#contact')">
           Contactar
         </button>
-        <button id="nav-burger" aria-label="Open menu" aria-expanded="false">
+        <button id="nav-burger" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-overlay">
           <span></span><span></span><span></span>
         </button>
       </div>
     </nav>
-    <div id="nav-overlay">
+    <div id="nav-overlay" aria-hidden="true">
       <div class="ov-link"><a href="#about" data-close>Perfil</a></div>
       <div class="ov-link"><a href="#skills" data-close>Stack</a></div>
       <div class="ov-link"><a href="#work" data-close>Proyectos</a></div>
@@ -385,12 +427,16 @@
               <div class="about-portrait" id="portrait">
                 <img
                   class="portrait-img portrait-dark"
-                  src="assets/pablo-casual.png"
+                  src="assets/pablo-casual.webp"
+                  fetchpriority="high"
+                  decoding="async"
                   alt="Pablo Schefer Orduña"
                 />
                 <img
                   class="portrait-img portrait-light"
-                  src="assets/pablo-profesional.jpg"
+                  src="assets/pablo-profesional.webp"
+                  loading="lazy"
+                  decoding="async"
                   alt=""
                   aria-hidden="true"
                 />
@@ -771,7 +817,7 @@
                 <span class="panel-bgmark">K</span>
                 <div class="ph-stage">
                   <div class="phone-float">
-                    <img class="phone-mockup" src="assets/phone-kicord.png" alt="KiCord en iPhone" draggable="false" />
+                    <img class="phone-mockup" src="assets/phone-kicord.webp" loading="lazy" decoding="async" alt="KiCord en iPhone" draggable="false" />
                     <div class="ph-ground" aria-hidden="true"></div>
                   </div>
                   <div class="ph-dots" aria-hidden="true"></div>
@@ -869,7 +915,7 @@
                 <span class="panel-bgmark">P</span>
                 <div class="ph-stage">
                   <div class="phone-float">
-                    <img class="phone-mockup" src="assets/phone-papige.png" alt="PapiGEGamer.com en iPhone" draggable="false" />
+                    <img class="phone-mockup" src="assets/phone-papige.webp" loading="lazy" decoding="async" alt="PapiGEGamer.com en iPhone" draggable="false" />
                     <div class="ph-ground" aria-hidden="true"></div>
                   </div>
                   <div class="ph-dots" aria-hidden="true"></div>
@@ -970,7 +1016,7 @@
                 <span class="panel-bgmark">KOS</span>
                 <div class="ph-stage">
                   <div class="phone-float">
-                    <img class="phone-mockup" src="assets/phone-kernelos.png" alt="KernelOS en iPhone" draggable="false" />
+                    <img class="phone-mockup" src="assets/phone-kernelos.webp" loading="lazy" decoding="async" alt="KernelOS en iPhone" draggable="false" />
                     <div class="ph-ground" aria-hidden="true"></div>
                   </div>
                   <div class="ph-dots" aria-hidden="true"></div>
@@ -1141,7 +1187,10 @@
                     ><input
                       class="f-input"
                       id="name"
+                      name="name"
                       type="text"
+                      autocomplete="name"
+                      maxlength="100"
                       placeholder="Tu nombre"
                       required
                     />
@@ -1151,7 +1200,10 @@
                     ><input
                       class="f-input"
                       id="email"
+                      name="email"
                       type="email"
+                      autocomplete="email"
+                      maxlength="200"
                       placeholder="your@email.com"
                       required
                     />
@@ -1162,13 +1214,19 @@
                   ><textarea
                     class="f-textarea"
                     id="message"
+                    name="message"
+                    maxlength="4000"
                     placeholder="Cuéntame en qué puedo ayudarte…"
                     required
                   ></textarea>
                 </div>
+                <div class="hp-field" aria-hidden="true">
+                  <label for="website">No rellenes este campo</label>
+                  <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
+                </div>
                 <button type="submit" class="f-submit anim" data-cursor="SEND">
                   <span class="fs-t"
-                    >Abrir email
+                    >Preparar mensaje
                     <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
                       <path
                         d="M1 6.5h11M7.5 2l5 4.5-5 4.5"
@@ -1180,9 +1238,9 @@
                   ></span>
                 </button>
               </form>
-              <div id="form-ok">
-                <div class="ok-t">Email preparado ✦</div>
-                <div class="ok-s">Gracias por escribirme.</div>
+              <div id="form-ok" role="status" aria-live="polite">
+                <div class="ok-t">Mensaje preparado ✦</div>
+                <div class="ok-s">Se abrirá tu aplicación de correo para que revises y envíes el mensaje.</div>
               </div>
             </div>
           </div>
