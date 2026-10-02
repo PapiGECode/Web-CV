@@ -3,7 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "node scripts/build.mjs"
+    "check": "node --check js/app.js && node --check api/contact.js && node --check api/github-activity.js && node scripts/validate.mjs",
+    "build": "npm run check && node scripts/build.mjs"
   },
   "devDependencies": {
     "sharp": "0.34.3"
