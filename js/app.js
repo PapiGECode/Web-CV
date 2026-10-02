@@ -250,41 +250,106 @@
         /* mobile menu */
         var burger = document.getElementById("nav-burger"),
           ov = document.getElementById("nav-overlay"),
-          open = false;
+          open = false,
+          menuReturnFocus = null;
+
+        function menuFocusable() {
+          return Array.from(
+            ov.querySelectorAll(
+              'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+            ),
+          ).filter(function (el) {
+            return el.offsetParent !== null;
+          });
+        }
+
         function setBurger() {
-          var s = burger.querySelectorAll("span");
+          var lines = burger.querySelectorAll("span");
           if (open) {
-            s[0].style.transform = "rotate(45deg) translate(4px,5px)";
-            s[1].style.opacity = "0";
-            s[2].style.transform = "rotate(-45deg) translate(4px,-5px)";
+            lines[0].style.transform = "rotate(45deg) translate(4px,5px)";
+            lines[1].style.opacity = "0";
+            lines[2].style.transform = "rotate(-45deg) translate(4px,-5px)";
           } else {
-            s.forEach(function (x) {
+            lines.forEach(function (x) {
               x.style.transform = "";
               x.style.opacity = "";
             });
           }
         }
-        burger.addEventListener("click", function () {
-          open = !open;
+
+        function setMenuState(nextOpen, restoreFocus) {
+          open = Boolean(nextOpen);
           ov.classList.toggle("open", open);
           nav.classList.toggle("menu-open", open);
-          burger.setAttribute("aria-expanded", open);
+          ov.setAttribute("aria-hidden", open ? "false" : "true");
+          burger.setAttribute("aria-expanded", open ? "true" : "false");
+          burger.setAttribute("aria-label", open ? "Cerrar menú" : "Abrir menú");
           setBurger();
-          if (lenis) {
-            open ? lenis.stop() : lenis.start();
+
+          var mainEl = document.getElementById("main");
+          var footerEl = document.querySelector("footer");
+          [mainEl, footerEl].forEach(function (el) {
+            if (!el) return;
+            if (open) el.setAttribute("inert", "");
+            else el.removeAttribute("inert");
+          });
+
+          if (lenis) open ? lenis.stop() : lenis.start();
+
+          if (open) {
+            menuReturnFocus = document.activeElement;
+            requestAnimationFrame(function () {
+              var items = menuFocusable();
+              if (items[0]) items[0].focus();
+            });
+          } else if (restoreFocus !== false) {
+            var target =
+              menuReturnFocus && typeof menuReturnFocus.focus === "function"
+                ? menuReturnFocus
+                : burger;
+            requestAnimationFrame(function () {
+              target.focus();
+            });
           }
+        }
+
+        burger.addEventListener("click", function () {
+          setMenuState(!open);
         });
+
         ov.querySelectorAll("[data-close]").forEach(function (a) {
           a.addEventListener("click", function (e) {
             e.preventDefault();
-            open = false;
-            ov.classList.remove("open");
-            nav.classList.remove("menu-open");
-            burger.setAttribute("aria-expanded", false);
-            setBurger();
-            if (lenis) lenis.start();
-            goTo(a.getAttribute("href"));
+            var href = a.getAttribute("href");
+            setMenuState(false, false);
+            burger.focus();
+            goTo(href);
           });
+        });
+
+        document.addEventListener("keydown", function (e) {
+          if (!open) return;
+          if (e.key === "Escape") {
+            e.preventDefault();
+            setMenuState(false);
+            return;
+          }
+          if (e.key !== "Tab") return;
+          var items = menuFocusable();
+          if (!items.length) {
+            e.preventDefault();
+            burger.focus();
+            return;
+          }
+          var first = items[0],
+            last = items[items.length - 1];
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
         });
 
         /* ============ THEME TOGGLE ============ */
@@ -300,7 +365,7 @@
             );
             var fav = document.getElementById("favicon");
             if (fav) {
-              fav.href = light ? "assets/favicon-light.png" : "assets/favicon-dark.png";
+              fav.href = light ? "assets/favicon-light-32.png" : "assets/favicon-dark-32.png";
             }
           }
           sync();
@@ -1259,49 +1324,87 @@
         })();
 
         /* ============ CONTACT FORM ============ */
-        document
-          .getElementById("contact-form")
-          .addEventListener("submit", function (e) {
+        var contactForm = document.getElementById("contact-form");
+        if (contactForm) {
+          contactForm.addEventListener("submit", async function (e) {
             e.preventDefault();
             if (!this.checkValidity()) {
               this.reportValidity();
               return;
             }
-            var name = document.getElementById("name").value.trim();
-            var email = document.getElementById("email").value.trim();
-            var message = document.getElementById("message").value.trim();
-            var subject = encodeURIComponent("Contacto desde pabloschefer.com — " + name);
-            var body = encodeURIComponent("Nombre: " + name + "\nEmail: " + email + "\n\n" + message);
-            window.location.href = "mailto:pablopme50@gmail.com?subject=" + subject + "&body=" + body;
-            var btn = this.querySelector(".f-submit"),
-              t = btn.querySelector(".fs-t");
-            t.textContent = "Abriendo email…";
-            btn.style.opacity = ".7";
-            var self = this;
-            setTimeout(function () {
-              if (hasGSAP) {
-                gsap.to(self, {
-                  opacity: 0,
-                  y: -8,
-                  duration: 0.4,
-                  onComplete: done,
-                });
-              } else done();
-              function done() {
-                self.style.display = "none";
-                var ok = document.getElementById("form-ok");
-                ok.classList.add("show");
-                if (hasGSAP)
-                  gsap.from(ok, {
-                    opacity: 0,
-                    scale: 0.96,
-                    y: 10,
-                    duration: 0.5,
-                    ease: "back.out(1.5)",
-                  });
+
+            var btn = this.querySelector(".f-submit");
+            var label = btn.querySelector(".fs-t");
+            var status = document.getElementById("form-ok");
+            var originalLabel = label.innerHTML;
+            var payload = {
+              name: document.getElementById("name").value.trim(),
+              email: document.getElementById("email").value.trim(),
+              message: document.getElementById("message").value.trim(),
+              website: document.getElementById("website")
+                ? document.getElementById("website").value.trim()
+                : "",
+            };
+
+            btn.disabled = true;
+            btn.style.opacity = ".65";
+            label.textContent = "Preparando…";
+            if (status) {
+              status.classList.remove("show");
+              status.removeAttribute("data-error");
+            }
+
+            try {
+              var res = await fetch("/api/contact", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+              });
+              var data = await res.json().catch(function () {
+                return {};
+              });
+              if (!res.ok || !data.ok) {
+                throw new Error(data.error || "No se pudo preparar el mensaje.");
               }
-            }, 450);
+
+              if (status) {
+                var title = status.querySelector(".ok-t");
+                var sub = status.querySelector(".ok-s");
+                if (data.mode === "sent") {
+                  if (title) title.textContent = "Mensaje enviado ✦";
+                  if (sub) sub.textContent = "Gracias. Te responderé cuando pueda.";
+                  contactForm.reset();
+                } else {
+                  if (title) title.textContent = "Mensaje preparado ✦";
+                  if (sub)
+                    sub.textContent =
+                      "Revisa y envía el borrador desde tu aplicación de correo.";
+                }
+                status.classList.add("show");
+              }
+
+              if (data.mailto) {
+                window.location.href = data.mailto;
+              }
+            } catch (err) {
+              if (status) {
+                var titleErr = status.querySelector(".ok-t");
+                var subErr = status.querySelector(".ok-s");
+                if (titleErr) titleErr.textContent = "No se pudo preparar";
+                if (subErr)
+                  subErr.textContent =
+                    "Puedes escribirme directamente a pablopme50@gmail.com.";
+                status.setAttribute("data-error", "true");
+                status.classList.add("show");
+              }
+              console.error("Contact form:", err);
+            } finally {
+              btn.disabled = false;
+              btn.style.opacity = "";
+              label.innerHTML = originalLabel;
+            }
           });
+        }
 
         var SHOTS = {
           careergpt: [
@@ -1583,7 +1686,7 @@
               "Extensión avanzada para Discord con arquitectura modular de plugins y mejoras de UX",
             statusDot: "oss",
             statusText: "Open Source · En desarrollo activo",
-            heroVisual: "assets/phone-kicord.png",
+            heroVisual: "assets/phone-kicord.webp",
             heroAlt: "KiCord en iPhone",
             tint: "rgba(150, 170, 255, 0.12)",
             meta: [
@@ -1686,7 +1789,7 @@
             gallery: [
               {
                 type: "image",
-                src: "assets/phone-kicord.png",
+                src: "assets/phone-kicord.webp",
                 caption: "KiCord interfaz móvil y visualización conceptual",
                 label: "Mockup de Producto",
               },
@@ -1713,7 +1816,7 @@
               "Portfolio interactivo y telemetría de comunidades en tiempo real",
             statusDot: "live",
             statusText: "Activo · En Producción",
-            heroVisual: "assets/phone-papige.png",
+            heroVisual: "assets/phone-papige.webp",
             heroAlt: "PapiGEGamer.com en iPhone",
             tint: "rgba(150, 255, 190, 0.1)",
             meta: [
@@ -1820,7 +1923,7 @@
             gallery: [
               {
                 type: "image",
-                src: "assets/phone-papige.png",
+                src: "assets/phone-papige.webp",
                 caption: "PapiGEGamer.com vista móvil y experiencia interactiva",
                 label: "Mockup de Plataforma",
               },
@@ -1847,7 +1950,7 @@
               "Ecosistema de CustomOS para gaming de baja latencia y soporte masivo",
             statusDot: "live",
             statusText: "50.000+ usuarios activos · Escala masiva",
-            heroVisual: "assets/phone-kernelos.png",
+            heroVisual: "assets/phone-kernelos.webp",
             heroAlt: "KernelOS en iPhone",
             tint: "rgba(255, 180, 140, 0.1)",
             meta: [
@@ -1971,7 +2074,7 @@
             gallery: [
               {
                 type: "image",
-                src: "assets/phone-kernelos.png",
+                src: "assets/phone-kernelos.webp",
                 caption: "KernelOS visualización conceptual y alcance",
                 label: "Mockup de Comunidad",
               },
@@ -2273,6 +2376,19 @@
           );
         }
 
+        var lastCaseStudyTrigger = null;
+
+        function caseStudyFocusable() {
+          if (!csModal) return [];
+          return Array.from(
+            csModal.querySelectorAll(
+              'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+            ),
+          ).filter(function (el) {
+            return el.offsetParent !== null;
+          });
+        }
+
         function openCaseStudy(id, pushState) {
           if (!csModal) return;
           var data = CASE_STUDIES[id];
@@ -2288,6 +2404,9 @@
           document.body.style.overflow = "hidden";
 
           if (lenis) lenis.stop();
+          requestAnimationFrame(function () {
+            if (csBtnClose) csBtnClose.focus();
+          });
 
           if (pushState !== false) {
             try {
@@ -2315,6 +2434,15 @@
           document.body.style.overflow = "";
 
           if (lenis) lenis.start();
+          if (
+            lastCaseStudyTrigger &&
+            document.contains(lastCaseStudyTrigger) &&
+            typeof lastCaseStudyTrigger.focus === "function"
+          ) {
+            requestAnimationFrame(function () {
+              lastCaseStudyTrigger.focus();
+            });
+          }
 
           if (popState !== false && location.hash.indexOf("#case-study") === 0) {
             try {
@@ -2327,6 +2455,7 @@
           var openTrigger = e.target.closest("[data-open-case]");
           if (openTrigger) {
             e.preventDefault();
+            lastCaseStudyTrigger = openTrigger;
             var id = openTrigger.getAttribute("data-open-case");
             openCaseStudy(id);
             return;
@@ -2352,12 +2481,23 @@
         }
 
         addEventListener("keydown", function (e) {
-          if (
-            e.key === "Escape" &&
-            csModal &&
-            csModal.classList.contains("cs-open")
-          ) {
+          if (!csModal || !csModal.classList.contains("cs-open")) return;
+          if (e.key === "Escape") {
+            e.preventDefault();
             closeCaseStudy();
+            return;
+          }
+          if (e.key !== "Tab") return;
+          var items = caseStudyFocusable();
+          if (!items.length) return;
+          var first = items[0],
+            last = items[items.length - 1];
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
           }
         });
 
@@ -2392,7 +2532,7 @@
           },
           status: {
             text: "Disponible para colaborar",
-            updated: "Actualizado en tiempo real",
+            updated: "Actividad sincronizada automáticamente",
           },
           github: {
             username: "PapiGECode",
@@ -2454,98 +2594,30 @@
           if (ghMsg && cfg.github && cfg.github.fallback)
             ghMsg.textContent = cfg.github.fallback.msg;
 
-          // Live GitHub API fetch if enabled
+          // Live GitHub activity through a cached same-origin endpoint.
           if (cfg.github && cfg.github.fetchLive && cfg.github.username) {
             var endpoint =
-              "https://api.github.com/users/" +
-              encodeURIComponent(cfg.github.username) +
-              "/events/public";
+              "/api/github-activity?username=" +
+              encodeURIComponent(cfg.github.username);
 
-            fetch(endpoint, { cache: "no-cache" })
+            fetch(endpoint, { cache: "no-store" })
               .then(function (res) {
-                if (!res.ok) throw new Error("GitHub API status " + res.status);
+                if (!res.ok) throw new Error("GitHub activity status " + res.status);
                 return res.json();
               })
-              .then(function (events) {
-                if (!Array.isArray(events) || !events.length) return;
-
-                // Find latest PushEvent, ReleaseEvent, or CreateEvent
-                var relevantEvent =
-                  events.find(function (ev) {
-                    return (
-                      ev.type === "PushEvent" ||
-                      ev.type === "ReleaseEvent" ||
-                      ev.type === "CreateEvent"
-                    );
-                  }) || events[0];
-
-                if (!relevantEvent) return;
-
-                var repoName = relevantEvent.repo
-                  ? relevantEvent.repo.name
-                  : cfg.github.username;
-
-                var commitMsg = "";
-                if (
-                  relevantEvent.payload &&
-                  relevantEvent.payload.commits &&
-                  relevantEvent.payload.commits.length
-                ) {
-                  commitMsg =
-                    relevantEvent.payload.commits[
-                      relevantEvent.payload.commits.length - 1
-                    ].message;
-                } else if (
-                  relevantEvent.type === "ReleaseEvent" &&
-                  relevantEvent.payload.release
-                ) {
-                  commitMsg =
-                    "Release " +
-                    (relevantEvent.payload.release.name ||
-                      relevantEvent.payload.release.tag_name);
-                } else if (relevantEvent.type === "CreateEvent") {
-                  commitMsg =
-                    "Created " +
-                    (relevantEvent.payload.ref_type || "repository") +
-                    " " +
-                    (relevantEvent.payload.ref || "");
-                } else {
-                  commitMsg = "Actividad reciente en " + repoName;
-                }
-
-                // Format relative time
-                var timeAgo = "Reciente";
-                if (relevantEvent.created_at) {
-                  var diffSec = Math.floor(
-                    (Date.now() -
-                      new Date(relevantEvent.created_at).getTime()) /
-                      1000,
-                  );
-                  if (diffSec < 60) timeAgo = "Hace un momento";
-                  else if (diffSec < 3600)
-                    timeAgo = "Hace " + Math.floor(diffSec / 60) + " min";
-                  else if (diffSec < 86400)
-                    timeAgo = "Hace " + Math.floor(diffSec / 3600) + " h";
-                  else if (diffSec < 2592000)
-                    timeAgo = "Hace " + Math.floor(diffSec / 86400) + " d";
-                  else
-                    timeAgo = new Date(
-                      relevantEvent.created_at,
-                    ).toLocaleDateString("es-ES");
-                }
-
-                if (ghRepo) ghRepo.textContent = repoName;
-                if (ghTime) ghTime.textContent = timeAgo;
-                if (ghMsg) ghMsg.textContent = commitMsg.split("\n")[0];
-                if (ghLink) {
-                  ghLink.href = "https://github.com/" + repoName;
+              .then(function (data) {
+                if (!data || !data.ok) return;
+                if (ghRepo && data.repo) ghRepo.textContent = data.repo;
+                if (ghTime && data.time) ghTime.textContent = data.time;
+                if (ghMsg && data.message) ghMsg.textContent = data.message;
+                if (ghLink && data.url) {
+                  ghLink.href = data.url;
                   var ghSpan = ghLink.querySelector("span");
-                  if (ghSpan) ghSpan.textContent = "github.com/" + repoName;
+                  if (ghSpan) ghSpan.textContent = data.url.replace(/^https?:\/\//, "");
                 }
               })
               .catch(function (err) {
-                // Graceful fallback to preconfigured data
-                console.info("GitHub live telemetry fallback:", err.message);
+                console.info("GitHub activity fallback:", err.message);
               });
           }
         }
