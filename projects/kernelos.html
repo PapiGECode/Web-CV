@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>KernelOS — Caso de estudio · Pablo Schefer</title>
+  <meta name="description" content="Ecosistema de CustomOS para gaming de baja latencia con soporte técnico y operación comunitaria a gran escala." />
+  <link rel="canonical" href="https://www.pabloschefer.com/projects/kernelos" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="KernelOS — Caso de estudio" />
+  <meta property="og:description" content="Ecosistema de CustomOS para gaming de baja latencia con soporte técnico y operación comunitaria a gran escala." />
+  <meta property="og:url" content="https://www.pabloschefer.com/projects/kernelos" />
+  <meta property="og:image" content="https://www.pabloschefer.com/assets/preview-og.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="theme-color" content="#0c0c0d" />
+  <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    .project-page{max-width:1180px;margin:0 auto;padding:clamp(1.5rem,4vw,4rem);min-height:100vh}
+    .pp-nav{display:flex;justify-content:space-between;align-items:center;padding:1rem 0 4rem;font:500 .72rem/1 var(--font-mono);text-transform:uppercase;color:var(--ash)}
+    .pp-nav a:hover{color:var(--bone)}
+    .pp-hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(260px,.75fr);gap:clamp(2rem,7vw,7rem);align-items:center;padding-bottom:clamp(4rem,9vw,8rem);border-bottom:1px solid var(--line)}
+    .pp-kicker{font:500 .72rem/1 var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ash);margin-bottom:1rem}
+    .pp-title{font:800 clamp(4rem,12vw,9.5rem)/.82 var(--font-display);letter-spacing:-.06em;text-transform:uppercase}
+    .pp-tagline{max-width:52ch;font-size:clamp(1rem,2vw,1.25rem);color:var(--ash);margin:1.7rem 0}
+    .pp-status{display:inline-flex;align-items:center;gap:.55rem;border:1px solid var(--line-2);border-radius:999px;padding:.55rem .8rem;font:500 .68rem/1 var(--font-mono);text-transform:uppercase}
+    .pp-status::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--bone);box-shadow:0 0 0 4px rgba(236,232,225,.08)}
+    .pp-visual{display:grid;place-items:center;min-height:420px;border:1px solid var(--line);border-radius:24px;background:rgba(236,232,225,.025);overflow:hidden}
+    .pp-visual img{max-height:560px;width:auto;object-fit:contain;padding:1rem}
+    .pp-section{padding:clamp(3.5rem,8vw,7rem) 0;border-bottom:1px solid var(--line)}
+    .pp-label{font:500 .7rem/1 var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ash);margin-bottom:1.1rem}
+    .pp-section h2{font:700 clamp(2rem,5vw,4rem)/1 var(--font-display);letter-spacing:-.04em;text-transform:uppercase;max-width:16ch}
+    .pp-copy{font-size:clamp(1rem,1.6vw,1.18rem);color:var(--ash);max-width:72ch;margin-top:1.5rem}
+    .pp-two{display:grid;grid-template-columns:1fr 1fr;gap:clamp(2rem,5vw,5rem)}
+    .pp-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin-top:2.5rem}
+    .pp-card{border:1px solid var(--line);border-radius:16px;padding:1.4rem;background:rgba(236,232,225,.02)}
+    .pp-card h3{font:700 1.15rem/1.15 var(--font-display);margin-bottom:.7rem}
+    .pp-card p{color:var(--ash);font-size:.92rem}
+    .pp-stack{display:flex;flex-wrap:wrap;gap:.55rem;margin-top:1.6rem}
+    .pp-stack span{border:1px solid var(--line-2);border-radius:999px;padding:.55rem .8rem;font:500 .68rem/1 var(--font-mono);text-transform:uppercase;color:var(--ash)}
+    .pp-actions{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:2rem}
+    .pp-footer{padding:2rem 0;color:var(--ash);font:400 .68rem/1.5 var(--font-mono);display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+    @media(max-width:760px){.pp-hero,.pp-two{grid-template-columns:1fr}.pp-grid{grid-template-columns:1fr}.pp-visual{min-height:300px}.pp-nav{padding-bottom:2rem}}
+  </style>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"CreativeWork","name":"KernelOS","url":"https://www.pabloschefer.com/projects/kernelos","description":"Ecosistema de CustomOS para gaming de baja latencia con soporte técnico y operación comunitaria a gran escala.","creator":{"@type":"Person","name":"Pablo Schefer Orduña","url":"https://www.pabloschefer.com/"}}
+  </script>
+</head>
+<body>
+  <main class="project-page">
+    <nav class="pp-nav" aria-label="Migas de pan">
+      <a href="/">← Pablo Schefer</a>
+      <span>Proyecto / Comunidad & Producto</span>
+    </nav>
+    <header class="pp-hero">
+      <div>
+        <div class="pp-kicker">Comunidad & Producto</div>
+        <h1 class="pp-title">KernelOS</h1>
+        <p class="pp-tagline">Ecosistema de CustomOS para gaming de baja latencia con soporte técnico y operación comunitaria a gran escala.</p>
+        <div class="pp-status">Comunidad activa · Soporte técnico</div>
+        <div class="pp-actions">
+          <a class="btn btn-solid" href="https://kernelos.org/" target="_blank" rel="noopener"><span class="btn-t">Visitar KernelOS ↗</span></a>
+          <a class="btn btn-ghost" href="/#work"><span class="btn-t">Volver a proyectos</span></a>
+        </div>
+      </div>
+      <div class="pp-visual"><img src="/assets/phone-kernelos.webp" alt="KernelOS" loading="eager" decoding="async" /></div>
+    </header>
+    <section class="pp-section">
+      <div class="pp-label">Overview</div>
+      <h2>Qué es y por qué existe</h2>
+      <p class="pp-copy">KernelOS es un ecosistema orientado a sistemas Windows optimizados para gaming. Mi trabajo se centra en soporte técnico, triaje de incidencias, documentación y canalización de feedback de la comunidad.</p>
+    </section>
+    <section class="pp-section pp-two">
+      <div>
+        <div class="pp-label">Problema</div>
+        <h2>El reto</h2>
+        <p class="pp-copy">La diversidad de hardware y drivers hace que una optimización agresiva pueda generar incidencias muy distintas entre equipos. A escala comunitaria, el reto es detectar patrones y separar problemas aislados de fallos reproducibles.</p>
+      </div>
+      <div>
+        <div class="pp-label">Solución</div>
+        <h2>La respuesta</h2>
+        <p class="pp-copy">El flujo de soporte se apoya en triaje estructurado, análisis de síntomas, documentación y escalado de hallazgos relevantes para convertir incidencias repetidas en conocimiento reutilizable.</p>
+      </div>
+    </section>
+    <section class="pp-section">
+      <div class="pp-label">Implementación</div>
+      <h2>Puntos técnicos</h2>
+      <div class="pp-grid">
+        <article class="pp-card"><h3>Triaje técnico</h3><p>Clasificación de incidencias y priorización de casos reproducibles.</p></article>
+        <article class="pp-card"><h3>Diagnóstico</h3><p>Análisis de drivers, eventos y síntomas relacionados con latencia o estabilidad.</p></article>
+        <article class="pp-card"><h3>Documentación</h3><p>Guías de troubleshooting para reducir consultas repetitivas.</p></article>
+        <article class="pp-card"><h3>Feedback de producto</h3><p>Síntesis de problemas y necesidades recurrentes de la comunidad.</p></article>
+      </div>
+      <div class="pp-stack"><span>Windows</span><span>PowerShell</span><span>Troubleshooting</span><span>LatencyMon</span><span>Event Viewer</span><span>Discord</span><span>QA</span><span>Documentación</span></div>
+    </section>
+    <footer class="pp-footer">
+      <span>© 2026 Pablo Schefer Orduña</span>
+      <a href="mailto:pablopme50@gmail.com">pablopme50@gmail.com</a>
+    </footer>
+  </main>
+</body>
+</html>

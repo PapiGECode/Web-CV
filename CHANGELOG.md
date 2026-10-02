@@ -1,3 +1,14 @@
+## 2026-10-02 — Production overhaul
+
+- Split the monolithic HTML into cacheable CSS, application JS and vendor bundles.
+- Added Vercel build validation and Sharp-based image optimization.
+- Added serverless GitHub activity proxy with caching and fallback.
+- Corrected contact-form semantics and removed false “sent” confirmation.
+- Added SEO metadata, JSON-LD, sitemap, robots, manifest and Open Graph image generation.
+- Added accessibility fixes for keyboard navigation, focus traps and skip navigation.
+- Added security headers, custom 404 page and mobile motion reductions.
+- Replaced the original template README with project-specific documentation.
+
 # Changelog
 
 All notable changes to this project are documented here.
