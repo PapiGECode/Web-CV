@@ -4036,3 +4036,19 @@ html.light :focus-visible {
   .orb, .atmos, .grain, .marquee-track { animation: none !important; }
   .spot { display: none !important; }
 }
+
+.hp-field {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+}
+#form-ok[data-error="true"] .ok-t {
+  color: #e58d8d;
+}
+.f-submit:disabled {
+  cursor: wait;
+}
