@@ -4052,3 +4052,20 @@ html.light :focus-visible {
 .f-submit:disabled {
   cursor: wait;
 }
+
+.skip-link {
+  position: fixed;
+  left: 1rem;
+  top: 1rem;
+  z-index: 100000000;
+  transform: translateY(-180%);
+  padding: .7rem 1rem;
+  border-radius: 999px;
+  background: var(--bone);
+  color: var(--ink);
+  font: 500 .75rem/1 var(--font-mono);
+  transition: transform .2s var(--ease);
+}
+.skip-link:focus {
+  transform: translateY(0);
+}
