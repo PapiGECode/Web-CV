@@ -12,9 +12,29 @@ function validEmail(value) {
 }
 
 export default async function handler(req, res) {
+  res.setHeader("Cache-Control", "no-store");
+  res.setHeader("X-Robots-Tag", "noindex");
+
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
     return res.status(405).json({ ok: false, error: "Method not allowed" });
+  }
+
+  const contentLength = Number(req.headers["content-length"] || 0);
+  if (contentLength > 12000) {
+    return res.status(413).json({ ok: false, error: "Payload too large" });
+  }
+
+  const origin = req.headers.origin;
+  const host = req.headers.host;
+  if (origin && host) {
+    try {
+      if (new URL(origin).host !== host) {
+        return res.status(403).json({ ok: false, error: "Invalid origin" });
+      }
+    } catch {
+      return res.status(403).json({ ok: false, error: "Invalid origin" });
+    }
   }
 
   const body = req.body || {};
