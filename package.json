@@ -1,0 +1,11 @@
+{
+  "name": "pabloschefer-portfolio",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs"
+  },
+  "devDependencies": {
+    "sharp": "0.34.3"
+  }
+}
