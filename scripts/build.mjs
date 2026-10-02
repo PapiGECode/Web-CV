@@ -19,7 +19,7 @@ for (const file of [
 ]) {
   await fs.copyFile(src(file), out(file));
 }
-for (const dir of ["css", "js", "assets"]) {
+for (const dir of ["css", "js", "assets", "projects"]) {
   await fs.cp(src(dir), out(dir), { recursive: true });
 }
 
