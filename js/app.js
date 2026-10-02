@@ -2138,6 +2138,16 @@
             })
             .join("");
 
+          var routeSlug = data.id === "papige" ? "papigegamer" : data.id;
+          linksHtml +=
+            '<a href="/projects/' +
+            routeSlug +
+            '" class="btn btn-ghost" data-cursor="OPEN">' +
+            '<span class="btn-t">URL permanente' +
+            '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">' +
+            '<path d="M1 11L11 1M11 1H4M11 1V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>' +
+            "</svg></span></a>";
+
           var highlightsHtml = data.technicalHighlights
             .map(function (h) {
               return (
