@@ -1,3 +1,5 @@
+export const config = { runtime: "edge" };
+
 const DEFAULT_USER = "PapiGECode";
 
 function relativeTime(iso) {
