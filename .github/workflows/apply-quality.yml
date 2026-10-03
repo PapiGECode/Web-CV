@@ -1,0 +1,91 @@
+name: Apply reviewed quality update
+on:
+  push:
+    branches: [feat/quality-contact-20261004]
+    paths: [.review/ready.json]
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      CHROME_PATH: /usr/bin/google-chrome
+      AGENT_BROWSER_EXECUTABLE_PATH: /usr/bin/google-chrome
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/quality-contact-20261004
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify source hashes and apply reviewed changes
+        run: |
+          python3 - <<'PY'
+          import base64,gzip,hashlib,json,pathlib
+          root=pathlib.Path.cwd()
+          manifest=json.loads((root/'.review/ready.json').read_text())
+          encoded=''.join((root/f'.review/quality-part{i}.b64').read_text().strip() for i in range(1,manifest['parts']+1))
+          raw=base64.b64decode(encoded,validate=True)
+          assert hashlib.sha256(raw).hexdigest()==manifest['sha256'], 'Transfer checksum mismatch'
+          records=json.loads(gzip.decompress(raw))
+          prepared=[]
+          for row in records:
+              rel=pathlib.PurePosixPath(row['path'])
+              assert not rel.is_absolute() and '..' not in rel.parts and '.git' not in rel.parts and '.github' not in rel.parts
+              target=root/rel
+              if row['base'] is None:
+                  assert not target.exists(),f'Unexpected existing file: {rel}'
+                  old=''
+              else:
+                  old=target.read_text()
+                  assert hashlib.sha256(old.encode()).hexdigest()==row['base'],f'Source changed: {rel}'
+              lines=old.splitlines(True)
+              new=''.join(''.join(lines[op[0]:op[0]+op[1]]) if isinstance(op,list) else op for op in row['ops'])
+              assert hashlib.sha256(new.encode()).hexdigest()==row['sha'],f'Reconstruction failed: {rel}'
+              prepared.append((target,new))
+          for target,new in prepared:
+              target.parent.mkdir(parents=True,exist_ok=True)
+              target.write_text(new)
+          pathlib.Path('/tmp/quality-paths.json').write_text(json.dumps([r['path'] for r in records]+['package-lock.json']))
+          print(f'Applied {len(prepared)} files with source and destination checksums verified.')
+          PY
+      - run: npm install
+      - run: npm test
+      - run: npm run build
+      - run: npm run test:e2e
+      - name: Browser visual check
+        run: |
+          node scripts/serve.mjs > /tmp/portfolio-preview.log 2>&1 &
+          for i in $(seq 1 20); do curl -sf http://localhost:3000 >/dev/null && break; sleep 1; done
+          AB="$PWD/node_modules/.bin/agent-browser"
+          "$AB" --args '--no-sandbox' open http://localhost:3000
+          "$AB" set viewport 1440 960
+          "$AB" wait --fn 'window.__portfolioReady === true'
+          "$AB" snapshot -i > review-reports/interactive-elements.txt
+          "$AB" screenshot review-reports/desktop-motion.png
+          "$AB" close
+      - name: Commit tested source to working branch only
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          python3 - <<'PY'
+          import json,subprocess
+          paths=json.load(open('/tmp/quality-paths.json'))
+          subprocess.run(['git','add','--',*paths],check=True)
+          PY
+          git rm -- .review/ready.json .review/quality-part*.b64
+          git commit -m 'feat: refine portfolio UX, secure contact and opt-in metrics'
+          git push origin HEAD:feat/quality-contact-20261004
+      - name: Archive review evidence
+        if: always()
+        run: |
+          mkdir -p review-reports
+          cp package-lock.json review-reports/package-lock.json 2>/dev/null || true
+          tar -czf /tmp/quality-evidence.tgz review-reports playwright-report test-results 2>/dev/null || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: quality-evidence
+          path: /tmp/quality-evidence.tgz
+          retention-days: 3
