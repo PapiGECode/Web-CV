@@ -18,7 +18,7 @@ jobs:
           ref: feat/quality-contact-20261004
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '24'
       - name: Verify source hashes and apply reviewed changes
         run: |
           python3 - <<'PY'
@@ -53,7 +53,20 @@ jobs:
           pathlib.Path('/tmp/quality-paths.json').write_text(json.dumps([r['path'] for r in records]+['package-lock.json']))
           print(f'Applied {len(prepared)} files with source and destination checksums verified.')
           PY
+      - name: Align supported runtime and dependency versions
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          p=Path('package.json');data=json.loads(p.read_text());data['engines']['node']='24.x';data['devDependencies']['sharp']='0.35.5';p.write_text(json.dumps(data,indent=2)+'\n')
+          p=Path('.gitignore');p.write_text(p.read_text()+'\n# Commit the dependency lockfile for reproducible builds.\n!package-lock.json\n')
+          p=Path('README.md');p.write_text(p.read_text().replace('Node.js 22','Node.js 24').replace('Node 22','Node 24'))
+          PY
       - run: npm install
+      - name: Dependency audit
+        run: |
+          mkdir -p review-reports
+          npm audit --json > review-reports/dependency-audit.json || true
       - run: npm test
       - run: npm run build
       - name: Save validated source to isolated working branch
