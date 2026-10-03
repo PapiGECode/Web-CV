@@ -1,77 +1,44 @@
-# Pablo Schefer Orduña — Portfolio
+# Pablo Schefer — portfolio
 
-Portfolio personal de **Pablo Schefer Orduña**, publicado en **https://www.pabloschefer.com/**.
+Portfolio editorial en https://www.pabloschefer.com. HTML estático indexable, CSS y JavaScript progresivos, GSAP y funciones Edge pequeñas. La web conserva contenido, enlaces a proyectos, CV y contacto por email sin JavaScript.
 
-La web combina una interfaz editorial monocroma con animaciones GSAP/ScrollTrigger, Lenis, casos de estudio interactivos y una pequeña capa serverless en Vercel.
+## Desarrollo
 
-## Stack
-
-- HTML5 semántico
-- CSS modular
-- JavaScript vanilla
-- GSAP + ScrollTrigger + SplitText
-- Lenis
-- Vercel Functions
-- Sharp para optimización de imágenes durante el build
+Requiere Node.js 24. Ejecuta `npm ci`, `npm run build` y `npm run dev`. La vista previa está en http://localhost:3000. `npm test` comprueba los endpoints con transportes simulados; `npm run test:e2e` ejecuta Chromium/Playwright. En CI se usa Chrome instalado en el runner; localmente se puede instalar con `npx playwright install chromium`.
 
 ## Estructura
 
-```text
-index.html
-css/
-  styles.css
-js/
-  app.js
-  vendor/
-api/
-  contact.js
-  github-activity.js
-scripts/
-  build.mjs
-  validate.mjs
-assets/
-robots.txt
-sitemap.xml
-site.webmanifest
-vercel.json
-```
+- `index.html`: contenido principal y proyectos secundarios indexables.
+- `projects/*.html`: casos de estudio con URL, metadatos y navegación propios.
+- `css/quality.css`: refinamiento responsive, accesibilidad, formulario y preferencias.
+- `js/app.js`: interacción y animaciones de portada; `shared.js`: tema, preferencias y copiar.
+- `js/contact.js`: formulario independiente de las animaciones, validación y estados de envío.
+- `server/contact.js`: validación y entrega Resend; `api/contact.js`: adaptador Edge.
+- `api/github-activity.js`: actividad pública con caché y límite de tiempo.
+- `server/metrics.js`: receptor acotado y validado de medición opcional.
+- `scripts/build.mjs`: WebP responsive, fuentes locales, minificación y nombres con hash.
+- `tests/`: pruebas unitarias y de navegador. Ninguna prueba envía emails reales.
 
-## Desarrollo y build
+## Correo: configuración necesaria
 
-```bash
-npm install
-npm run check
-npm run build
-```
+El envío directo solo se habilita si el entorno tiene `RESEND_API_KEY` y `CONTACT_FROM`. El remitente debe pertenecer a un dominio verificado en Resend. Configura los valores en Vercel, nunca en archivos públicos. `GET /api/contact` informa únicamente de disponibilidad, sin exponer claves. Un proveedor configurado puede rechazar un remitente no verificado; solo la respuesta del proveedor con identificador se considera envío aceptado, no entrega garantizada al buzón.
 
-El build genera `dist/`, optimiza los recursos gráficos y crea variantes WebP/AVIF, favicons e imagen Open Graph.
+Sin credenciales la interfaz ofrece un **borrador explícito** para el correo del visitante y copiar mensaje; nunca simula envío. Si falla un envío directo se conserva el texto para reintentar. La clave de idempotencia permanece estable para el mismo intento y contenido.
 
-## Producción
+El destinatario está fijado en servidor. Hay validación de origen, contenido JSON acotado por bytes, honeypot, límites y tiempo máximo. El límite por instancia es de 5 intentos/10 minutos: **no es una garantía distribuida**. Para límites compartidos configura conjuntamente `UPSTASH_REDIS_REST_URL` y `UPSTASH_REDIS_REST_TOKEN`; un fallo de ese servicio configurado bloquea el envío. No se registran campos del formulario ni IP en los logs de la aplicación.
 
-El proyecto está conectado a Vercel. Los despliegues de producción sirven:
+## Medición y privacidad
 
-- HTML/CSS/JS separados y cacheables.
-- Imágenes optimizadas generadas durante el build.
-- Cabeceras de seguridad.
-- `robots.txt`, `sitemap.xml`, manifest y metadatos sociales.
-- Actividad pública de GitHub mediante `/api/github-activity`, con caché y fallback.
-- Formulario de contacto validado mediante `/api/contact`.
+La medición propia está apagada por defecto y requiere consentimiento en el pie de página. Respeta DNT/GPC. Captura con `web-vitals` LCP, INP, CLS y TTFB y cuatro eventos permitidos. No envía parámetros de URL, identificadores persistentes ni campos del formulario.
 
-El formulario utiliza un borrador `mailto:` como método de entrega mientras no exista un proveedor transaccional configurado en servidor. La interfaz no muestra un falso estado de “enviado”.
+`/api/metrics` valida tamaño, origen, campos y rangos. Registra exclusivamente eventos normalizados `portfolio_metric` en los logs de Vercel. **Esto no habilita los paneles comerciales Vercel Web Analytics/Speed Insights ni calcula visitantes únicos**. Esos productos requieren activar la función correspondiente en la cuenta. La conservación de datos depende de la configuración de logs del alojamiento. Consulta `/privacidad` para el comportamiento del sitio.
 
-## Accesibilidad
+## Producción y reversión
 
-- Respeta `prefers-reduced-motion`.
-- Navegación por teclado.
-- Focus trap y devolución de foco en menú móvil y casos de estudio.
-- Estados ARIA sincronizados.
-- Foco visible.
-- Menor carga de efectos en dispositivos táctiles.
+Vercel compila `dist/` y sirve las funciones `api/` desde el repositorio. El build contiene la revisión de Git en `meta[name="build-revision"]`. CSS, JS y fuentes con hash usan caché inmutable; HTML y recursos sin versión se revalidan. No cambies el dominio ni crees otro proyecto para desplegar esta web.
 
-## SEO
+El workflow `Portfolio quality` valida, compila y prueba antes de revisar/fusionar una PR. Las capturas y trazas se guardan como artifacts temporales, no en la web. Para revertir, utiliza un deployment anterior de Vercel o un commit de reversión revisado. Se conserva la rama `backup/pre-quality-20261004`.
 
-Incluye canonical, Open Graph, Twitter Cards, JSON-LD `Person`, sitemap, robots, manifest e imagen social 1200×630.
+## Licencias
 
-## Licencia
-
-Consulta [LICENSE](./LICENSE).
+Consulta `LICENSE`. Se conservan los avisos originales de GSAP/Lenis y las licencias de las fuentes autoalojadas. No atribuyas la autoría de esas dependencias al portfolio.

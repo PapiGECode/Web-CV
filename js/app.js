@@ -4,10 +4,11 @@
         var REDUCE = matchMedia("(prefers-reduced-motion: reduce)").matches;
         var FINE = matchMedia("(hover:hover) and (pointer:fine)").matches;
         var html = document.documentElement;
-        if (FINE) html.classList.add("fine");
-        if (!REDUCE) html.classList.add("fx");
+        
+        
 
-        var hasGSAP = typeof gsap !== "undefined";
+        var hasGSAP = typeof gsap !== "undefined" && typeof ScrollTrigger !== "undefined";
+        if (hasGSAP && !REDUCE) html.classList.add("fx");
         if (hasGSAP) {
           gsap.registerPlugin(ScrollTrigger);
         }
@@ -48,104 +49,15 @@
           }
         }
         window.goTo = function (sel) {
-          var el = document.querySelector(sel);
+          if (typeof sel !== 'string' || !/^#[a-z][a-z0-9_-]*$/i.test(sel)) return;
+          var el = document.getElementById(sel.slice(1));
           if (!el) return;
-          if (lenis) lenis.scrollTo(el, { offset: -10, duration: 1.2 });
-          else el.scrollIntoView({ behavior: REDUCE ? "auto" : "smooth" });
+          if (sel === '#main') { el.focus({ preventScroll: true }); el.scrollIntoView(); return; }
+          if (lenis) lenis.scrollTo(el, { offset: -96, duration: .85 });
+          else el.scrollIntoView({ behavior: REDUCE ? 'instant' : 'smooth' });
         };
 
-        /* ============ CURSOR (Premium custom, works everywhere) ============ */
-        var bindCursor = function () {};
-        if (FINE) {
-          var cd = document.getElementById("cur-dot"),
-            cr = document.getElementById("cur-ring"),
-            cl = document.getElementById("cur-label");
-          var cx = innerWidth / 2,
-            cy = innerHeight / 2,
-            rx = cx,
-            ry = cy;
-          var curVisible = false;
-
-          document.addEventListener("mouseleave", function () {
-            curVisible = false;
-            if (cd) cd.style.opacity = "0";
-            if (cr) cr.style.opacity = "0";
-            if (cl) cl.style.opacity = "0";
-          });
-
-          document.addEventListener("mouseenter", function () {
-            curVisible = true;
-            if (cd) cd.style.opacity = "1";
-            if (cr) cr.style.opacity = "1";
-          });
-
-          addEventListener(
-            "mousemove",
-            function (e) {
-              cx = e.clientX;
-              cy = e.clientY;
-              if (!curVisible) {
-                curVisible = true;
-                if (cd) cd.style.opacity = "1";
-                if (cr) cr.style.opacity = "1";
-              }
-              if (cd) {
-                cd.style.transform =
-                  "translate3d(" + cx + "px," + cy + "px,0) translate(-50%,-50%)";
-              }
-              if (cl) {
-                cl.style.transform =
-                  "translate3d(" + cx + "px," + cy + "px,0) translate(16px,16px)";
-              }
-            },
-            { passive: true },
-          );
-
-          (function ringLoop() {
-            rx += (cx - rx) * 0.18;
-            ry += (cy - ry) * 0.18;
-            if (cr) {
-              cr.style.transform =
-                "translate3d(" + rx + "px," + ry + "px,0) translate(-50%,-50%)";
-            }
-            requestAnimationFrame(ringLoop);
-          })();
-
-          /* Global event delegation: works on ALL sections, existing, new, and dynamically created */
-          var activeHoverEl = null;
-          var cursorSelector =
-            "a, button, [role='button'], .btn, .btn-case, .nav-cta, .nav-theme, .social, .metric-pill, .panel-visual, .cap-card, .cs-close-btn, .cs-back-btn, .cs-btn, .cs-next-card, [data-cursor], .cap-evidence-link";
-
-          document.addEventListener("mouseover", function (e) {
-            var target = e.target.closest(cursorSelector);
-            if (target) {
-              activeHoverEl = target;
-              var isMedia =
-                target.classList.contains("panel-visual") ||
-                target.classList.contains("proj-visual");
-              html.classList.add(isMedia ? "cur-media" : "cur-hot");
-              var lbl = target.getAttribute("data-cursor");
-              if (lbl && cl) {
-                cl.textContent = lbl;
-                cl.style.opacity = "1";
-              }
-            }
-          });
-
-          document.addEventListener("mouseout", function (e) {
-            if (
-              activeHoverEl &&
-              (!e.relatedTarget || !activeHoverEl.contains(e.relatedTarget))
-            ) {
-              html.classList.remove("cur-hot", "cur-media");
-              if (cl) cl.style.opacity = "0";
-              activeHoverEl = null;
-            }
-          });
-
-          bindCursor = function () {};
-        }
-
+        // Keep the native cursor; motion is enhancement, not navigation.
         /* ============ MAGNETIC BUTTONS / LINKS ============ */
         if (FINE && !REDUCE) {
           document
@@ -184,7 +96,7 @@
         }
 
         /* ============ SPOTLIGHT ============ */
-        if (!REDUCE) {
+        if (FINE && !REDUCE) {
           var spot = document.getElementById("spot");
           var hero = document.getElementById("hero");
           addEventListener(
@@ -213,15 +125,15 @@
         function onScroll() {
           var y = scrollY || pageYOffset;
           nav.classList.toggle("float", y > 40);
-          var max = document.documentElement.scrollHeight - innerHeight;
-          if (hasGSAP)
+          var max = Math.max(1, document.documentElement.scrollHeight - innerHeight);
+          if (progress && hasGSAP)
             gsap.to(progress, {
               scaleX: y / max,
               duration: 0.2,
               ease: "none",
               transformOrigin: "left",
             });
-          else progress.style.width = (y / max) * 100 + "%";
+          else if (progress) progress.style.width = (y / max) * 100 + "%";
           var cur = "";
           sections.forEach(function (s) {
             if (y >= s.offsetTop - 200) cur = s.id;
@@ -243,611 +155,77 @@
             if (a.getAttribute("onclick")) return;
             a.addEventListener("click", function (e) {
               e.preventDefault();
+              if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
               goTo(a.getAttribute("href"));
             });
           });
 
-        /* mobile menu */
-        var burger = document.getElementById("nav-burger"),
-          ov = document.getElementById("nav-overlay"),
-          open = false,
-          menuReturnFocus = null;
-
-        function menuFocusable() {
-          return Array.from(
-            ov.querySelectorAll(
-              'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
-            ),
-          ).filter(function (el) {
-            return el.offsetParent !== null;
-          });
+        /* Mobile navigation: trap focus and lock native scrolling as well as Lenis. */
+        var burger = document.getElementById('nav-burger');
+        var ov = document.getElementById('nav-overlay');
+        var open = false;
+        function menuItems() {
+          return Array.from(document.querySelectorAll('#nav .nav-actions a, #nav .nav-actions button, #nav-overlay a'))
+            .filter(function (el) { return el.getClientRects().length && getComputedStyle(el).visibility !== 'hidden'; });
         }
-
-        function setBurger() {
-          var lines = burger.querySelectorAll("span");
-          if (open) {
-            lines[0].style.transform = "rotate(45deg) translate(4px,5px)";
-            lines[1].style.opacity = "0";
-            lines[2].style.transform = "rotate(-45deg) translate(4px,-5px)";
-          } else {
-            lines.forEach(function (x) {
-              x.style.transform = "";
-              x.style.opacity = "";
-            });
-          }
-        }
-
         function setMenuState(nextOpen, restoreFocus) {
           open = Boolean(nextOpen);
-          ov.classList.toggle("open", open);
-          nav.classList.toggle("menu-open", open);
-          ov.setAttribute("aria-hidden", open ? "false" : "true");
-          burger.setAttribute("aria-expanded", open ? "true" : "false");
-          burger.setAttribute("aria-label", open ? "Cerrar menú" : "Abrir menú");
-          setBurger();
-
-          var mainEl = document.getElementById("main");
-          var footerEl = document.querySelector("footer");
-          [mainEl, footerEl].forEach(function (el) {
-            if (!el) return;
-            if (open) el.setAttribute("inert", "");
-            else el.removeAttribute("inert");
-          });
-
+          ov.classList.toggle('open', open);
+          nav.classList.toggle('menu-open', open);
+          ov.setAttribute('aria-hidden', String(!open));
+          ov.inert = !open;
+          burger.setAttribute('aria-expanded', String(open));
+          burger.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+          document.documentElement.classList.toggle('menu-locked', open);
+          document.getElementById('main').inert = open;
+          document.querySelector('footer').inert = open;
           if (lenis) open ? lenis.stop() : lenis.start();
-
-          if (open) {
-            menuReturnFocus = document.activeElement;
-            requestAnimationFrame(function () {
-              var items = menuFocusable();
-              if (items[0]) items[0].focus();
-            });
-          } else if (restoreFocus !== false) {
-            var target =
-              menuReturnFocus && typeof menuReturnFocus.focus === "function"
-                ? menuReturnFocus
-                : burger;
-            requestAnimationFrame(function () {
-              target.focus();
-            });
-          }
+          if (open) ov.querySelector('a').focus({ preventScroll: true });
+          else if (restoreFocus !== false) burger.focus({ preventScroll: true });
         }
-
-        burger.addEventListener("click", function () {
-          setMenuState(!open);
-        });
-
-        ov.querySelectorAll("[data-close]").forEach(function (a) {
-          a.addEventListener("click", function (e) {
-            e.preventDefault();
-            var href = a.getAttribute("href");
-            setMenuState(false, false);
-            burger.focus();
-            goTo(href);
+        ov.inert = true;
+        burger.addEventListener('click', function () { setMenuState(!open); });
+        document.querySelectorAll('#nav-overlay [data-close], #nav a[href^="#"]').forEach(function(a) {
+          a.addEventListener('click', function(e) {
+            if (!open || e.ctrlKey || e.metaKey) return;
+            e.preventDefault(); setMenuState(false, false); burger.focus({ preventScroll: true });
+            goTo(a.getAttribute('href'));
           });
         });
-
-        document.addEventListener("keydown", function (e) {
+        document.addEventListener('keydown', function(e) {
           if (!open) return;
-          if (e.key === "Escape") {
-            e.preventDefault();
-            setMenuState(false);
-            return;
-          }
-          if (e.key !== "Tab") return;
-          var items = menuFocusable();
-          if (!items.length) {
-            e.preventDefault();
-            burger.focus();
-            return;
-          }
-          var first = items[0],
-            last = items[items.length - 1];
-          if (e.shiftKey && document.activeElement === first) {
-            e.preventDefault();
-            last.focus();
-          } else if (!e.shiftKey && document.activeElement === last) {
-            e.preventDefault();
-            first.focus();
+          if (e.key === 'Escape') { e.preventDefault(); setMenuState(false); return; }
+          if (e.key !== 'Tab') return;
+          var items = menuItems(), i = items.indexOf(document.activeElement);
+          if ((e.shiftKey && i <= 0) || (!e.shiftKey && i === items.length - 1) || i < 0) {
+            e.preventDefault(); items[e.shiftKey ? items.length - 1 : 0].focus();
           }
         });
-
-        /* ============ THEME TOGGLE ============ */
-        (function () {
-          var tt = document.getElementById("theme-toggle");
-          if (!tt) return;
-          function sync() {
-            var light = html.classList.contains("light");
-            tt.setAttribute("aria-pressed", light);
-            tt.setAttribute(
-              "aria-label",
-              light ? "Cambiar a modo oscuro" : "Cambiar a modo claro",
-            );
-            var fav = document.getElementById("favicon");
-            if (fav) {
-              fav.href = light ? "assets/favicon-light-32.png" : "assets/favicon-dark-32.png";
-            }
-          }
-          sync();
-          tt.addEventListener("click", function () {
-            html.classList.add("theming");
-            var light = html.classList.toggle("light");
-            try {
-              localStorage.setItem("ps-theme", light ? "light" : "dark");
-            } catch (e) {}
-            sync();
-            setTimeout(function () {
-              html.classList.remove("theming");
-            }, 560);
-          });
-        })();
+        addEventListener('resize', function() {
+          if (open && matchMedia('(min-width: 881px)').matches) setMenuState(false, false);
+        });
 
         /* ============ LOADER + HERO REVEAL ============ */
         function revealHero() {
-          if (!hasGSAP) {
-            document.querySelectorAll(".anim").forEach(function (e) {
-              e.style.opacity = "1";
-            });
-            return;
-          }
-          var tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-          // SplitText name reveal
-          if (typeof SplitText !== "undefined") {
-            var sp = new SplitText(".hero-line > span", {
-              type: "chars",
-              charsClass: "char",
-            });
-            gsap.set(sp.chars, {
-              yPercent: 120,
-              opacity: 0,
-              filter: "blur(12px)",
-            });
-            tl.to(
-              sp.chars,
-              {
-                yPercent: 0,
-                opacity: 1,
-                filter: "blur(0px)",
-                duration: 1,
-                stagger: 0.035,
-              },
-              0,
-            );
-          } else {
-            tl.from(
-              ".hero-line > span",
-              { yPercent: 120, opacity: 0, duration: 1, stagger: 0.1 },
-              0,
-            );
-          }
-          tl.to(".hero-sub", { opacity: 1, y: 0, duration: 0.8 }, 0.5)
-            .to(".hero-actions", { opacity: 1, y: 0, duration: 0.8 }, 0.65)
-            .to(
-              ".hero-top .mono,.hero-eyebrow",
-              { opacity: 1, y: 0, duration: 0.7, stagger: 0.05 },
-              0.4,
-            );
-          gsap.set(".hero-sub,.hero-actions", { y: 18 });
-          gsap.set(".hero-top .mono,.hero-eyebrow", { y: -8 });
+          // The name and primary actions are visible immediately, even with no JS.
+          document.querySelectorAll('#hero .anim').forEach(function(el) { el.style.opacity = '1'; });
+          if (hasGSAP && !REDUCE) gsap.fromTo('.hero-kicker', { y: 8 }, { y: 0, duration: .45 });
         }
 
         /* ========================================================
            SECONDARY PROJECTS (Bento Box - Configurable in one place)
            ======================================================== */
-        window.SECONDARY_PROJECTS = [
-          {
-            id: "kicord-doom-plugin",
-            index: "04",
-            name: "KiCord-DOOM-Plugin",
-            badgeType: "Plugin Open Source",
-            status: { label: "Activo", type: "active" },
-            colSpan: 2,
-            category: "plugin",
-            description:
-              "Adaptación y plugin funcional en TypeScript que lleva el clásico DOOM al entorno de KiCord, demostrando la extensibilidad modular de su motor de plugins y una integración de bajo nivel en el cliente.",
-            language: { name: "TypeScript", color: "#3178c6" },
-            technologies: [
-              "TypeScript",
-              "DOOM Wasm",
-              "Discord Client",
-              "Plugin Architecture",
-            ],
-            githubUrl: "https://github.com/PapiGECode/KiCord-DOOM-Plugin",
-            webUrl: null,
-            stars: 1,
-            updatedAt: "Ago 2026",
-          },
-          {
-            id: "duolingo-streak-keeper",
-            index: "05",
-            name: "duolingo-streak-keeper",
-            badgeType: "Automatización",
-            status: { label: "Mantenido", type: "maintained" },
-            colSpan: 1,
-            category: "automation",
-            description:
-              "Script de automatización en TypeScript para la monitorización e interacción periódica programada, resolviendo la retención de rachas de forma desatendida y fiable.",
-            language: { name: "TypeScript", color: "#3178c6" },
-            technologies: [
-              "TypeScript",
-              "Node.js",
-              "Cron Tasks",
-              "API Client",
-            ],
-            githubUrl: "https://github.com/PapiGECode/duolingo-streak-keeper",
-            webUrl: null,
-            stars: 1,
-            updatedAt: "Sep 2026",
-          },
-          {
-            id: "fnlb-comunidades",
-            index: "06",
-            name: "FNLB & Comunidades Tech",
-            badgeType: "Gestión & Operaciones",
-            status: { label: "Activo", type: "active" },
-            colSpan: 1,
-            category: "community",
-            description:
-              "Moderación y colaboración de producto en FNLB, junto a participación activa y soporte técnico en comunidades de Nate Gentile, Edgar Pons y ThiagoIUTU a gran escala.",
-            language: { name: "Community Ops", color: "#10b981" },
-            technologies: [
-              "Moderación",
-              "Gestión de Producto",
-              "Discord Ops",
-              "Resolución Técnica",
-            ],
-            githubUrl: "https://github.com/PapiGECode",
-            webUrl: null,
-            stars: null,
-            updatedAt: "Actualidad",
-          },
-          {
-            id: "thiagoiutu-portfolio",
-            index: "07",
-            name: "thiagoiutu-portfolio",
-            badgeType: "Colaboración Web",
-            status: { label: "Completado", type: "completed" },
-            colSpan: 1,
-            category: "web",
-            description:
-              "Colaboración técnica y desarrollo frontend para el portfolio del creador ThiagoIUTU, enfocado en rendimiento web, maquetación responsive limpia y arquitectura visual atractiva.",
-            language: { name: "HTML / JS", color: "#e34c26" },
-            technologies: [
-              "HTML5",
-              "CSS Grid",
-              "JavaScript",
-              "Responsive UI",
-            ],
-            githubUrl: "https://github.com/PapiGECode/thiagoiutu-portfolio",
-            webUrl: null,
-            stars: 1,
-            updatedAt: "Sep 2026",
-          },
-          {
-            id: "github-achievements-lab",
-            index: "08",
-            name: "github-achievements-lab",
-            badgeType: "Research & CI/CD",
-            status: { label: "Laboratorio", type: "lab" },
-            colSpan: 1,
-            category: "lab",
-            description:
-              "Entorno de pruebas y laboratorio técnico para validar flujos colaborativos en GitHub: pull requests, resolución de issues, trazabilidad técnica y automatizaciones CI/CD.",
-            language: { name: "Git / CI", color: "#8957e5" },
-            technologies: [
-              "Git Workflows",
-              "CI/CD",
-              "PRs & Issues",
-              "Code Review",
-            ],
-            githubUrl: "https://github.com/PapiGECode/github-achievements-lab",
-            webUrl: null,
-            stars: 0,
-            updatedAt: "Sep 2026",
-          },
-          {
-            id: "project-vi-technical-archive",
-            index: "09",
-            name: "project-vi-technical-archive",
-            badgeType: "Investigación C++",
-            status: { label: "Archivo", type: "archive" },
-            colSpan: 2,
-            category: "systems",
-            description:
-              "Archivo y análisis técnico en C++ estructurado para la exploración de pipelines, ingeniería de sistemas y compilación orientada a rendimiento en arquitecturas de software complejas.",
-            language: { name: "C++", color: "#f34b7d" },
-            technologies: [
-              "C++",
-              "Sistemas",
-              "Low-level Analysis",
-              "Engine Tech",
-            ],
-            githubUrl:
-              "https://github.com/PapiGECode/project-vi-technical-archive",
-            webUrl: "https://www.rockstargames.com/VI",
-            stars: 1,
-            updatedAt: "Ago 2026",
-          },
-          {
-            id: "github-ecosystem",
-            index: "+",
-            name: "Ecosistema GitHub",
-            badgeType: "Código Abierto",
-            status: { label: "Público", type: "active" },
-            colSpan: 1,
-            category: "hub",
-            description:
-              "Explora el perfil completo de GitHub con todos los repositorios públicos, forks, contribuciones y actividad técnica de código abierto continua.",
-            language: { name: "GitHub Hub", color: "#38bdf8" },
-            technologies: [
-              "Open Source",
-              "Git",
-              "Commits",
-              "Developer Program",
-            ],
-            githubUrl: "https://github.com/PapiGECode?tab=repositories",
-            webUrl: null,
-            stars: "9 repos",
-            updatedAt: "Continuo",
-          },
-        ];
-
-        function renderSecondaryProjects() {
-          var container = document.getElementById("bento-projects-grid");
-          if (
-            !container ||
-            !window.SECONDARY_PROJECTS ||
-            !window.SECONDARY_PROJECTS.length
-          )
-            return;
-
-          var categoryIcons = {
-            plugin:
-              '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2"></rect><path d="M6 12h4m-2-2v4m10-2h.01m-3-1h.01"></path></svg>',
-            automation:
-              '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>',
-            community:
-              '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>',
-            web:
-              '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>',
-            lab:
-              '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"></path><path d="M8.5 2h7"></path><path d="M7 16h10"></path></svg>',
-            systems:
-              '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line></svg>',
-            hub:
-              '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>',
-          };
-
-          var githubIconSvg =
-            '<svg viewBox="0 0 16 16" width="13" height="13" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>';
-          var externalLinkSvg =
-            '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>';
-          var starIconSvg =
-            '<svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor" aria-hidden="true"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.75.75 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25z"></path></svg>';
-
-          var cardsHtml = window.SECONDARY_PROJECTS.map(function (item) {
-            var colClass = item.colSpan === 2 ? "bento-col-2" : "bento-col-1";
-            var icon = categoryIcons[item.category] || categoryIcons.plugin;
-            var statusClass =
-              "status-" +
-              (item.status && item.status.type ? item.status.type : "active");
-            var statusLabel =
-              item.status && item.status.label ? item.status.label : "Activo";
-
-            var tagsHtml = (item.technologies || [])
-              .map(function (t) {
-                return '<span class="bento-tag">' + t + "</span>";
-              })
-              .join("");
-
-            var starsHtml = "";
-            if (item.stars !== null && item.stars !== undefined) {
-              starsHtml =
-                '<div class="bento-stars" title="Stars en GitHub" aria-label="' +
-                item.stars +
-                '">' +
-                starIconSvg +
-                "<span>" +
-                item.stars +
-                "</span>" +
-                "</div>";
-            }
-
-            var webBtnHtml = "";
-            if (item.webUrl) {
-              webBtnHtml =
-                '<a href="' +
-                item.webUrl +
-                '" target="_blank" rel="noopener" class="bento-btn-link secondary" aria-label="Visitar web oficial de ' +
-                item.name +
-                '" data-cursor="VISIT">' +
-                externalLinkSvg +
-                "<span>Web</span>" +
-                "</a>";
-            }
-
-            var ghBtnHtml = "";
-            if (item.githubUrl) {
-              var ghText = item.category === "hub" ? "Explorar" : "Código";
-              ghBtnHtml =
-                '<a href="' +
-                item.githubUrl +
-                '" target="_blank" rel="noopener" class="bento-btn-link" aria-label="Ver ' +
-                item.name +
-                ' en GitHub" data-cursor="GITHUB">' +
-                githubIconSvg +
-                "<span>" +
-                ghText +
-                "</span>" +
-                "</a>";
-            }
-
-            return (
-              '<article class="bento-card ' +
-              colClass +
-              '" data-cursor="PROJECT">' +
-              '<div class="bento-border-glow" aria-hidden="true"></div>' +
-              '<div class="bento-card-inner">' +
-              '<div class="bento-top">' +
-              '<div class="bento-meta-left">' +
-              '<span class="bento-num">' +
-              item.index +
-              "</span>" +
-              '<span class="bento-type-badge">' +
-              item.badgeType +
-              "</span>" +
-              "</div>" +
-              '<div class="bento-status-badge ' +
-              statusClass +
-              '">' +
-              '<span class="bento-status-dot" aria-hidden="true"></span>' +
-              "<span>" +
-              statusLabel +
-              "</span>" +
-              "</div>" +
-              "</div>" +
-              '<div class="bento-heading-row">' +
-              '<div class="bento-icon-box" aria-hidden="true">' +
-              icon +
-              "</div>" +
-              '<div class="bento-title-group">' +
-              '<h4 class="bento-card-title">' +
-              item.name +
-              "</h4>" +
-              '<span class="bento-updated">Actualizado: ' +
-              item.updatedAt +
-              "</span>" +
-              "</div>" +
-              "</div>" +
-              '<p class="bento-desc">' +
-              item.description +
-              "</p>" +
-              '<div class="bento-footer">' +
-              '<div class="bento-specs-row">' +
-              '<div class="bento-lang">' +
-              '<span class="bento-lang-dot" style="background-color: ' +
-              item.language.color +
-              ';" aria-hidden="true"></span>' +
-              "<span>" +
-              item.language.name +
-              "</span>" +
-              "</div>" +
-              starsHtml +
-              "</div>" +
-              '<div class="bento-tags">' +
-              tagsHtml +
-              "</div>" +
-              '<div class="bento-actions">' +
-              webBtnHtml +
-              ghBtnHtml +
-              "</div>" +
-              "</div>" +
-              "</div>" +
-              "</article>"
-            );
-          }).join("");
-
-          container.innerHTML = cardsHtml;
-
-          // Wire mouse tracking on newly rendered cards
-          container.querySelectorAll(".bento-card").forEach(function (card) {
-            card.addEventListener("mousemove", function (e) {
-              var r = card.getBoundingClientRect();
-              card.style.setProperty("--mouse-x", e.clientX - r.left + "px");
-              card.style.setProperty("--mouse-y", e.clientY - r.top + "px");
-            });
-          });
-        }
-
         function startReveals() {
-          renderSecondaryProjects();
+
           revealHero();
           buildScroll();
         }
 
-        var loader = document.getElementById("loader");
-        function killLoader(instant) {
-          if (loader.dataset.done) return;
-          loader.dataset.done = "1";
-          if (!hasGSAP || instant) {
-            loader.style.display = "none";
-            startReveals();
-            return;
-          }
-          gsap
-            .timeline({
-              onComplete: function () {
-                loader.style.display = "none";
-              },
-            })
-            .to(
-              "#loader .l-mark,#loader .l-bar,#loader .l-num,#loader .l-skip",
-              {
-                opacity: 0,
-                y: -10,
-                duration: 0.4,
-                ease: "power2.in",
-                stagger: 0.03,
-              },
-            )
-            .to(
-              loader,
-              {
-                yPercent: -100,
-                duration: 0.9,
-                ease: "power4.inOut",
-                onStart: startReveals,
-              },
-              "-=.05",
-            );
-        }
-
-        if (REDUCE || !hasGSAP) {
-          killLoader(true);
-        } else {
-          gsap.set("#loader .l-inner", { y: 0 });
-          var lt = gsap.timeline();
-          lt.fromTo(
-            "#loader .l-mark",
-            { opacity: 0, y: 14, filter: "blur(8px)" },
-            {
-              opacity: 1,
-              y: 0,
-              filter: "blur(0px)",
-              duration: 0.7,
-              ease: "power3.out",
-            },
-          ).to(
-            "#loader .l-glow",
-            { opacity: 1, duration: 1.2, ease: "power2.out" },
-            "-=.3",
-          );
-          var prog = { v: 0 };
-          lt.to(
-            prog,
-            {
-              v: 100,
-              duration: 1.5,
-              ease: "power1.inOut",
-              onUpdate: function () {
-                var n = Math.round(prog.v);
-                document.querySelector("#loader .l-num").textContent = String(
-                  n,
-                ).padStart(3, "0");
-                document.querySelector("#loader .l-bar i").style.width =
-                  n + "%";
-              },
-            },
-            "-=.9",
-          );
-          lt.add(function () {
-            killLoader(false);
-          });
-          loader.addEventListener("click", function () {
-            lt.kill();
-            killLoader(false);
-          });
-        }
+        var loader = document.getElementById('loader');
+        if (loader) loader.remove();
+        // No artificial loading counter. Layout stabilizes after the critical font or a short bound.
+        Promise.race([document.fonts ? document.fonts.ready : Promise.resolve(), new Promise(function(r) { setTimeout(r, 350); })])
+          .then(function() { startReveals(); window.__portfolioReady = true; });
 
         /* ============ SCROLL-DRIVEN STORY ============ */
         function buildScroll() {
@@ -1323,185 +701,7 @@
           }, 3200);
         })();
 
-        /* ============ CONTACT FORM ============ */
-        var contactForm = document.getElementById("contact-form");
-        if (contactForm) {
-          contactForm.addEventListener("submit", async function (e) {
-            e.preventDefault();
-            if (!this.checkValidity()) {
-              this.reportValidity();
-              return;
-            }
-
-            var btn = this.querySelector(".f-submit");
-            var label = btn.querySelector(".fs-t");
-            var status = document.getElementById("form-ok");
-            var originalLabel = label.innerHTML;
-            var payload = {
-              name: document.getElementById("name").value.trim(),
-              email: document.getElementById("email").value.trim(),
-              message: document.getElementById("message").value.trim(),
-              website: document.getElementById("website")
-                ? document.getElementById("website").value.trim()
-                : "",
-            };
-
-            btn.disabled = true;
-            btn.style.opacity = ".65";
-            label.textContent = "Preparando…";
-            if (status) {
-              status.classList.remove("show");
-              status.removeAttribute("data-error");
-            }
-
-            try {
-              var res = await fetch("/api/contact", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload),
-              });
-              var data = await res.json().catch(function () {
-                return {};
-              });
-              if (!res.ok || !data.ok) {
-                throw new Error(data.error || "No se pudo preparar el mensaje.");
-              }
-
-              if (status) {
-                var title = status.querySelector(".ok-t");
-                var sub = status.querySelector(".ok-s");
-                if (data.mode === "sent") {
-                  if (title) title.textContent = "Mensaje enviado ✦";
-                  if (sub) sub.textContent = "Gracias. Te responderé cuando pueda.";
-                  contactForm.reset();
-                } else {
-                  if (title) title.textContent = "Mensaje preparado ✦";
-                  if (sub)
-                    sub.textContent =
-                      "Revisa y envía el borrador desde tu aplicación de correo.";
-                }
-                status.classList.add("show");
-              }
-
-              if (data.mailto) {
-                window.location.href = data.mailto;
-              }
-            } catch (err) {
-              if (status) {
-                var titleErr = status.querySelector(".ok-t");
-                var subErr = status.querySelector(".ok-s");
-                if (titleErr) titleErr.textContent = "No se pudo preparar";
-                if (subErr)
-                  subErr.textContent =
-                    "Puedes escribirme directamente a pablopme50@gmail.com.";
-                status.setAttribute("data-error", "true");
-                status.classList.add("show");
-              }
-              console.error("Contact form:", err);
-            } finally {
-              btn.disabled = false;
-              btn.style.opacity = "";
-              label.innerHTML = originalLabel;
-            }
-          });
-        }
-
-        var SHOTS = {
-          careergpt: [
-            "https://res.cloudinary.com/dfd2kp7s5/image/upload/v1782973143/1_rw2yje.png",
-            "https://res.cloudinary.com/dfd2kp7s5/image/upload/v1782973144/3_legmnj.png",
-            "https://res.cloudinary.com/dfd2kp7s5/image/upload/v1782973143/2_dallfn.png",
-            "https://res.cloudinary.com/dfd2kp7s5/image/upload/v1782973143/6_gyvp6d.png",
-            "https://res.cloudinary.com/dfd2kp7s5/image/upload/v1782973143/4_oxq7vl.png",
-            "https://res.cloudinary.com/dfd2kp7s5/image/upload/v1782973146/9_xs1icw.png",
-            "https://res.cloudinary.com/dfd2kp7s5/image/upload/v1782973143/5_xksmwm.png",
-            "https://res.cloudinary.com/dfd2kp7s5/image/upload/v1782973146/9_xs1icw.png",
-            "https://res.cloudinary.com/dfd2kp7s5/image/upload/v1782973147/10_ebvyma.png",
-          ],
-          simul: [
-            "https://res.cloudinary.com/dfd2kp7s5/image/upload/v1783853542/chrome_ZM1e5oNyMR_czlrgt.png",
-            "https://res.cloudinary.com/dfd2kp7s5/image/upload/v1783853541/chrome_AwHGP1909S_gjefco.png",
-            "https://res.cloudinary.com/dfd2kp7s5/image/upload/v1783853541/chrome_j32CX6cZca_kououo.png",
-          ],
-          f1vision: [
-            "https://res.cloudinary.com/dfd2kp7s5/image/upload/v1785107389/f1_vision_wmMGzfeXkz_vb599s.png",
-            "https://res.cloudinary.com/dfd2kp7s5/image/upload/v1785107389/f1_vision_cHAJMejlkO_bvyvtx.png",
-            "https://res.cloudinary.com/dfd2kp7s5/image/upload/v1785107388/f1_vision_aLX2csGVee_lnyhyg.png",
-            "https://res.cloudinary.com/dfd2kp7s5/image/upload/v1785107388/f1_vision_MlM7ESAeEL_lcyl6a.png",
-            "https://res.cloudinary.com/dfd2kp7s5/image/upload/v1785107388/f1_vision_Jh4OB93a9G_s1zz2t.png",
-            "https://res.cloudinary.com/dfd2kp7s5/image/upload/v1785107388/f1_vision_iSo93niUZj_ae5pam.png",
-            "https://res.cloudinary.com/dfd2kp7s5/image/upload/v1785107388/f1_vision_vVwb4jiAJi_tix9lx.png",
-            "https://res.cloudinary.com/dfd2kp7s5/image/upload/v1785107388/f1_vision_veFebSDnfZ_w6baib.png",
-          ],
-        };
-        document.querySelectorAll(".phone[data-shots]").forEach(function (ph) {
-          var key = ph.getAttribute("data-shots");
-          var urls = (SHOTS[key] || []).filter(function (u) {
-            return u && typeof u === "string" && u.indexOf("PASTE") === -1;
-          });
-          var screen = ph.querySelector(".ph-screen");
-          var dotsWrap = document.querySelector(
-            '.ph-dots[data-dots="' + key + '"]',
-          );
-          if (!urls.length) {
-            screen.classList.add("ph-empty");
-            if (dotsWrap) dotsWrap.style.display = "none";
-            return;
-          }
-          var idx = 0,
-            hover = false,
-            imgs = [],
-            dots = [];
-          urls.forEach(function (u, i) {
-            var img = document.createElement("img");
-            img.src = u;
-            img.alt = "";
-            img.loading = i ? "lazy" : "eager";
-            img.decoding = "async";
-            img.draggable = false;
-            img.className = "ph-shot" + (i ? "" : " on");
-            screen.appendChild(img);
-            imgs.push(img);
-            if (dotsWrap) {
-              var d = document.createElement("button");
-              d.type = "button";
-              d.className = "pdot" + (i ? "" : " on");
-              d.setAttribute(
-                "aria-label",
-                "Screenshot " + (i + 1) + " of " + urls.length,
-              );
-              d.addEventListener("click", function () {
-                show(i);
-              });
-              dotsWrap.appendChild(d);
-              dots.push(d);
-            }
-          });
-          function show(n) {
-            if (n === idx && imgs[idx].classList.contains("on")) return;
-            imgs[idx].classList.remove("on");
-            if (dots[idx]) dots[idx].classList.remove("on");
-            idx = (n + imgs.length) % imgs.length;
-            var im = imgs[idx];
-            im.classList.remove("on");
-            void im.offsetWidth;
-            im.classList.add("on");
-            if (dots[idx]) dots[idx].classList.add("on");
-          }
-          if (!REDUCE)
-            setInterval(function () {
-              if (!hover) show(idx + 1);
-            }, 3000);
-          var hoverEl = ph.closest(".panel-visual") || ph;
-          hoverEl.addEventListener("mouseenter", function () {
-            hover = true;
-            screen.classList.add("paused");
-          });
-          hoverEl.addEventListener("mouseleave", function () {
-            hover = false;
-            screen.classList.remove("paused");
-          });
-        });
+        // Contact is independently managed in js/contact.js.
 
         /* ============ 3D INTERACTIONS — WORK SECTION ============ */
         if (hasGSAP && FINE && !REDUCE) {
@@ -1686,8 +886,8 @@
               "Extensión avanzada para Discord con arquitectura modular de plugins y mejoras de UX",
             statusDot: "oss",
             statusText: "Open Source · En desarrollo activo",
-            heroVisual: "assets/phone-kicord.webp",
-            heroAlt: "KiCord en iPhone",
+            heroVisual: "/assets/phone-kicord.webp",
+            heroAlt: "Vista conceptual de la web de KiCord",
             tint: "rgba(150, 170, 255, 0.12)",
             meta: [
               { label: "Mi Papel", value: "Creador y Desarrollador Principal" },
@@ -1789,7 +989,7 @@
             gallery: [
               {
                 type: "image",
-                src: "assets/phone-kicord.webp",
+                src: "/assets/phone-kicord.webp",
                 caption: "KiCord interfaz móvil y visualización conceptual",
                 label: "Mockup de Producto",
               },
@@ -1816,7 +1016,7 @@
               "Portfolio interactivo y telemetría de comunidades en tiempo real",
             statusDot: "live",
             statusText: "Activo · En Producción",
-            heroVisual: "assets/phone-papige.webp",
+            heroVisual: "/assets/phone-papige.webp",
             heroAlt: "PapiGEGamer.com en iPhone",
             tint: "rgba(150, 255, 190, 0.1)",
             meta: [
@@ -1923,7 +1123,7 @@
             gallery: [
               {
                 type: "image",
-                src: "assets/phone-papige.webp",
+                src: "/assets/phone-papige.webp",
                 caption: "PapiGEGamer.com vista móvil y experiencia interactiva",
                 label: "Mockup de Plataforma",
               },
@@ -1950,8 +1150,8 @@
               "Ecosistema de CustomOS para gaming de baja latencia y soporte masivo",
             statusDot: "live",
             statusText: "50.000+ usuarios activos · Escala masiva",
-            heroVisual: "assets/phone-kernelos.webp",
-            heroAlt: "KernelOS en iPhone",
+            heroVisual: "/assets/phone-kernelos.webp",
+            heroAlt: "Vista de la web de KernelOS",
             tint: "rgba(255, 180, 140, 0.1)",
             meta: [
               {
@@ -2074,7 +1274,7 @@
             gallery: [
               {
                 type: "image",
-                src: "assets/phone-kernelos.webp",
+                src: "/assets/phone-kernelos.webp",
                 caption: "KernelOS visualización conceptual y alcance",
                 label: "Mockup de Comunidad",
               },
@@ -2124,7 +1324,7 @@
               return (
                 '<a href="' +
                 l.url +
-                '" target="_blank" rel="noopener" class="' +
+                '" target="_blank" rel="noopener noreferrer" class="' +
                 cls +
                 '" data-cursor="OPEN">' +
                 '<span class="btn-t">' +
@@ -2209,7 +1409,7 @@
             })
             .join("");
 
-          var galleryHtml = data.gallery
+          var galleryHtml = data.gallery.filter(function(g) { return g.type === "image"; })
             .map(function (g) {
               if (g.type === "image") {
                 return (
@@ -2219,7 +1419,7 @@
                   g.src +
                   '" alt="' +
                   (g.caption || "") +
-                  '" draggable="false" />' +
+                  '" loading="lazy" decoding="async" width="501" height="1024" draggable="false" />' +
                   "</div>" +
                   '<div class="cs-gallery-foot">' +
                   '<div class="cs-gallery-caption">' +
@@ -2283,7 +1483,7 @@
             data.heroVisual +
             '" alt="' +
             data.heroAlt +
-            '" draggable="false" />' +
+            '" loading="lazy" decoding="async" width="501" height="1024" draggable="false" />' +
             "</div>" +
             "</div>" +
             '<div class="cs-sec">' +
@@ -2357,22 +1557,7 @@
             galleryHtml +
             "</div>" +
             "</div>" +
-            '<div class="cs-sec">' +
-            '<div class="cs-sec-label">Demostración</div>' +
-            '<h2 class="cs-sec-title">Vídeo &amp; Demo Interactiva</h2>' +
-            '<div class="cs-video-box">' +
-            '<div class="icon" aria-hidden="true">' +
-            '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>' +
-            "</div>" +
-            '<div class="title">' +
-            data.video.title +
-            "</div>" +
-            '<div class="desc">' +
-            data.video.note +
-            "</div>" +
-            "</div>" +
-            "</div>" +
-            '<div class="cs-next-card" data-next-case="' +
+            '<button type="button" class="cs-next-card" data-next-case="' +
             data.nextId +
             '" data-cursor="CASE STUDY">' +
             "<div>" +
@@ -2382,256 +1567,80 @@
             "</div>" +
             "</div>" +
             '<div class="cs-next-arr" aria-hidden="true">→</div>' +
-            "</div>"
+            "</button>"
           );
         }
 
         var lastCaseStudyTrigger = null;
-
         function caseStudyFocusable() {
-          if (!csModal) return [];
-          return Array.from(
-            csModal.querySelectorAll(
-              'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
-            ),
-          ).filter(function (el) {
-            return el.offsetParent !== null;
-          });
+          return Array.from(csModal.querySelectorAll('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'))
+            .filter(function(el) { return el.getClientRects().length > 0; });
         }
-
+        function setCaseBackground(locked) {
+          [document.getElementById('main'), nav, ov, document.querySelector('footer')].forEach(function(el) { if(el) el.inert = locked; });
+          if (!locked) ov.inert = true;
+          document.documentElement.classList.toggle('modal-locked', locked);
+        }
         function openCaseStudy(id, pushState) {
-          if (!csModal) return;
           var data = CASE_STUDIES[id];
-          if (!data) return;
-
+          if (!csModal || !data) return;
+          var alreadyOpen = csModal.classList.contains('cs-open');
+          if (!alreadyOpen && !lastCaseStudyTrigger) lastCaseStudyTrigger = document.activeElement;
           csTopNum.textContent = data.number;
           csTopName.textContent = data.title;
           csContent.innerHTML = renderCaseStudy(data);
           csScroller.scrollTop = 0;
-
-          csModal.classList.add("cs-open");
-          csModal.setAttribute("aria-hidden", "false");
-          document.body.style.overflow = "hidden";
-
+          csModal.inert = false;
+          csModal.classList.add('cs-open');
+          csModal.setAttribute('aria-hidden', 'false');
+          setCaseBackground(true);
           if (lenis) lenis.stop();
-          requestAnimationFrame(function () {
-            if (csBtnClose) csBtnClose.focus();
-          });
-
+          csBtnClose.focus({ preventScroll: true });
           if (pushState !== false) {
-            try {
-              history.pushState({ caseStudy: id }, "", "#case-study-" + id);
-            } catch (e) {}
+            history[alreadyOpen ? 'replaceState' : 'pushState']({ portfolioModal: true, caseStudy: id }, '', '#case-study-' + id);
           }
-
-          if (typeof bindCursor === "function") {
-            bindCursor(csContent);
-          }
-
-          if (hasGSAP && !REDUCE) {
-            gsap.fromTo(
-              csContent,
-              { opacity: 0, y: 22 },
-              { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" },
-            );
-          }
+          if (hasGSAP && !REDUCE) gsap.fromTo(csContent, { opacity: .7, y: 8 }, { opacity: 1, y: 0, duration: .22 });
         }
-
-        function closeCaseStudy(popState) {
-          if (!csModal || !csModal.classList.contains("cs-open")) return;
-          csModal.classList.remove("cs-open");
-          csModal.setAttribute("aria-hidden", "true");
-          document.body.style.overflow = "";
-
+        function closeCaseStudy(navigate) {
+          if (!csModal || !csModal.classList.contains('cs-open')) return;
+          if (navigate !== false && history.state && history.state.portfolioModal) {
+            history.back(); return;
+          }
+          csModal.classList.remove('cs-open');
+          csModal.setAttribute('aria-hidden', 'true');
+          setCaseBackground(false);
+          if (lastCaseStudyTrigger && lastCaseStudyTrigger.isConnected) lastCaseStudyTrigger.focus({ preventScroll: true });
+          csModal.inert = true;
           if (lenis) lenis.start();
-          if (
-            lastCaseStudyTrigger &&
-            document.contains(lastCaseStudyTrigger) &&
-            typeof lastCaseStudyTrigger.focus === "function"
-          ) {
-            requestAnimationFrame(function () {
-              lastCaseStudyTrigger.focus();
-            });
-          }
-
-          if (popState !== false && location.hash.indexOf("#case-study") === 0) {
-            try {
-              history.pushState(null, "", location.pathname + location.search);
-            } catch (e) {}
-          }
+          if (navigate !== false) history.replaceState(null, '', location.pathname + location.search + '#work');
         }
-
-        document.addEventListener("click", function (e) {
-          var openTrigger = e.target.closest("[data-open-case]");
-          if (openTrigger) {
-            e.preventDefault();
-            lastCaseStudyTrigger = openTrigger;
-            var id = openTrigger.getAttribute("data-open-case");
-            openCaseStudy(id);
-            return;
-          }
-          var nextTrigger = e.target.closest("[data-next-case]");
-          if (nextTrigger) {
-            e.preventDefault();
-            var nextId = nextTrigger.getAttribute("data-next-case");
-            openCaseStudy(nextId);
-            return;
+        document.addEventListener('click', function(e) {
+          if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+          var trigger = e.target.closest('[data-open-case], [data-next-case]');
+          if (!trigger) return;
+          var id = trigger.dataset.openCase || trigger.dataset.nextCase;
+          if (!CASE_STUDIES[id]) return;
+          e.preventDefault();
+          if (trigger.dataset.openCase) lastCaseStudyTrigger = trigger;
+          openCaseStudy(id);
+        });
+        [csBtnBack, csBtnClose].forEach(function(el) { if(el) el.addEventListener('click', function() { closeCaseStudy(); }); });
+        addEventListener('keydown', function(e) {
+          if (!csModal || !csModal.classList.contains('cs-open')) return;
+          if (e.key === 'Escape') { e.preventDefault(); closeCaseStudy(); return; }
+          if (e.key !== 'Tab') return;
+          var items = caseStudyFocusable(), i = items.indexOf(document.activeElement);
+          if (i < 0 || (e.shiftKey && i === 0) || (!e.shiftKey && i === items.length - 1)) {
+            e.preventDefault(); items[e.shiftKey ? items.length - 1 : 0].focus();
           }
         });
-
-        if (csBtnBack) {
-          csBtnBack.addEventListener("click", function () {
-            closeCaseStudy();
-          });
+        function syncCaseHash() {
+          var match = location.hash.match(/^#case-study-([a-z0-9_-]+)$/i);
+          if (match && CASE_STUDIES[match[1]]) openCaseStudy(match[1], false);
+          else closeCaseStudy(false);
         }
-        if (csBtnClose) {
-          csBtnClose.addEventListener("click", function () {
-            closeCaseStudy();
-          });
-        }
-
-        addEventListener("keydown", function (e) {
-          if (!csModal || !csModal.classList.contains("cs-open")) return;
-          if (e.key === "Escape") {
-            e.preventDefault();
-            closeCaseStudy();
-            return;
-          }
-          if (e.key !== "Tab") return;
-          var items = caseStudyFocusable();
-          if (!items.length) return;
-          var first = items[0],
-            last = items[items.length - 1];
-          if (e.shiftKey && document.activeElement === first) {
-            e.preventDefault();
-            last.focus();
-          } else if (!e.shiftKey && document.activeElement === last) {
-            e.preventDefault();
-            first.focus();
-          }
-        });
-
-        window.addEventListener("popstate", function () {
-          var match = location.hash.match(/^#case-study-([a-z0-9_-]+)/i);
-          if (match && CASE_STUDIES[match[1]]) {
-            openCaseStudy(match[1], false);
-          } else if (csModal && csModal.classList.contains("cs-open")) {
-            closeCaseStudy(false);
-          }
-        });
-
-        // Check hash on initial load
-        (function checkInitialHash() {
-          var match = location.hash.match(/^#case-study-([a-z0-9_-]+)/i);
-          if (match && CASE_STUDIES[match[1]]) {
-            setTimeout(function () {
-              openCaseStudy(match[1], false);
-            }, 500);
-          }
-        })();
-
-        /* ========================================================
-           NOW STATUS PANEL (Configurable in one single place)
-           ======================================================== */
-        window.NOW_CONFIG = {
-          project: {
-            title: "KiCord & PapiGEGamer",
-            url: "https://kicord.es",
-            linkText: "Explorar KiCord",
-            desc: "Iterando arquitectura modular en TypeScript, sistema de plugins dinámicos y telemetría reactiva en tiempo real.",
-          },
-          status: {
-            text: "Disponible para colaborar",
-            updated: "Actividad sincronizada automáticamente",
-          },
-          github: {
-            username: "PapiGECode",
-            fetchLive: true,
-            fallback: {
-              repo: "PapiGECode/Web-CV",
-              msg: "feat: visual premium timeline & live status integration",
-              time: "Reciente",
-            },
-          },
-          focusTags: [
-            "TypeScript",
-            "React / Next.js",
-            "Kernel & Sistemas",
-            "Open Source",
-          ],
-        };
-
-        function initNowPanel() {
-          var cfg = window.NOW_CONFIG;
-          if (!cfg) return;
-
-          // Render static config immediately
-          var pTitle = document.getElementById("now-project-title");
-          var pDesc = document.getElementById("now-project-desc");
-          var pLink = document.getElementById("now-project-link");
-          var sText = document.getElementById("now-status-text");
-          var uText = document.getElementById("now-updated-text");
-          var tagsContainer = document.getElementById("now-focus-tags");
-
-          if (pTitle && cfg.project) pTitle.textContent = cfg.project.title;
-          if (pDesc && cfg.project) pDesc.textContent = cfg.project.desc;
-          if (pLink && cfg.project) {
-            pLink.href = cfg.project.url;
-            var linkSpan = pLink.querySelector("span");
-            if (linkSpan) linkSpan.textContent = cfg.project.linkText;
-          }
-          if (sText && cfg.status) sText.textContent = cfg.status.text;
-          if (uText && cfg.status) uText.textContent = cfg.status.updated;
-
-          if (tagsContainer && cfg.focusTags && cfg.focusTags.length) {
-            tagsContainer.innerHTML = cfg.focusTags
-              .map(function (t) {
-                return '<span class="now-tag">' + t + "</span>";
-              })
-              .join("");
-          }
-
-          // Render GitHub fallback initially
-          var ghRepo = document.getElementById("now-github-repo");
-          var ghTime = document.getElementById("now-github-time");
-          var ghMsg = document.getElementById("now-github-msg");
-          var ghLink = document.getElementById("now-github-link");
-
-          if (ghRepo && cfg.github && cfg.github.fallback)
-            ghRepo.textContent = cfg.github.fallback.repo;
-          if (ghTime && cfg.github && cfg.github.fallback)
-            ghTime.textContent = cfg.github.fallback.time;
-          if (ghMsg && cfg.github && cfg.github.fallback)
-            ghMsg.textContent = cfg.github.fallback.msg;
-
-          // Live GitHub activity through a cached same-origin endpoint.
-          if (cfg.github && cfg.github.fetchLive && cfg.github.username) {
-            var endpoint =
-              "/api/github-activity?username=" +
-              encodeURIComponent(cfg.github.username);
-
-            fetch(endpoint, { cache: "no-store" })
-              .then(function (res) {
-                if (!res.ok) throw new Error("GitHub activity status " + res.status);
-                return res.json();
-              })
-              .then(function (data) {
-                if (!data || !data.ok) return;
-                if (ghRepo && data.repo) ghRepo.textContent = data.repo;
-                if (ghTime && data.time) ghTime.textContent = data.time;
-                if (ghMsg && data.message) ghMsg.textContent = data.message;
-                if (ghLink && data.url) {
-                  ghLink.href = data.url;
-                  var ghSpan = ghLink.querySelector("span");
-                  if (ghSpan) ghSpan.textContent = data.url.replace(/^https?:\/\//, "");
-                }
-              })
-              .catch(function (err) {
-                console.info("GitHub activity fallback:", err.message);
-              });
-          }
-        }
-        initNowPanel();
+        addEventListener('popstate', syncCaseHash);
+        syncCaseHash();
 
         // refresh ST after fonts load (layout shift guard)
         if (document.fonts && document.fonts.ready) {

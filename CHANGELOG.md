@@ -1,3 +1,13 @@
+## 2026-10-04 — Quality, contact and opt-in measurement
+
+- Refined project-first hierarchy, responsive type and actions; fixed mobile overflow and empty notification artifact.
+- Removed artificial loading delay, kept native cursor and made project cards readable without JavaScript.
+- Shared themes, keyboard menu/dialog navigation, scroll lock and modal history fixes.
+- Added validated Resend delivery with capability detection, explicit draft fallback, idempotency and bounded requests.
+- Added opt-in, first-party event/Web Vitals logging; documented distinction from Vercel dashboard products.
+- Self-hosted fonts, content-hashed/minified scripts/styles, responsive WebP and matching security/cache policies.
+- Added server tests, browser interaction/viewport tests, accessibility checks and review screenshots.
+
 ## 2026-10-02 — Production overhaul
 
 - Split the monolithic HTML into cacheable CSS, application JS and vendor bundles.

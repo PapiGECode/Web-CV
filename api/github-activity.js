@@ -37,6 +37,7 @@ export default async function handler(request) {
     const response = await fetch(
       `https://api.github.com/users/${encodeURIComponent(USERNAME)}/events/public?per_page=30`,
       {
+        signal: AbortSignal.timeout(4500),
         headers: {
           Accept: "application/vnd.github+json",
           "User-Agent": "pabloschefer.com",
@@ -62,7 +63,7 @@ export default async function handler(request) {
         ok: true,
         repo: "PapiGECode/Web-CV",
         message: "Actividad pública disponible en GitHub",
-        time: "Reciente",
+        time: "GitHub",
         url: "https://github.com/PapiGECode",
         source: "fallback",
       });
@@ -95,6 +96,7 @@ export default async function handler(request) {
       repo: repoName,
       message,
       time: relativeTime(relevant.created_at),
+      createdAt: relevant.created_at,
       url: repoName.includes("/")
         ? `https://github.com/${repoName}`
         : `https://github.com/${USERNAME}`,
@@ -106,7 +108,7 @@ export default async function handler(request) {
         ok: true,
         repo: "PapiGECode/Web-CV",
         message: "Actividad pública disponible en GitHub",
-        time: "Reciente",
+        time: "GitHub",
         url: "https://github.com/PapiGECode",
         source: "fallback",
       },
