@@ -33,9 +33,13 @@ jobs:
           node scripts/serve.mjs > /tmp/portfolio-preview.log 2>&1 &
           for i in $(seq 1 20); do curl -sf http://localhost:3000 >/dev/null && break; sleep 1; done
           AB="$PWD/node_modules/.bin/agent-browser"
-          "$AB" --args '--no-sandbox' open http://localhost:3000
+          "$AB" --args '--no-sandbox' open about:blank
           "$AB" set viewport 1440 960
-          "$AB" wait --fn 'window.__portfolioReady === true'
+          "$AB" open http://localhost:3000
+          "$AB" wait --load networkidle
+          "$AB" wait '#hero h1'
+          "$AB" eval 'JSON.stringify({ready:window.__portfolioReady,theme:document.documentElement.className,scripts:Array.from(document.scripts).map(s=>s.src)})' > review-reports/browser-diagnostics.txt
+          "$AB" errors > review-reports/browser-errors.txt
           "$AB" snapshot -i > review-reports/interactive-elements.txt
           "$AB" screenshot review-reports/desktop-motion.png
           "$AB" close
