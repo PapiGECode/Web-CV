@@ -148,3 +148,28 @@ html.light #form-ok[data-error] .ok-t { color:#982820; }
 .field-hints { display:flex; justify-content:space-between; gap:1rem; font-size:.75rem; color:var(--ash); margin-top:.5rem; }
 .field-hints span:last-child { white-space:nowrap; }
 @media(max-width:380px) { .nav-cta { display:none; } .nav-logo { font-size:.95rem; } .hero-top .hero-copyright { max-width:125px; } }
+
+/* Compact screens: badges wrap; modal navigation stays inside the viewport. */
+.cap-head { flex-wrap:wrap; }
+.cap-num-title, .cs-top-title { min-width:0; }
+.cap-badge { max-width:100%; white-space:normal; }
+@media(max-width:680px) {
+ .cs-topbar { gap:.5rem; padding:.65rem 1rem; }
+ .cs-topbar > button { flex-shrink:0; padding:.55rem .75rem; }
+ .cs-top-title { flex:1; justify-content:center; }
+ .cs-top-title > span:not(#cs-top-name) { display:none; }
+ #cs-top-name { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-size:.65rem; }
+ .cs-back-btn span { font-size:0; }
+ .cs-back-btn span::after { content:'Volver'; font-size:.68rem; }
+}
+
+/* Keep the large footer signature legible in both themes. */
+#foot-word { color:var(--faint); opacity:1; }
+html.light { --ash:#59554e; }
+html.light .bento-subtag { color:#075985; }
+html.light .bento-btn-link { color:var(--bone); }
+html.light .bento-btn-link:hover { color:#075985; }
+html.light .status-active, html.light .status-completed { color:#065f46; }
+html.light .status-maintained { color:#075985; }
+html.light .status-lab { color:#6b21a8; }
+html.light .status-archive { color:#475569; }
