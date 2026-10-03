@@ -58,6 +58,8 @@ async function webp(name, destination, width, quality = 82) {
 for (const [base, source, width] of [['pablo-casual', 'pablo-casual.png', 1024], ['pablo-profesional', 'pablo-profesional.jpg', 1122]]) {
   for (const size of [480, 800]) await webp(source, `${base}-${size}.webp`, size);
   await webp(source, `${base}.webp`, width);
+  // Every advertised srcset candidate must exist, including full-resolution variants.
+  await fs.copyFile(output('assets', `${base}.webp`), output('assets', `${base}-${width}.webp`));
 }
 for (const name of ['phone-kicord', 'phone-papige', 'phone-kernelos']) await webp(name + '.png', name + '.webp', 600, 85);
 for (const theme of ['dark', 'light']) await sharp(input('assets', `favicon-${theme}.png`)).resize(32, 32).png({ palette: true, compressionLevel: 9 }).toFile(output('assets', `favicon-${theme}-32.png`));
@@ -77,6 +79,21 @@ for (const file of pages) {
   html = html.replace(/(href|src)="((?:css|js|assets)\/[^\"]+)"/g, '$1="/$2"');
   for (const [before, after] of replacements) html = html.split(`"${before}"`).join(`"${after}"`);
   html = html.replace('</head>', `<meta name="build-revision" content="${revision.replace(/[^a-zA-Z0-9_-]/g, '')}"><link rel="preload" href="${displayFont}" as="font" type="font/woff2" crossorigin></head>`);
+  // Fail the build instead of publishing a broken local asset or srcset candidate.
+  const assets = new Set();
+  for (const match of html.matchAll(/(?:src|href)="(\/(?:assets|css|js)\/[^"?#]+)(?:[?#][^"]*)?"/g)) assets.add(match[1]);
+  for (const match of html.matchAll(/srcset="([^"]+)"/g)) {
+    for (const candidate of match[1].split(',')) {
+      const url = candidate.trim().split(/\s+/)[0];
+      if (url.startsWith('/assets/')) assets.add(url);
+    }
+  }
+  for (const asset of assets) {
+    const local = path.resolve(dist, '.' + asset);
+    if (!local.startsWith(dist + path.sep)) throw new Error(`Unsafe asset path in ${file}: ${asset}`);
+    const info = await fs.stat(local).catch(() => null);
+    if (!info?.isFile()) throw new Error(`Missing production asset in ${file}: ${asset}`);
+  }
   await fs.writeFile(output(file), html);
 }
 for (const file of ['robots.txt', 'sitemap.xml', 'site.webmanifest']) await fs.copyFile(input(file), output(file));
