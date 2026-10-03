@@ -1,0 +1,39 @@
+name: Portfolio quality
+on:
+  push:
+    branches: [master, feat/quality-contact-20261004]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: quality-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install
+        run: |
+          if [ -f package-lock.json ]; then npm ci; else npm install; fi
+      - name: Validate and build
+        run: npm run build
+      - name: Run tests when present
+        run: npm run test --if-present
+      - name: Prepare review bundle
+        run: |
+          mkdir -p /tmp/portfolio-review/source /tmp/portfolio-review/dist
+          git archive HEAD | tar -x -C /tmp/portfolio-review/source
+          cp -R dist/. /tmp/portfolio-review/dist/
+          tar -czf /tmp/portfolio-review.tgz -C /tmp/portfolio-review .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: portfolio-review
+          path: /tmp/portfolio-review.tgz
+          retention-days: 3
