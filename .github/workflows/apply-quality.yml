@@ -26,6 +26,9 @@ jobs:
           root=pathlib.Path.cwd()
           manifest=json.loads((root/'.review/ready.json').read_text())
           encoded=''.join((root/f'.review/quality-part{i}.b64').read_text().strip() for i in range(1,manifest['parts']+1))
+          assert hashlib.sha256(encoded.encode()).hexdigest()==manifest['transportSha256'], 'Staged transport changed'
+          for start,end,replacement in reversed(manifest.get('repairs',[])):
+              encoded=encoded[:start]+replacement+encoded[end:]
           raw=base64.b64decode(encoded,validate=True)
           assert hashlib.sha256(raw).hexdigest()==manifest['sha256'], 'Transfer checksum mismatch'
           records=json.loads(gzip.decompress(raw))
@@ -53,6 +56,18 @@ jobs:
       - run: npm install
       - run: npm test
       - run: npm run build
+      - name: Save validated source to isolated working branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          python3 - <<'PY'
+          import json,subprocess
+          paths=json.load(open('/tmp/quality-paths.json'))
+          subprocess.run(['git','add','--',*paths],check=True)
+          PY
+          git rm -- .review/ready.json .review/quality-part*.b64
+          git commit -m 'feat: refine portfolio UX, secure contact and opt-in metrics'
+          git push origin HEAD:feat/quality-contact-20261004
       - run: npm run test:e2e
       - name: Browser visual check
         run: |
@@ -65,18 +80,6 @@ jobs:
           "$AB" snapshot -i > review-reports/interactive-elements.txt
           "$AB" screenshot review-reports/desktop-motion.png
           "$AB" close
-      - name: Commit tested source to working branch only
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          python3 - <<'PY'
-          import json,subprocess
-          paths=json.load(open('/tmp/quality-paths.json'))
-          subprocess.run(['git','add','--',*paths],check=True)
-          PY
-          git rm -- .review/ready.json .review/quality-part*.b64
-          git commit -m 'feat: refine portfolio UX, secure contact and opt-in metrics'
-          git push origin HEAD:feat/quality-contact-20261004
       - name: Archive review evidence
         if: always()
         run: |
