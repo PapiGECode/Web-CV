@@ -1,4 +1,4 @@
-name: Review telemetry libraries
+name: Verify source transfer
 on:
   push:
     branches: [feat/quality-contact-20261004]
@@ -6,21 +6,15 @@ on:
 permissions:
   contents: read
 jobs:
-  tools:
+  verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 3
     steps:
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-      - run: |
-          mkdir -p /tmp/telemetry-tools
-          cd /tmp/telemetry-tools
-          npm init -y
-          npm install --save-exact web-vitals @vercel/analytics @vercel/speed-insights
-          tar -czf /tmp/telemetry-tools.tgz -C /tmp telemetry-tools
+      - uses: actions/checkout@v4
+      - name: Archive staged source and workflow for integrity review
+        run: tar -czf /tmp/source-transfer.tgz .review .github/workflows/apply-quality.yml
       - uses: actions/upload-artifact@v4
         with:
-          name: telemetry-tools
-          path: /tmp/telemetry-tools.tgz
+          name: source-transfer
+          path: /tmp/source-transfer.tgz
           retention-days: 2
