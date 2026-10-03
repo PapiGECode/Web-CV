@@ -1,0 +1,48 @@
+name: Review baseline
+on:
+  push:
+    branches: [feat/quality-contact-20261004]
+    paths: [.github/workflows/review-tools.yml]
+permissions:
+  contents: read
+jobs:
+  baseline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Prepare isolated review tools
+        run: |
+          mkdir -p /tmp/portfolio-tools/reports
+          cd /tmp/portfolio-tools
+          npm init -y
+          npm install --save-exact agent-browser esbuild @axe-core/playwright @playwright/test @fontsource-variable/bricolage-grotesque @fontsource-variable/inter @fontsource-variable/jetbrains-mono
+      - name: Capture current production
+        env:
+          AGENT_BROWSER_EXECUTABLE_PATH: /usr/bin/google-chrome
+        run: |
+          cd /tmp/portfolio-tools
+          AB="$PWD/node_modules/.bin/agent-browser"
+          "$AB" --args '--no-sandbox' open https://www.pabloschefer.com/
+          "$AB" set viewport 1440 960
+          "$AB" wait --load networkidle
+          "$AB" screenshot reports/before-desktop.png
+          "$AB" snapshot -i > reports/before-desktop.txt
+          "$AB" open https://www.pabloschefer.com/projects/papigegamer
+          "$AB" set viewport 390 844
+          "$AB" screenshot reports/before-project-mobile.png
+          "$AB" open https://www.pabloschefer.com/
+          "$AB" wait --load networkidle
+          "$AB" screenshot reports/before-mobile.png
+          "$AB" close
+      - name: Bundle review environment
+        if: always()
+        run: tar -czf /tmp/portfolio-tools.tgz -C /tmp portfolio-tools
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: portfolio-tools
+          path: /tmp/portfolio-tools.tgz
+          retention-days: 2
