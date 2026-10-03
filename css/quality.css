@@ -113,7 +113,7 @@ html.light #form-ok[data-error] .ok-t { color:#982820; }
  .now-panel { padding:1.15rem; }
  .sec-head { margin-bottom:2rem; }
  .site-tools [href='#hero'] { margin-left:0; }
- .cs-title { font-size:2.6rem; }
+ .cs-title { font-size:clamp(1.6rem,8.3vw,2.6rem); }
  .cs-hero-actions .btn { padding:.8rem 1rem; font-size:.68rem; }
  .cs-meta-grid, .cs-compare-grid { grid-template-columns:1fr; }
  .f-row { grid-template-columns:1fr; }
