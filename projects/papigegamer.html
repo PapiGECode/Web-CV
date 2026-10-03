@@ -3,6 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <script src="/js/boot.js"></script>
+  <link rel="stylesheet" href="/css/fonts.css" />
+  <link rel="icon" id="favicon" href="/assets/favicon-dark-32.png" />
   <title>PapiGEGamer.com — Caso de estudio · Pablo Schefer</title>
   <meta name="description" content="Portfolio interactivo y hub técnico con integraciones de GitHub, Discord y experiencias en tiempo real." />
   <link rel="canonical" href="https://www.pabloschefer.com/projects/papigegamer" />
@@ -14,65 +17,47 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="theme-color" content="#0c0c0d" />
   <link rel="stylesheet" href="/css/styles.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <style>
-    .project-page{max-width:1180px;margin:0 auto;padding:clamp(1.5rem,4vw,4rem);min-height:100vh}
-    .pp-nav{display:flex;justify-content:space-between;align-items:center;padding:1rem 0 4rem;font:500 .72rem/1 var(--font-mono);text-transform:uppercase;color:var(--ash)}
-    .pp-nav a:hover{color:var(--bone)}
-    .pp-hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(260px,.75fr);gap:clamp(2rem,7vw,7rem);align-items:center;padding-bottom:clamp(4rem,9vw,8rem);border-bottom:1px solid var(--line)}
-    .pp-kicker{font:500 .72rem/1 var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ash);margin-bottom:1rem}
-    .pp-title{font:800 clamp(4rem,12vw,9.5rem)/.82 var(--font-display);letter-spacing:-.06em;text-transform:uppercase}
-    .pp-tagline{max-width:52ch;font-size:clamp(1rem,2vw,1.25rem);color:var(--ash);margin:1.7rem 0}
-    .pp-status{display:inline-flex;align-items:center;gap:.55rem;border:1px solid var(--line-2);border-radius:999px;padding:.55rem .8rem;font:500 .68rem/1 var(--font-mono);text-transform:uppercase}
-    .pp-status::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--bone);box-shadow:0 0 0 4px rgba(236,232,225,.08)}
-    .pp-visual{display:grid;place-items:center;min-height:420px;border:1px solid var(--line);border-radius:24px;background:rgba(236,232,225,.025);overflow:hidden}
-    .pp-visual img{max-height:560px;width:auto;object-fit:contain;padding:1rem}
-    .pp-section{padding:clamp(3.5rem,8vw,7rem) 0;border-bottom:1px solid var(--line)}
-    .pp-label{font:500 .7rem/1 var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ash);margin-bottom:1.1rem}
-    .pp-section h2{font:700 clamp(2rem,5vw,4rem)/1 var(--font-display);letter-spacing:-.04em;text-transform:uppercase;max-width:16ch}
-    .pp-copy{font-size:clamp(1rem,1.6vw,1.18rem);color:var(--ash);max-width:72ch;margin-top:1.5rem}
-    .pp-two{display:grid;grid-template-columns:1fr 1fr;gap:clamp(2rem,5vw,5rem)}
-    .pp-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin-top:2.5rem}
-    .pp-card{border:1px solid var(--line);border-radius:16px;padding:1.4rem;background:rgba(236,232,225,.02)}
-    .pp-card h3{font:700 1.15rem/1.15 var(--font-display);margin-bottom:.7rem}
-    .pp-card p{color:var(--ash);font-size:.92rem}
-    .pp-stack{display:flex;flex-wrap:wrap;gap:.55rem;margin-top:1.6rem}
-    .pp-stack span{border:1px solid var(--line-2);border-radius:999px;padding:.55rem .8rem;font:500 .68rem/1 var(--font-mono);text-transform:uppercase;color:var(--ash)}
-    .pp-actions{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:2rem}
-    .pp-footer{padding:2rem 0;color:var(--ash);font:400 .68rem/1.5 var(--font-mono);display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
-    @media(max-width:760px){.pp-hero,.pp-two{grid-template-columns:1fr}.pp-grid{grid-template-columns:1fr}.pp-visual{min-height:300px}.pp-nav{padding-bottom:2rem}}
-  </style>
+  
+  
+  
+  
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"CreativeWork","name":"PapiGEGamer.com","url":"https://www.pabloschefer.com/projects/papigegamer","description":"Portfolio interactivo y hub técnico con integraciones de GitHub, Discord y experiencias en tiempo real.","creator":{"@type":"Person","name":"Pablo Schefer Orduña","url":"https://www.pabloschefer.com/"}}
   </script>
-</head>
-<body>
-  <main class="project-page">
+<link rel="stylesheet" href="/css/quality.css" /><link rel="stylesheet" href="/css/projects.css" /></head>
+<body><a class="skip-link" href="#main">Saltar al contenido principal</a>
+  <main class="project-page" id="main" tabindex="-1">
     <nav class="pp-nav" aria-label="Migas de pan">
       <a href="/">← Pablo Schefer</a>
-      <span>Proyecto / Plataforma Web</span>
+      <div><span>Proyecto / Plataforma Web</span><button aria-label="Cambiar a modo claro" aria-pressed="false" class="nav-theme" id="theme-toggle" title="Cambiar tema">
+<svg aria-hidden="true" class="i-sun" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.6" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="4"></circle>
+<path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
+</svg>
+<svg aria-hidden="true" class="i-moon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" viewbox="0 0 24 24">
+<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path>
+</svg>
+</button></div>
     </nav>
     <header class="pp-hero">
       <div>
         <div class="pp-kicker">Plataforma Web</div>
-        <h1 class="pp-title">PapiGEGamer.com</h1>
+        <h1 class="pp-title long">PapiGEGamer<span class="domain-ending">.com</span></h1>
         <p class="pp-tagline">Portfolio interactivo y hub técnico con integraciones de GitHub, Discord y experiencias en tiempo real.</p>
         <div class="pp-status">Activo · En producción</div>
         <div class="pp-actions">
-          <a class="btn btn-solid" href="https://papigegamer.com" target="_blank" rel="noopener"><span class="btn-t">Visitar PapiGEGamer.com ↗</span></a>
+          <a class="btn btn-solid" href="https://papigegamer.com" target="_blank" rel="noopener noreferrer"><span class="btn-t">Visitar PapiGEGamer.com ↗</span></a>
           <a class="btn btn-ghost" href="/#work"><span class="btn-t">Volver a proyectos</span></a>
         </div>
       </div>
-      <div class="pp-visual"><img src="/assets/phone-papige.webp" alt="PapiGEGamer.com" loading="eager" decoding="async" /></div>
-    </header>
-    <section class="pp-section">
-      <div class="pp-label">Overview</div>
+      <div class="pp-visual"><img src="/assets/phone-papige.webp" alt="PapiGEGamer.com" loading="eager" decoding="async" width="501" height="1024" /></div>
+    </header><nav class="pp-toc" aria-label="En este proyecto"><a href="#overview">Visión general</a><a href="#approach">Enfoque</a><a href="#implementation">Implementación</a></nav>
+    <section id="overview" class="pp-section">
+      <div class="pp-label">Visión general</div>
       <h2>Qué es y por qué existe</h2>
       <p class="pp-copy">PapiGEGamer.com es una plataforma web construida con React y TypeScript que centraliza proyectos, actividad técnica y presencia de comunidad en una experiencia interactiva.</p>
     </section>
-    <section class="pp-section pp-two">
+    <section id="approach" class="pp-section pp-two">
       <div>
         <div class="pp-label">Problema</div>
         <h2>El reto</h2>
@@ -84,7 +69,7 @@
         <p class="pp-copy">La plataforma combina componentes React con APIs externas, despliegue continuo y módulos interactivos para mostrar información dinámica sin convertir el frontend en un bloque monolítico.</p>
       </div>
     </section>
-    <section class="pp-section">
+    <section id="implementation" class="pp-section">
       <div class="pp-label">Implementación</div>
       <h2>Puntos técnicos</h2>
       <div class="pp-grid">
@@ -95,10 +80,18 @@
       </div>
       <div class="pp-stack"><span>React</span><span>TypeScript</span><span>Vite</span><span>REST APIs</span><span>Discord</span><span>GitHub</span><span>Vercel</span><span>CI/CD</span></div>
     </section>
-    <footer class="pp-footer">
+<a class="pp-next" href="/projects/kernelos"><div><span>Siguiente proyecto</span><strong>KernelOS</strong></div><span aria-hidden="true">↗</span></a><div class="site-tools"><button type="button" data-copy-email>Copiar email</button><button type="button" data-copy-url>Copiar enlace</button><button type="button" data-open-preferences>Preferencias de medición</button><a href="/privacidad">Privacidad</a></div>    <footer class="pp-footer">
       <span>© 2026 Pablo Schefer Orduña</span>
       <a href="mailto:pablopme50@gmail.com">pablopme50@gmail.com</a>
     </footer>
   </main>
-</body>
+<dialog aria-labelledby="preferences-title" class="preferences-dialog" id="preferences-dialog">
+<form method="dialog"><button aria-label="Cerrar preferencias" class="dialog-close">×</button></form>
+<p class="mono">Tu elección</p><h2 id="preferences-title">Medición opcional.</h2>
+<p>Permite medir la velocidad de carga y las interacciones para mejorar la web. Está desactivado por defecto. No se envían nombres, emails, mensajes ni identificadores personales desde esta medición.</p>
+<label class="preference-option"><input id="allow-measurement" type="checkbox"/> Permitir medición de uso y rendimiento</label>
+<p class="preference-note" id="measurement-note"></p>
+<button class="btn btn-solid" id="save-preferences" type="button"><span class="btn-t">Guardar preferencia</span></button>
+</dialog>
+<div aria-live="polite" class="ui-toast" id="ui-toast" role="status"></div><script defer src="/js/shared.js"></script><script type="module" src="/js/metrics.js"></script></body>
 </html>

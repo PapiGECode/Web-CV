@@ -3,34 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script>
-      (function () {
-        try {
-          var t = localStorage.getItem("ps-theme");
-          var isLight =
-            t === "light" ||
-            (!t &&
-              window.matchMedia &&
-              matchMedia("(prefers-color-scheme: light)").matches);
-          if (isLight) {
-            document.documentElement.classList.add("light");
-          }
-        } catch (e) {}
-      })();
-      window.setTimeout(function () {
-        var loader = document.getElementById("loader");
-        if (loader) {
-          loader.style.opacity = "0";
-          loader.style.pointerEvents = "none";
-          window.setTimeout(function () {
-            if (loader && loader.parentNode) loader.parentNode.removeChild(loader);
-          }, 350);
-        }
-        document.querySelectorAll(".anim").forEach(function (el) {
-          if (getComputedStyle(el).opacity === "0") el.style.opacity = "1";
-        });
-      }, 7000);
-    </script>
+    
+    <script src="/js/boot.js"></script>
+    <link rel="stylesheet" href="/css/fonts.css" />
     <title>Pablo Schefer Orduña — Full-Stack Developer &amp; OSS Maintainer</title>
     <link
       id="favicon"
@@ -39,16 +14,7 @@
       href="assets/favicon-dark-32.png"
     />
     <link rel="apple-touch-icon" href="assets/apple-touch-icon-180.png" />
-    <script>
-      (function () {
-        try {
-          var fav = document.getElementById("favicon");
-          if (fav && document.documentElement.classList.contains("light")) {
-            fav.href = "assets/favicon-light-32.png";
-          }
-        } catch (e) {}
-      })();
-    </script>
+    
     <meta
       name="description"
       content="Portfolio de Pablo Schefer Orduña, Full-Stack Developer, Cybersecurity Analyst y mantenedor de proyectos open source."
@@ -78,15 +44,13 @@
     <meta name="twitter:description" content="Desarrollo full-stack, ciberseguridad, automatización y proyectos open source." />
     <meta name="twitter:image" content="https://www.pabloschefer.com/assets/preview-og.jpg" />
     <link rel="manifest" href="/site.webmanifest" />
-    <link rel="preload" as="image" href="assets/pablo-casual.webp" type="image/webp" fetchpriority="high" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
-      rel="stylesheet"
-    />
+    
+    
+    
+    
 
-    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/quality.css" />
       <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -98,8 +62,7 @@
         "jobTitle": "Full-Stack Developer",
         "sameAs": [
           "https://github.com/PapiGECode",
-          "https://papigegamer.com",
-          "https://kicord.es"
+          "https://papigegamer.com"
         ],
         "knowsAbout": [
           "Full-stack web development",
@@ -130,12 +93,7 @@
     <div class="orb orb-2" aria-hidden="true"></div>
     <div class="orb orb-3" aria-hidden="true"></div>
 
-    <!-- cursor -->
-    <div id="cur" aria-hidden="true">
-      <div id="cur-ring"></div>
-      <div id="cur-dot"></div>
-      <div id="cur-label"></div>
-    </div>
+
     <div id="loader" aria-hidden="true">
       <div class="l-glow"></div>
       <div class="l-inner">
@@ -195,9 +153,7 @@
             <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
           </svg>
         </button>
-        <button class="nav-cta" data-cursor="SEND" onclick="goTo('#contact')">
-          Contactar
-        </button>
+        <a class="nav-cta" href="#contact">Contactar</a>
         <button id="nav-burger" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-overlay">
           <span></span><span></span><span></span>
         </button>
@@ -210,7 +166,7 @@
       <div class="ov-link"><a href="#contact" data-close>Contacto</a></div>
     </div>
 
-    <main id="main">
+    <main id="main" tabindex="-1">
       <!-- HERO -->
       <section id="hero">
         <div class="hero-top">
@@ -224,25 +180,21 @@
           </div>
         </div>
         <div class="shell hero-inner">
+          <p class="hero-kicker mono">Desarrollo web / Código abierto</p>
           <h1 class="hero-name" aria-label="Pablo Schefer">
             <span class="hero-line"><span>Pablo</span></span>
             <span class="hero-line"><span>Schefer</span></span>
           </h1>
           <div class="hero-meta">
             <p class="hero-sub anim">
-              Full-Stack Developer, Cybersecurity Analyst y OSS Maintainer.
-              Construyo productos web, herramientas para comunidades y
-              automatizaciones con una base técnica sólida.
+              Desarrollo productos web, automatizaciones y herramientas para comunidades.
+              Ideas convertidas en software útil.
             </p>
             <div class="hero-actions anim">
               <a
                 href="#work"
                 class="btn btn-solid"
                 data-cursor="VIEW"
-                onclick="
-                  goTo('#work');
-                  return false;
-                "
                 ><span class="btn-t"
                   >Ver proyectos
                   <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
@@ -254,14 +206,11 @@
                       stroke-linejoin="round"
                     /></svg></span
               ></a>
+              <a class="btn btn-ghost" href="/assets/Pablo-Schefer-CV.pdf" download="Pablo-Schefer-CV.pdf" data-track="download_cv"><span class="btn-t">Descargar CV ↓</span></a>
               <a
                 href="#contact"
-                class="btn btn-ghost"
+                class="hero-contact-link"
                 data-cursor="SEND"
-                onclick="
-                  goTo('#contact');
-                  return false;
-                "
                 ><span class="btn-t">Hablemos</span></a
               >
             </div>
@@ -297,115 +246,329 @@
         </div>
       </div>
 
-      <!-- LIVE STATUS / ACTUALMENTE -->
-      <section id="now" class="now-section" aria-label="Estado actual de proyectos y actividad">
+      <!-- WORK -->
+      <section id="work">
         <div class="shell">
-          <div class="now-panel anim">
-            <div class="now-head-row">
-              <div class="now-badge">
-                <span class="now-live-dot" aria-hidden="true"></span>
-                <span>Actualmente</span>
-                <span style="opacity: 0.4;">/</span>
-                <span style="color: var(--ash); font-weight: 400;">Now</span>
-              </div>
-              <div class="now-timestamp" id="now-updated-text">
-                Actividad sincronizada automáticamente
+          <div class="sec-head">
+            <span class="tag">Proyectos seleccionados</span><span class="sec-line"></span
+            ><span class="sec-title">Cosas que he construido</span>
+          </div>
+        </div>
+
+        <div class="stack">
+          <!-- Panel 2 -->
+          <article class="panel" style="--tint: rgba(150, 170, 255, 0.06)">
+            <div class="shell panel-grid">
+              <a href="/projects/kicord" aria-label="Ver caso de estudio de kicord" class="panel-visual" data-cursor="CASE" data-open-case="kicord">
+                <span class="panel-bgmark">K</span>
+                <div class="ph-stage">
+                  <div class="phone-float">
+                    <img class="phone-mockup" src="/assets/phone-kicord.webp" width="501" height="1024" loading="lazy" decoding="async" alt="Vista conceptual de la web de KiCord" draggable="false" />
+                    <div class="ph-ground" aria-hidden="true"></div>
+                  </div>
+                  <div class="ph-dots" aria-hidden="true"></div>
+                </div>
+              </a>
+              <div class="panel-info">
+                <div class="panel-num">01 — Producto open source</div>
+                <h3 class="panel-title"><a href="/projects/kicord" data-open-case="kicord">KiCord</a></h3>
+                <div class="panel-metrics" aria-label="Métricas y datos de KiCord">
+                  <span class="metric-pill" title="Modelo de desarrollo">
+                    <span class="metric-dot oss" aria-hidden="true"></span>
+                    <span class="metric-val">Open Source</span>
+                  </span>
+                  <span class="metric-pill" title="Tipo de software">
+                    <span class="metric-lbl">Tipo</span>
+                    <span class="metric-val">Extensión Discord</span>
+                  </span>
+                  <span class="metric-pill" title="Arquitectura extensible">
+                    <span class="metric-lbl">Ecosistema</span>
+                    <span class="metric-val">Plugins modulares</span>
+                  </span>
+                </div>
+                <p class="panel-desc">
+                  Creador y desarrollador principal de una extensión avanzada
+                  para Discord. KiCord incorpora una arquitectura modular,
+                  mejoras de experiencia de usuario y un ecosistema propio de
+                  plugins para ampliar el cliente.
+                </p>
+                <div class="panel-tags">
+                  <span class="panel-tag">TypeScript</span
+                  ><span class="panel-tag">Discord</span
+                  ><span class="panel-tag">Plugins</span
+                  ><span class="panel-tag">UX</span
+                  ><span class="panel-tag">Open Source</span>
+                </div>
+                <div class="panel-links">
+                  <a
+                    href="/projects/kicord"
+                    class="btn btn-case"
+                    data-open-case="kicord"
+                    data-cursor="CASE STUDY"
+                    ><span class="btn-t"
+                      >Ver caso<svg
+                        width="12"
+                        height="12"
+                        viewBox="0 0 12 12"
+                        fill="none"
+                        aria-hidden="true"
+                      >
+                        <path
+                          d="M1 11L11 1M11 1H4M11 1V8"
+                          stroke="currentColor"
+                          stroke-width="1.4"
+                          stroke-linecap="round"
+                        /></svg></span
+                  ></a>
+                  <a
+                    href="https://kicord.es"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="btn btn-solid"
+                    data-cursor="OPEN"
+                    ><span class="btn-t"
+                      >Web
+                      <svg
+                        width="12"
+                        height="12"
+                        viewBox="0 0 12 12"
+                        fill="none"
+                      >
+                        <path
+                          d="M1 11L11 1M11 1H4M11 1V8"
+                          stroke="currentColor"
+                          stroke-width="1.4"
+                          stroke-linecap="round"
+                        /></svg></span
+                  ></a>
+                  <a
+                    href="https://github.com/PapiGECode"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="btn btn-ghost"
+                    data-cursor="VISIT"
+                    ><span class="btn-t">GitHub</span></a
+                  >
+                </div>
               </div>
             </div>
+          </article>
 
-            <div class="now-grid">
-              <!-- Col 1: Enfoque y Proyecto Principal -->
-              <div class="now-col">
-                <div>
-                  <div class="now-eyebrow">
-                    <span>Enfoque principal</span>
+          <article class="panel flip" style="--tint: rgba(150, 255, 190, 0.05)">
+            <div class="shell panel-grid">
+              <a href="/projects/papigegamer" aria-label="Ver caso de estudio de PapiGEGamer" class="panel-visual" data-cursor="CASE" data-open-case="papige">
+                <span class="panel-bgmark">P</span>
+                <div class="ph-stage">
+                  <div class="phone-float">
+                    <img class="phone-mockup" src="/assets/phone-papige.webp" width="503" height="1024" loading="lazy" decoding="async" alt="Vista conceptual de la web de PapiGEGamer" draggable="false" />
+                    <div class="ph-ground" aria-hidden="true"></div>
                   </div>
-                  <h3 class="now-title" id="now-project-title">KiCord &amp; PapiGEGamer</h3>
-                  <p class="now-desc" id="now-project-desc">
-                    Iterando arquitectura modular en TypeScript, sistema de plugins dinámicos y telemetría reactiva en tiempo real.
-                  </p>
+                  <div class="ph-dots" aria-hidden="true"></div>
                 </div>
-                <a
-                  href="https://kicord.es"
-                  target="_blank"
-                  rel="noopener"
-                  class="now-link"
-                  id="now-project-link"
-                  data-cursor="VISIT"
-                >
-                  <span>Explorar KiCord</span>
-                  <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                    <path d="M1 11L11 1M11 1H3M11 1V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </a>
+              </a>
+              <div class="panel-info">
+                <div class="panel-num">02 — Plataforma web</div>
+                <h3 class="panel-title"><a href="/projects/papigegamer" data-open-case="papige">PapiGEGamer<span class="domain-ending">.com</span></a></h3>
+                <div class="panel-metrics" aria-label="Métricas y datos de PapiGEGamer.com">
+                  <span class="metric-pill" title="Estado del servicio">
+                    <span class="metric-dot live" aria-hidden="true"></span>
+                    <span class="metric-val">Activo</span>
+                  </span>
+                  <span class="metric-pill" title="Integraciones y APIs">
+                    <span class="metric-lbl">APIs</span>
+                    <span class="metric-val">Discord &amp; GitHub</span>
+                  </span>
+                  <span class="metric-pill" title="Asistente interactivo">
+                    <span class="metric-lbl">IA</span>
+                    <span class="metric-val">NEXO</span>
+                  </span>
+                </div>
+                <p class="panel-desc">
+                  Portfolio interactivo desarrollado con React y TypeScript.
+                  Centraliza telemetría en tiempo real de comunidades,
+                  integraciones con las APIs de Discord y GitHub, y NEXO, un
+                  asistente interactivo pensado para explorar el proyecto.
+                </p>
+                <div class="panel-tags">
+                  <span class="panel-tag">React</span
+                  ><span class="panel-tag">TypeScript</span
+                  ><span class="panel-tag">Discord API</span
+                  ><span class="panel-tag">GitHub API</span
+                  ><span class="panel-tag">NEXO</span>
+                </div>
+                <div class="panel-links">
+                  <a
+                    href="/projects/papigegamer"
+                    class="btn btn-case"
+                    data-open-case="papige"
+                    data-cursor="CASE STUDY"
+                    ><span class="btn-t"
+                      >Ver caso<svg
+                        width="12"
+                        height="12"
+                        viewBox="0 0 12 12"
+                        fill="none"
+                        aria-hidden="true"
+                      >
+                        <path
+                          d="M1 11L11 1M11 1H4M11 1V8"
+                          stroke="currentColor"
+                          stroke-width="1.4"
+                          stroke-linecap="round"
+                        /></svg></span
+                  ></a>
+                  <a
+                    href="https://papigegamer.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="btn btn-solid"
+                    data-cursor="OPEN"
+                    ><span class="btn-t"
+                      >Web
+                      <svg
+                        width="12"
+                        height="12"
+                        viewBox="0 0 12 12"
+                        fill="none"
+                      >
+                        <path
+                          d="M1 11L11 1M11 1H4M11 1V8"
+                          stroke="currentColor"
+                          stroke-width="1.4"
+                          stroke-linecap="round"
+                        /></svg></span
+                  ></a>
+                  <a
+                    href="https://github.com/PapiGECode"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="btn btn-ghost"
+                    data-cursor="VISIT"
+                    ><span class="btn-t">GitHub</span></a
+                  >
+                </div>
               </div>
+            </div>
+          </article>
 
-              <!-- Col 2: Telemetría GitHub en vivo -->
-              <div class="now-col">
-                <div>
-                  <div class="now-eyebrow">
-                    <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" style="opacity: 0.8;">
-                      <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
-                    </svg>
-                    <span>Actividad pública GitHub</span>
-                  </div>
-                  <div class="now-commit-box" id="now-github-box">
-                    <div class="now-commit-head">
-                      <span class="now-repo-name" id="now-github-repo">PapiGECode/Web-CV</span>
-                      <span class="now-commit-time" id="now-github-time">Reciente</span>
-                    </div>
-                    <p class="now-commit-msg" id="now-github-msg">
-                      Cargando última actividad pública...
-                    </p>
-                  </div>
-                </div>
-                <a
-                  href="https://github.com/PapiGECode"
-                  target="_blank"
-                  rel="noopener"
-                  class="now-link"
-                  id="now-github-link"
-                  data-cursor="GITHUB"
-                  style="margin-top: 0.75rem;"
-                >
-                  <span>github.com/PapiGECode</span>
-                  <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                    <path d="M1 11L11 1M11 1H3M11 1V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </a>
-              </div>
+          <!-- Panel 1 -->
 
-              <!-- Col 3: Disponibilidad y Stack Activo -->
-              <div class="now-col">
-                <div>
-                  <div class="now-eyebrow">
-                    <span>Disponibilidad &amp; Stack</span>
+          <!-- Panel 3 -->
+          <article class="panel" style="--tint: rgba(255, 180, 140, 0.05)">
+            <div class="shell panel-grid">
+              <a href="/projects/kernelos" aria-label="Ver caso de estudio de kernelos" class="panel-visual" data-cursor="CASE" data-open-case="kernelos">
+                <span class="panel-bgmark">KOS</span>
+                <div class="ph-stage">
+                  <div class="phone-float">
+                    <img class="phone-mockup" src="/assets/phone-kernelos.webp" width="501" height="1024" loading="lazy" decoding="async" alt="Vista conceptual de la web de KernelOS" draggable="false" />
+                    <div class="ph-ground" aria-hidden="true"></div>
                   </div>
-                  <div class="now-status-pill" id="now-status-badge">
-                    <span class="now-live-dot" style="width: 6px; height: 6px;"></span>
-                    <span id="now-status-text">Disponible para colaborar</span>
-                  </div>
-                  <div class="now-tags" id="now-focus-tags">
-                    <span class="now-tag">TypeScript</span>
-                    <span class="now-tag">React / Next.js</span>
-                    <span class="now-tag">Kernel &amp; Sistemas</span>
-                    <span class="now-tag">Open Source</span>
-                  </div>
+                  <div class="ph-dots" aria-hidden="true"></div>
                 </div>
-                <a
-                  href="#contact"
-                  class="now-collab-btn"
-                  data-cursor="SEND"
-                  onclick="goTo('#contact'); return false;"
-                >
-                  <span>Contactar</span>
-                  <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                    <path d="M1 6H11M11 6L6 1M11 6L6 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </a>
+              </a>
+              <div class="panel-info">
+                <div class="panel-num">03 — Comunidad &amp; producto</div>
+                <h3 class="panel-title"><a href="/projects/kernelos" data-open-case="kernelos">KernelOS</a></h3>
+                <div class="panel-metrics" aria-label="Métricas y datos de KernelOS">
+                  <span class="metric-pill" title="Usuarios activos en la comunidad">
+                    <span class="metric-dot live" aria-hidden="true"></span>
+                    <span class="metric-val">50K+</span>
+                    <span class="metric-lbl">activos</span>
+                  </span>
+                  <span class="metric-pill" title="Usuarios históricos totales">
+                    <span class="metric-val">1.5M+</span>
+                    <span class="metric-lbl">históricos</span>
+                  </span>
+                  <span class="metric-pill" title="Enfoque del producto">
+                    <span class="metric-lbl">Enfoque</span>
+                    <span class="metric-val">CustomOS Gaming</span>
+                  </span>
+                </div>
+                <p class="panel-desc">
+                  Soporte, comunidad y producto en un ecosistema de CustomOS
+                  para gaming de baja latencia con más de 50.000 usuarios
+                  activos y más de 1,5 millones de usuarios históricos. Un
+                  trabajo enfocado en escucha, prevención técnica y producto.
+                </p>
+                <div class="panel-tags">
+                  <span class="panel-tag">Comunidad</span
+                  ><span class="panel-tag">Soporte</span
+                  ><span class="panel-tag">Gaming</span
+                  ><span class="panel-tag">Producto</span
+                  ><span class="panel-tag">Rendimiento</span>
+                </div>
+                <div class="panel-links">
+                  <a
+                    href="/projects/kernelos"
+                    class="btn btn-case"
+                    data-open-case="kernelos"
+                    data-cursor="CASE STUDY"
+                    ><span class="btn-t"
+                      >Ver caso<svg
+                        width="12"
+                        height="12"
+                        viewBox="0 0 12 12"
+                        fill="none"
+                        aria-hidden="true"
+                      >
+                        <path
+                          d="M1 11L11 1M11 1H4M11 1V8"
+                          stroke="currentColor"
+                          stroke-width="1.4"
+                          stroke-linecap="round"
+                        /></svg></span
+                  ></a>
+                  <a
+                    href="https://kernelos.org/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="btn btn-solid"
+                    data-cursor="OPEN"
+                    ><span class="btn-t"
+                      >Web
+                      <svg
+                        width="12"
+                        height="12"
+                        viewBox="0 0 12 12"
+                        fill="none"
+                      >
+                        <path
+                          d="M1 11L11 1M11 1H4M11 1V8"
+                          stroke="currentColor"
+                          stroke-width="1.4"
+                          stroke-linecap="round"
+                        /></svg></span
+                  ></a>
+                  <a
+                    href="https://github.com/PapiGECode"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="btn btn-ghost"
+                    data-cursor="VISIT"
+                    ><span class="btn-t">GitHub</span></a
+                  >
+                </div>
               </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="shell bento-projects-wrap">
+          <div class="bento-projects-head anim">
+            <div class="bento-head-left">
+              <span class="bento-subtag">Ecosistema &amp; Open Source</span>
+              <h3 class="bento-title">Más proyectos y colaboraciones</h3>
+            </div>
+            <div class="bento-head-meta" aria-label="Recuento de proyectos e iniciativas secundarias">
+              <span class="bento-repo-count">Ecosistema GitHub &amp; Iniciativas</span>
             </div>
           </div>
+          <div
+            class="bento-grid"
+            id="bento-projects-grid"
+            role="region"
+            aria-label="Cuadrícula Bento de proyectos secundarios y colaboraciones"
+          ><article class="bento-card bento-col-2" data-cursor="PROJECT"><div class="bento-border-glow" aria-hidden="true"></div><div class="bento-card-inner"><div class="bento-top"><div class="bento-meta-left"><span class="bento-num">04</span><span class="bento-type-badge">Plugin Open Source</span></div><div class="bento-status-badge status-active"><span class="bento-status-dot" aria-hidden="true"></span><span>Activo</span></div></div><div class="bento-heading-row"><div class="bento-icon-box" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2"></rect><path d="M6 12h4m-2-2v4m10-2h.01m-3-1h.01"></path></svg></div><div class="bento-title-group"><h4 class="bento-card-title">KiCord-DOOM-Plugin</h4></div></div><p class="bento-desc">Adaptación y plugin funcional en TypeScript que lleva el clásico DOOM al entorno de KiCord, demostrando la extensibilidad modular de su motor de plugins y una integración de bajo nivel en el cliente.</p><div class="bento-footer"><div class="bento-specs-row"><div class="bento-lang"><span class="bento-lang-dot" style="background-color: #3178c6;" aria-hidden="true"></span><span>TypeScript</span></div></div><div class="bento-tags"><span class="bento-tag">TypeScript</span><span class="bento-tag">DOOM Wasm</span><span class="bento-tag">Discord Client</span><span class="bento-tag">Plugin Architecture</span></div><div class="bento-actions"><a href="https://github.com/PapiGECode/KiCord-DOOM-Plugin" target="_blank" rel="noopener noreferrer" class="bento-btn-link" aria-label="Ver KiCord-DOOM-Plugin en GitHub" data-cursor="GITHUB"><svg viewBox="0 0 16 16" width="13" height="13" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg><span>Código</span></a></div></div></div></article><article class="bento-card bento-col-1" data-cursor="PROJECT"><div class="bento-border-glow" aria-hidden="true"></div><div class="bento-card-inner"><div class="bento-top"><div class="bento-meta-left"><span class="bento-num">05</span><span class="bento-type-badge">Automatización</span></div><div class="bento-status-badge status-maintained"><span class="bento-status-dot" aria-hidden="true"></span><span>Mantenido</span></div></div><div class="bento-heading-row"><div class="bento-icon-box" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg></div><div class="bento-title-group"><h4 class="bento-card-title">duolingo-streak-keeper</h4></div></div><p class="bento-desc">Script de automatización en TypeScript para la monitorización e interacción periódica programada, resolviendo la retención de rachas de forma desatendida y fiable.</p><div class="bento-footer"><div class="bento-specs-row"><div class="bento-lang"><span class="bento-lang-dot" style="background-color: #3178c6;" aria-hidden="true"></span><span>TypeScript</span></div></div><div class="bento-tags"><span class="bento-tag">TypeScript</span><span class="bento-tag">Node.js</span><span class="bento-tag">Cron Tasks</span><span class="bento-tag">API Client</span></div><div class="bento-actions"><a href="https://github.com/PapiGECode/duolingo-streak-keeper" target="_blank" rel="noopener noreferrer" class="bento-btn-link" aria-label="Ver duolingo-streak-keeper en GitHub" data-cursor="GITHUB"><svg viewBox="0 0 16 16" width="13" height="13" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg><span>Código</span></a></div></div></div></article><article class="bento-card bento-col-1" data-cursor="PROJECT"><div class="bento-border-glow" aria-hidden="true"></div><div class="bento-card-inner"><div class="bento-top"><div class="bento-meta-left"><span class="bento-num">06</span><span class="bento-type-badge">Gestión & Operaciones</span></div><div class="bento-status-badge status-active"><span class="bento-status-dot" aria-hidden="true"></span><span>Activo</span></div></div><div class="bento-heading-row"><div class="bento-icon-box" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div><div class="bento-title-group"><h4 class="bento-card-title">FNLB & Comunidades Tech</h4></div></div><p class="bento-desc">Moderación y colaboración de producto en FNLB, junto a participación activa y soporte técnico en comunidades de Nate Gentile, Edgar Pons y ThiagoIUTU a gran escala.</p><div class="bento-footer"><div class="bento-specs-row"><div class="bento-lang"><span class="bento-lang-dot" style="background-color: #10b981;" aria-hidden="true"></span><span>Community Ops</span></div></div><div class="bento-tags"><span class="bento-tag">Moderación</span><span class="bento-tag">Gestión de Producto</span><span class="bento-tag">Discord Ops</span><span class="bento-tag">Resolución Técnica</span></div><div class="bento-actions"><a href="https://github.com/PapiGECode" target="_blank" rel="noopener noreferrer" class="bento-btn-link" aria-label="Ver FNLB & Comunidades Tech en GitHub" data-cursor="GITHUB"><svg viewBox="0 0 16 16" width="13" height="13" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg><span>Código</span></a></div></div></div></article><article class="bento-card bento-col-1" data-cursor="PROJECT"><div class="bento-border-glow" aria-hidden="true"></div><div class="bento-card-inner"><div class="bento-top"><div class="bento-meta-left"><span class="bento-num">07</span><span class="bento-type-badge">Colaboración Web</span></div><div class="bento-status-badge status-completed"><span class="bento-status-dot" aria-hidden="true"></span><span>Completado</span></div></div><div class="bento-heading-row"><div class="bento-icon-box" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg></div><div class="bento-title-group"><h4 class="bento-card-title">thiagoiutu-portfolio</h4></div></div><p class="bento-desc">Colaboración técnica y desarrollo frontend para el portfolio del creador ThiagoIUTU, enfocado en rendimiento web, maquetación responsive limpia y arquitectura visual atractiva.</p><div class="bento-footer"><div class="bento-specs-row"><div class="bento-lang"><span class="bento-lang-dot" style="background-color: #e34c26;" aria-hidden="true"></span><span>HTML / JS</span></div></div><div class="bento-tags"><span class="bento-tag">HTML5</span><span class="bento-tag">CSS Grid</span><span class="bento-tag">JavaScript</span><span class="bento-tag">Responsive UI</span></div><div class="bento-actions"><a href="https://github.com/PapiGECode/thiagoiutu-portfolio" target="_blank" rel="noopener noreferrer" class="bento-btn-link" aria-label="Ver thiagoiutu-portfolio en GitHub" data-cursor="GITHUB"><svg viewBox="0 0 16 16" width="13" height="13" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg><span>Código</span></a></div></div></div></article><article class="bento-card bento-col-1" data-cursor="PROJECT"><div class="bento-border-glow" aria-hidden="true"></div><div class="bento-card-inner"><div class="bento-top"><div class="bento-meta-left"><span class="bento-num">08</span><span class="bento-type-badge">Research & CI/CD</span></div><div class="bento-status-badge status-lab"><span class="bento-status-dot" aria-hidden="true"></span><span>Laboratorio</span></div></div><div class="bento-heading-row"><div class="bento-icon-box" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"></path><path d="M8.5 2h7"></path><path d="M7 16h10"></path></svg></div><div class="bento-title-group"><h4 class="bento-card-title">github-achievements-lab</h4></div></div><p class="bento-desc">Entorno de pruebas y laboratorio técnico para validar flujos colaborativos en GitHub: pull requests, resolución de issues, trazabilidad técnica y automatizaciones CI/CD.</p><div class="bento-footer"><div class="bento-specs-row"><div class="bento-lang"><span class="bento-lang-dot" style="background-color: #8957e5;" aria-hidden="true"></span><span>Git / CI</span></div></div><div class="bento-tags"><span class="bento-tag">Git Workflows</span><span class="bento-tag">CI/CD</span><span class="bento-tag">PRs & Issues</span><span class="bento-tag">Code Review</span></div><div class="bento-actions"><a href="https://github.com/PapiGECode/github-achievements-lab" target="_blank" rel="noopener noreferrer" class="bento-btn-link" aria-label="Ver github-achievements-lab en GitHub" data-cursor="GITHUB"><svg viewBox="0 0 16 16" width="13" height="13" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg><span>Código</span></a></div></div></div></article><article class="bento-card bento-col-2" data-cursor="PROJECT"><div class="bento-border-glow" aria-hidden="true"></div><div class="bento-card-inner"><div class="bento-top"><div class="bento-meta-left"><span class="bento-num">09</span><span class="bento-type-badge">Investigación C++</span></div><div class="bento-status-badge status-archive"><span class="bento-status-dot" aria-hidden="true"></span><span>Archivo</span></div></div><div class="bento-heading-row"><div class="bento-icon-box" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line></svg></div><div class="bento-title-group"><h4 class="bento-card-title">project-vi-technical-archive</h4></div></div><p class="bento-desc">Archivo y análisis técnico en C++ estructurado para la exploración de pipelines, ingeniería de sistemas y compilación orientada a rendimiento en arquitecturas de software complejas.</p><div class="bento-footer"><div class="bento-specs-row"><div class="bento-lang"><span class="bento-lang-dot" style="background-color: #f34b7d;" aria-hidden="true"></span><span>C++</span></div></div><div class="bento-tags"><span class="bento-tag">C++</span><span class="bento-tag">Sistemas</span><span class="bento-tag">Low-level Analysis</span><span class="bento-tag">Engine Tech</span></div><div class="bento-actions"><a href="https://www.rockstargames.com/VI" target="_blank" rel="noopener noreferrer" class="bento-btn-link secondary" aria-label="Visitar web oficial de project-vi-technical-archive" data-cursor="VISIT"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg><span>Web</span></a><a href="https://github.com/PapiGECode/project-vi-technical-archive" target="_blank" rel="noopener noreferrer" class="bento-btn-link" aria-label="Ver project-vi-technical-archive en GitHub" data-cursor="GITHUB"><svg viewBox="0 0 16 16" width="13" height="13" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg><span>Código</span></a></div></div></div></article><article class="bento-card bento-col-1" data-cursor="PROJECT"><div class="bento-border-glow" aria-hidden="true"></div><div class="bento-card-inner"><div class="bento-top"><div class="bento-meta-left"><span class="bento-num">+</span><span class="bento-type-badge">Código Abierto</span></div><div class="bento-status-badge status-active"><span class="bento-status-dot" aria-hidden="true"></span><span>Público</span></div></div><div class="bento-heading-row"><div class="bento-icon-box" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></div><div class="bento-title-group"><h4 class="bento-card-title">Ecosistema GitHub</h4></div></div><p class="bento-desc">Explora el perfil completo de GitHub con todos los repositorios públicos, forks, contribuciones y actividad técnica de código abierto continua.</p><div class="bento-footer"><div class="bento-specs-row"><div class="bento-lang"><span class="bento-lang-dot" style="background-color: #38bdf8;" aria-hidden="true"></span><span>GitHub Hub</span></div></div><div class="bento-tags"><span class="bento-tag">Open Source</span><span class="bento-tag">Git</span><span class="bento-tag">Commits</span><span class="bento-tag">Developer Program</span></div><div class="bento-actions"><a href="https://github.com/PapiGECode?tab=repositories" target="_blank" rel="noopener noreferrer" class="bento-btn-link" aria-label="Ver Ecosistema GitHub en GitHub" data-cursor="GITHUB"><svg viewBox="0 0 16 16" width="13" height="13" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg><span>Explorar</span></a></div></div></div></article></div>
         </div>
       </section>
 
@@ -446,14 +609,14 @@
               <div class="about-portrait" id="portrait">
                 <img
                   class="portrait-img portrait-dark"
-                  src="assets/pablo-casual.webp"
-                  fetchpriority="high"
+                  src="/assets/pablo-casual.webp" srcset="/assets/pablo-casual-480.webp 480w, /assets/pablo-casual-800.webp 800w, /assets/pablo-casual-1024.webp 1024w" sizes="(max-width: 880px) 88vw, 38vw" width="1024" height="1536"
+                  loading="lazy"
                   decoding="async"
                   alt="Pablo Schefer Orduña"
                 />
                 <img
                   class="portrait-img portrait-light"
-                  src="assets/pablo-profesional.webp"
+                  src="/assets/pablo-profesional.webp" srcset="/assets/pablo-profesional-480.webp 480w, /assets/pablo-profesional-800.webp 800w, /assets/pablo-profesional-1122.webp 1122w" sizes="(max-width: 880px) 88vw, 38vw" width="1122" height="1402"
                   loading="lazy"
                   decoding="async"
                   alt=""
@@ -740,11 +903,11 @@
                 <ul class="cap-evidence-list">
                   <li class="cap-evidence-item">
                     <span class="cap-evidence-icon">›</span>
-                    <span><strong>GitHub Developer Program:</strong> Miembro acreditado con actividad en <a href="https://github.com/PapiGECode" target="_blank" rel="noopener" class="cap-evidence-link">github.com/PapiGECode</a>.</span>
+                    <span><strong>GitHub Developer Program:</strong> Miembro acreditado con actividad en <a href="https://github.com/PapiGECode" target="_blank" rel="noopener noreferrer" class="cap-evidence-link">github.com/PapiGECode</a>.</span>
                   </li>
                   <li class="cap-evidence-item">
                     <span class="cap-evidence-icon">›</span>
-                    <span><strong>KiCord OSS:</strong> Proyecto open-source con arquitectura de plugins dinámicos en <a href="https://kicord.es" target="_blank" rel="noopener" class="cap-evidence-link">kicord.es</a>.</span>
+                    <span><strong>KiCord OSS:</strong> Proyecto open-source con arquitectura de plugins dinámicos en <a href="https://kicord.es" target="_blank" rel="noopener noreferrer" class="cap-evidence-link">kicord.es</a>.</span>
                   </li>
                   <li class="cap-evidence-item">
                     <span class="cap-evidence-icon">›</span>
@@ -819,333 +982,113 @@
         </div>
       </section>
 
-      <!-- WORK -->
-      <section id="work">
+      <!-- LIVE STATUS / ACTUALMENTE -->
+      <section id="now" class="now-section" aria-label="Estado actual de proyectos y actividad">
         <div class="shell">
-          <div class="sec-head">
-            <span class="tag">Proyectos seleccionados</span><span class="sec-line"></span
-            ><span class="sec-title">Cosas que he construido</span>
-          </div>
-        </div>
+          <div class="now-panel anim">
+            <div class="now-head-row">
+              <div class="now-badge">
+                <span class="now-live-dot" aria-hidden="true"></span>
+                <span>Actualmente</span>
+                <span style="opacity: 0.4;">/</span>
+                <span style="color: var(--ash); font-weight: 400;">Now</span>
+              </div>
+              <div class="now-timestamp" id="now-updated-text">
+                Actividad pública de GitHub
+              </div>
+            </div>
 
-        <div class="stack">
-          <!-- Panel 2 -->
-          <article class="panel" style="--tint: rgba(150, 170, 255, 0.06)">
-            <div class="shell panel-grid">
-              <div class="panel-visual" data-cursor="CASE" data-open-case="kicord">
-                <span class="panel-bgmark">K</span>
-                <div class="ph-stage">
-                  <div class="phone-float">
-                    <img class="phone-mockup" src="assets/phone-kicord.webp" loading="lazy" decoding="async" alt="KiCord en iPhone" draggable="false" />
-                    <div class="ph-ground" aria-hidden="true"></div>
+            <div class="now-grid">
+              <!-- Col 1: Enfoque y Proyecto Principal -->
+              <div class="now-col">
+                <div>
+                  <div class="now-eyebrow">
+                    <span>Enfoque principal</span>
                   </div>
-                  <div class="ph-dots" aria-hidden="true"></div>
+                  <h3 class="now-title" id="now-project-title">KiCord &amp; PapiGEGamer</h3>
+                  <p class="now-desc" id="now-project-desc">
+                    Iterando arquitectura modular en TypeScript, sistema de plugins dinámicos y telemetría reactiva en tiempo real.
+                  </p>
                 </div>
+                <a
+                  href="https://kicord.es"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="now-link"
+                  id="now-project-link"
+                  data-cursor="VISIT"
+                >
+                  <span>Explorar KiCord</span>
+                  <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                    <path d="M1 11L11 1M11 1H3M11 1V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </a>
               </div>
-              <div class="panel-info">
-                <div class="panel-num">01 — Producto open source</div>
-                <h3 class="panel-title" data-open-case="kicord" data-cursor="CASE" title="Ver caso de estudio de KiCord">KiCord</h3>
-                <div class="panel-metrics" aria-label="Métricas y datos de KiCord">
-                  <span class="metric-pill" title="Modelo de desarrollo">
-                    <span class="metric-dot oss" aria-hidden="true"></span>
-                    <span class="metric-val">Open Source</span>
-                  </span>
-                  <span class="metric-pill" title="Tipo de software">
-                    <span class="metric-lbl">Tipo</span>
-                    <span class="metric-val">Extensión Discord</span>
-                  </span>
-                  <span class="metric-pill" title="Arquitectura extensible">
-                    <span class="metric-lbl">Ecosistema</span>
-                    <span class="metric-val">Plugins modulares</span>
-                  </span>
-                </div>
-                <p class="panel-desc">
-                  Creador y desarrollador principal de una extensión avanzada
-                  para Discord. KiCord incorpora una arquitectura modular,
-                  mejoras de experiencia de usuario y un ecosistema propio de
-                  plugins para ampliar el cliente.
-                </p>
-                <div class="panel-tags">
-                  <span class="panel-tag">TypeScript</span
-                  ><span class="panel-tag">Discord</span
-                  ><span class="panel-tag">Plugins</span
-                  ><span class="panel-tag">UX</span
-                  ><span class="panel-tag">Open Source</span>
-                </div>
-                <div class="panel-links">
-                  <a
-                    href="#case-study-kicord"
-                    role="button"
-                    class="btn btn-case"
-                    data-open-case="kicord"
-                    data-cursor="CASE STUDY"
-                    ><span class="btn-t"
-                      >Case Study<svg
-                        width="12"
-                        height="12"
-                        viewBox="0 0 12 12"
-                        fill="none"
-                        aria-hidden="true"
-                      >
-                        <path
-                          d="M1 11L11 1M11 1H4M11 1V8"
-                          stroke="currentColor"
-                          stroke-width="1.4"
-                          stroke-linecap="round"
-                        /></svg></span
-                  ></a>
-                  <a
-                    href="https://kicord.es"
-                    target="_blank"
-                    rel="noopener"
-                    class="btn btn-solid"
-                    data-cursor="OPEN"
-                    ><span class="btn-t"
-                      >Web
-                      <svg
-                        width="12"
-                        height="12"
-                        viewBox="0 0 12 12"
-                        fill="none"
-                      >
-                        <path
-                          d="M1 11L11 1M11 1H4M11 1V8"
-                          stroke="currentColor"
-                          stroke-width="1.4"
-                          stroke-linecap="round"
-                        /></svg></span
-                  ></a>
-                  <a
-                    href="https://github.com/PapiGECode"
-                    target="_blank"
-                    rel="noopener"
-                    class="btn btn-ghost"
-                    data-cursor="VISIT"
-                    ><span class="btn-t">GitHub</span></a
-                  >
-                </div>
-              </div>
-            </div>
-          </article>
 
-          <article class="panel flip" style="--tint: rgba(150, 255, 190, 0.05)">
-            <div class="shell panel-grid">
-              <div class="panel-visual" data-cursor="CASE" data-open-case="papige">
-                <span class="panel-bgmark">P</span>
-                <div class="ph-stage">
-                  <div class="phone-float">
-                    <img class="phone-mockup" src="assets/phone-papige.webp" loading="lazy" decoding="async" alt="PapiGEGamer.com en iPhone" draggable="false" />
-                    <div class="ph-ground" aria-hidden="true"></div>
+              <!-- Col 2: Telemetría GitHub en vivo -->
+              <div class="now-col">
+                <div>
+                  <div class="now-eyebrow">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" style="opacity: 0.8;">
+                      <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+                    </svg>
+                    <span>Actividad pública GitHub</span>
                   </div>
-                  <div class="ph-dots" aria-hidden="true"></div>
-                </div>
-              </div>
-              <div class="panel-info">
-                <div class="panel-num">02 — Plataforma web</div>
-                <h3 class="panel-title" data-open-case="papige" data-cursor="CASE" title="Ver caso de estudio de PapiGEGamer.com">PapiGEGamer.com</h3>
-                <div class="panel-metrics" aria-label="Métricas y datos de PapiGEGamer.com">
-                  <span class="metric-pill" title="Estado del servicio">
-                    <span class="metric-dot live" aria-hidden="true"></span>
-                    <span class="metric-val">Activo</span>
-                  </span>
-                  <span class="metric-pill" title="Integraciones y APIs">
-                    <span class="metric-lbl">APIs</span>
-                    <span class="metric-val">Discord &amp; GitHub</span>
-                  </span>
-                  <span class="metric-pill" title="Asistente interactivo">
-                    <span class="metric-lbl">IA</span>
-                    <span class="metric-val">NEXO</span>
-                  </span>
-                </div>
-                <p class="panel-desc">
-                  Portfolio interactivo desarrollado con React y TypeScript.
-                  Centraliza telemetría en tiempo real de comunidades,
-                  integraciones con las APIs de Discord y GitHub, y NEXO, un
-                  asistente interactivo pensado para explorar el proyecto.
-                </p>
-                <div class="panel-tags">
-                  <span class="panel-tag">React</span
-                  ><span class="panel-tag">TypeScript</span
-                  ><span class="panel-tag">Discord API</span
-                  ><span class="panel-tag">GitHub API</span
-                  ><span class="panel-tag">NEXO</span>
-                </div>
-                <div class="panel-links">
-                  <a
-                    href="#case-study-papige"
-                    role="button"
-                    class="btn btn-case"
-                    data-open-case="papige"
-                    data-cursor="CASE STUDY"
-                    ><span class="btn-t"
-                      >Case Study<svg
-                        width="12"
-                        height="12"
-                        viewBox="0 0 12 12"
-                        fill="none"
-                        aria-hidden="true"
-                      >
-                        <path
-                          d="M1 11L11 1M11 1H4M11 1V8"
-                          stroke="currentColor"
-                          stroke-width="1.4"
-                          stroke-linecap="round"
-                        /></svg></span
-                  ></a>
-                  <a
-                    href="https://papigegamer.com"
-                    target="_blank"
-                    rel="noopener"
-                    class="btn btn-solid"
-                    data-cursor="OPEN"
-                    ><span class="btn-t"
-                      >Web
-                      <svg
-                        width="12"
-                        height="12"
-                        viewBox="0 0 12 12"
-                        fill="none"
-                      >
-                        <path
-                          d="M1 11L11 1M11 1H4M11 1V8"
-                          stroke="currentColor"
-                          stroke-width="1.4"
-                          stroke-linecap="round"
-                        /></svg></span
-                  ></a>
-                  <a
-                    href="https://github.com/PapiGECode"
-                    target="_blank"
-                    rel="noopener"
-                    class="btn btn-ghost"
-                    data-cursor="VISIT"
-                    ><span class="btn-t">GitHub</span></a
-                  >
-                </div>
-              </div>
-            </div>
-          </article>
-
-          <!-- Panel 1 -->
-
-          <!-- Panel 3 -->
-          <article class="panel" style="--tint: rgba(255, 180, 140, 0.05)">
-            <div class="shell panel-grid">
-              <div class="panel-visual" data-cursor="CASE" data-open-case="kernelos">
-                <span class="panel-bgmark">KOS</span>
-                <div class="ph-stage">
-                  <div class="phone-float">
-                    <img class="phone-mockup" src="assets/phone-kernelos.webp" loading="lazy" decoding="async" alt="KernelOS en iPhone" draggable="false" />
-                    <div class="ph-ground" aria-hidden="true"></div>
+                  <div class="now-commit-box" id="now-github-box" aria-live="polite">
+                    <div class="now-commit-head">
+                      <span class="now-repo-name" id="now-github-repo">PapiGECode/Web-CV</span>
+                      <span class="now-commit-time" id="now-github-time">GitHub</span>
+                    </div>
+                    <p class="now-commit-msg" id="now-github-msg">
+                      Consulta mis repositorios y contribuciones públicas.
+                    </p>
                   </div>
-                  <div class="ph-dots" aria-hidden="true"></div>
                 </div>
+                <a
+                  href="https://github.com/PapiGECode"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="now-link"
+                  id="now-github-link"
+                  data-cursor="GITHUB"
+                  style="margin-top: 0.75rem;"
+                >
+                  <span>github.com/PapiGECode</span>
+                  <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                    <path d="M1 11L11 1M11 1H3M11 1V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </a>
               </div>
-              <div class="panel-info">
-                <div class="panel-num">03 — Comunidad &amp; producto</div>
-                <h3 class="panel-title" data-open-case="kernelos" data-cursor="CASE" title="Ver caso de estudio de KernelOS">KernelOS</h3>
-                <div class="panel-metrics" aria-label="Métricas y datos de KernelOS">
-                  <span class="metric-pill" title="Usuarios activos en la comunidad">
-                    <span class="metric-dot live" aria-hidden="true"></span>
-                    <span class="metric-val">50K+</span>
-                    <span class="metric-lbl">activos</span>
-                  </span>
-                  <span class="metric-pill" title="Usuarios históricos totales">
-                    <span class="metric-val">1.5M+</span>
-                    <span class="metric-lbl">históricos</span>
-                  </span>
-                  <span class="metric-pill" title="Enfoque del producto">
-                    <span class="metric-lbl">Enfoque</span>
-                    <span class="metric-val">CustomOS Gaming</span>
-                  </span>
-                </div>
-                <p class="panel-desc">
-                  Soporte, comunidad y producto en un ecosistema de CustomOS
-                  para gaming de baja latencia con más de 50.000 usuarios
-                  activos y más de 1,5 millones de usuarios históricos. Un
-                  trabajo enfocado en escucha, prevención técnica y producto.
-                </p>
-                <div class="panel-tags">
-                  <span class="panel-tag">Comunidad</span
-                  ><span class="panel-tag">Soporte</span
-                  ><span class="panel-tag">Gaming</span
-                  ><span class="panel-tag">Producto</span
-                  ><span class="panel-tag">Rendimiento</span>
-                </div>
-                <div class="panel-links">
-                  <a
-                    href="#case-study-kernelos"
-                    role="button"
-                    class="btn btn-case"
-                    data-open-case="kernelos"
-                    data-cursor="CASE STUDY"
-                    ><span class="btn-t"
-                      >Case Study<svg
-                        width="12"
-                        height="12"
-                        viewBox="0 0 12 12"
-                        fill="none"
-                        aria-hidden="true"
-                      >
-                        <path
-                          d="M1 11L11 1M11 1H4M11 1V8"
-                          stroke="currentColor"
-                          stroke-width="1.4"
-                          stroke-linecap="round"
-                        /></svg></span
-                  ></a>
-                  <a
-                    href="https://kernelos.org/"
-                    target="_blank"
-                    rel="noopener"
-                    class="btn btn-solid"
-                    data-cursor="OPEN"
-                    ><span class="btn-t"
-                      >Web
-                      <svg
-                        width="12"
-                        height="12"
-                        viewBox="0 0 12 12"
-                        fill="none"
-                      >
-                        <path
-                          d="M1 11L11 1M11 1H4M11 1V8"
-                          stroke="currentColor"
-                          stroke-width="1.4"
-                          stroke-linecap="round"
-                        /></svg></span
-                  ></a>
-                  <a
-                    href="https://github.com/PapiGECode"
-                    target="_blank"
-                    rel="noopener"
-                    class="btn btn-ghost"
-                    data-cursor="VISIT"
-                    ><span class="btn-t">GitHub</span></a
-                  >
-                </div>
-              </div>
-            </div>
-          </article>
-        </div>
 
-        <div class="shell bento-projects-wrap">
-          <div class="bento-projects-head anim">
-            <div class="bento-head-left">
-              <span class="bento-subtag">Ecosistema &amp; Open Source</span>
-              <h3 class="bento-title">Más proyectos y colaboraciones</h3>
+              <!-- Col 3: Disponibilidad y Stack Activo -->
+              <div class="now-col">
+                <div>
+                  <div class="now-eyebrow">
+                    <span>Disponibilidad &amp; Stack</span>
+                  </div>
+                  <div class="now-status-pill" id="now-status-badge">
+                    <span class="now-live-dot" style="width: 6px; height: 6px;"></span>
+                    <span id="now-status-text">Disponible para colaborar</span>
+                  </div>
+                  <div class="now-tags" id="now-focus-tags">
+                    <span class="now-tag">TypeScript</span>
+                    <span class="now-tag">React / Next.js</span>
+                    <span class="now-tag">Kernel &amp; Sistemas</span>
+                    <span class="now-tag">Open Source</span>
+                  </div>
+                </div>
+                <a
+                  href="#contact"
+                  class="now-collab-btn"
+                  data-cursor="SEND"
+                >
+                  <span>Contactar</span>
+                  <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                    <path d="M1 6H11M11 6L6 1M11 6L6 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </a>
+              </div>
             </div>
-            <div class="bento-head-meta" aria-label="Recuento de proyectos e iniciativas secundarias">
-              <span class="bento-repo-count">Ecosistema GitHub &amp; Iniciativas</span>
-            </div>
-          </div>
-          <div
-            class="bento-grid"
-            id="bento-projects-grid"
-            role="region"
-            aria-label="Cuadrícula Bento de proyectos secundarios y colaboraciones"
-          >
-            <!-- Generado dinámicamente desde window.SECONDARY_PROJECTS -->
           </div>
         </div>
       </section>
@@ -1178,7 +1121,7 @@
                   class="social anim"
                   href="https://github.com/PapiGECode"
                   target="_blank"
-                  rel="noopener"
+                  rel="noopener noreferrer"
                   data-cursor="VISIT"
                   >GitHub <span class="arr">↗</span></a
                 >
@@ -1186,11 +1129,11 @@
                   class="social anim"
                   href="https://papigegamer.com"
                   target="_blank"
-                  rel="noopener"
+                  rel="noopener noreferrer"
                   data-cursor="VISIT"
                   >Web personal <span class="arr">↗</span></a
                 >
-                <a class="social anim" href="assets/Pablo-Schefer-CV.pdf" target="_blank" rel="noopener" data-cursor="OPEN"
+                <a class="social anim" href="assets/Pablo-Schefer-CV.pdf" target="_blank" rel="noopener noreferrer" data-cursor="OPEN"
                   >Ver CV <span class="arr">↗</span></a
                 >
                 <a class="social anim" href="assets/Pablo-Schefer-CV.pdf" download="Pablo-Schefer-CV.pdf" data-cursor="OPEN"
@@ -1199,67 +1142,35 @@
               </div>
             </div>
             <div>
-              <form class="form" id="contact-form" novalidate>
+              <form class="form" id="contact-form" method="post" action="/api/contact" novalidate hidden>
+                <p class="form-eyebrow mono">Cuéntame tu idea</p>
                 <div class="f-row">
-                  <div class="f-field anim">
-                    <label class="f-label" for="name">Nombre</label
-                    ><input
-                      class="f-input"
-                      id="name"
-                      name="name"
-                      type="text"
-                      autocomplete="name"
-                      maxlength="100"
-                      placeholder="Tu nombre"
-                      required
-                    />
+                  <div class="f-field">
+                    <label class="f-label" for="name">Nombre</label>
+                    <input class="f-input" id="name" name="name" type="text" autocomplete="name" minlength="2" maxlength="100" required placeholder="Tu nombre" aria-describedby="name-error" />
+                    <span class="field-error" id="name-error"></span>
                   </div>
-                  <div class="f-field anim">
-                    <label class="f-label" for="email">Email</label
-                    ><input
-                      class="f-input"
-                      id="email"
-                      name="email"
-                      type="email"
-                      autocomplete="email"
-                      maxlength="200"
-                      placeholder="your@email.com"
-                      required
-                    />
+                  <div class="f-field">
+                    <label class="f-label" for="email">Email</label>
+                    <input class="f-input" id="email" name="email" type="email" autocomplete="email" maxlength="254" required placeholder="tu@email.com" aria-describedby="email-error" />
+                    <span class="field-error" id="email-error"></span>
                   </div>
                 </div>
-                <div class="f-field anim">
-                  <label class="f-label" for="message">Tu mensaje</label
-                  ><textarea
-                    class="f-textarea"
-                    id="message"
-                    name="message"
-                    maxlength="4000"
-                    placeholder="Cuéntame en qué puedo ayudarte…"
-                    required
-                  ></textarea>
+                <div class="f-field">
+                  <label class="f-label" for="message">¿En qué estás pensando?</label>
+                  <textarea class="f-textarea" id="message" name="message" minlength="20" maxlength="4000" rows="6" required placeholder="El proyecto, la oportunidad o el problema que necesitas resolver…" aria-describedby="message-error message-hint"></textarea>
+                  <span class="field-error" id="message-error"></span>
+                  <div class="field-hints"><span id="message-hint">Entre 20 y 4.000 caracteres.</span><span id="message-count">0 / 4.000</span></div>
                 </div>
-                <div class="hp-field" aria-hidden="true">
-                  <label for="website">No rellenes este campo</label>
-                  <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
-                </div>
-                <button type="submit" class="f-submit anim" data-cursor="SEND">
-                  <span class="fs-t"
-                    >Preparar mensaje
-                    <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
-                      <path
-                        d="M1 6.5h11M7.5 2l5 4.5-5 4.5"
-                        stroke="currentColor"
-                        stroke-width="1.4"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      /></svg
-                  ></span>
-                </button>
+                <div class="hp-field" aria-hidden="true"><label for="website">Deja este campo vacío</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off" /></div>
+                <button type="submit" class="f-submit"><span class="fs-t">Preparar correo ↗</span></button>
+                <p class="contact-mode" id="contact-mode">Envío desde tu aplicación de correo.</p>
+                <div class="draft-actions"><a id="mail-draft" href="mailto:pablopme50@gmail.com" hidden>Abrir mi aplicación de correo ↗</a><button id="copy-message" type="button">Copiar mensaje</button></div>
+                <p class="contact-privacy">Tus datos se usan para responder a esta consulta. <a href="/privacidad">Privacidad y funcionamiento</a>.</p>
               </form>
-              <div id="form-ok" role="status" aria-live="polite">
-                <div class="ok-t">Mensaje preparado ✦</div>
-                <div class="ok-s">Se abrirá tu aplicación de correo para que revises y envíes el mensaje.</div>
+              <div id="form-ok" role="status" aria-live="polite" aria-atomic="true">
+                <div class="ok-t"></div>
+                <div class="ok-s"></div>
               </div>
             </div>
           </div>
@@ -1278,38 +1189,18 @@
             <h4>Enlaces rápidos</h4>
             <a
               href="#hero"
-              onclick="
-                goTo('#hero');
-                return false;
-              "
               >Inicio</a
             ><a
               href="#about"
-              onclick="
-                goTo('#about');
-                return false;
-              "
               >Perfil</a
             ><a
               href="#skills"
-              onclick="
-                goTo('#skills');
-                return false;
-              "
               >Stack</a
             ><a
               href="#work"
-              onclick="
-                goTo('#work');
-                return false;
-              "
               >Proyectos</a
             ><a
               href="#contact"
-              onclick="
-                goTo('#contact');
-                return false;
-              "
               >Contacto</a
             >
           </div>
@@ -1322,12 +1213,12 @@
             <a
               href="https://github.com/PapiGECode"
               target="_blank"
-              rel="noopener"
+              rel="noopener noreferrer"
               >GitHub</a
             ><a
               href="https://papigegamer.com"
               target="_blank"
-              rel="noopener"
+              rel="noopener noreferrer"
               >Web personal</a
             >
           </div>
@@ -1340,17 +1231,18 @@
           ><span>Diseñado y construido por PapiGECode</span>
         </div>
       </div>
+      <div class="shell site-tools"><button type="button" data-copy-email>Copiar email</button><a href="/privacidad">Privacidad</a><button type="button" data-open-preferences>Preferencias de medición</button><a href="#hero">Volver arriba ↑</a></div>
     </footer>
 
     <!-- ─── VENDORED LIBRARIES (inlined for a single portable file) ─── -->
-    <script src="js/vendor/gsap.min.js"></script>
-    <script src="js/vendor/ScrollTrigger.min.js"></script>
-    <script src="js/vendor/SplitText.min.js"></script>
-    <script src="js/vendor/lenis.min.js"></script>
+    <script defer src="/js/vendor/gsap.min.js"></script>
+    <script defer src="/js/vendor/ScrollTrigger.min.js"></script>
+    <script defer src="/js/vendor/SplitText.min.js"></script>
+    <script defer src="/js/vendor/lenis.min.js"></script>
 
     <!-- ─── CASE STUDY FULLSCREEN MODAL / CANVAS ───────────────── -->
     <div
-      id="case-study-modal"
+      id="case-study-modal" inert
       class="cs-modal"
       role="dialog"
       aria-modal="true"
@@ -1370,7 +1262,7 @@
           </svg>
           <span>Volver (ESC)</span>
         </button>
-        <div class="cs-top-title" aria-hidden="true">
+        <div class="cs-top-title">
           <span>Case Study</span>
           <span>/</span>
           <span class="cs-top-num" id="cs-top-num">01</span>
@@ -1397,6 +1289,19 @@
       </div>
     </div>
 
-    <script src="js/app.js"></script>
+    <script defer src="/js/shared.js"></script>
+    <script defer src="/js/app.js"></script>
+    <script defer src="/js/contact.js"></script>
+    <script defer src="/js/activity.js"></script>
+    <script type="module" src="/js/metrics.js"></script>
+  <dialog id="preferences-dialog" class="preferences-dialog" aria-labelledby="preferences-title">
+      <form method="dialog"><button class="dialog-close" aria-label="Cerrar preferencias">×</button></form>
+      <p class="mono">Tu elección</p><h2 id="preferences-title">Medición opcional.</h2>
+      <p>Permite medir la velocidad de carga y las interacciones para mejorar la web. Está desactivado por defecto. No se envían nombres, emails, mensajes ni identificadores personales desde esta medición.</p>
+      <label class="preference-option"><input type="checkbox" id="allow-measurement" /> Permitir medición de uso y rendimiento</label>
+      <p class="preference-note" id="measurement-note"></p>
+      <button class="btn btn-solid" type="button" id="save-preferences"><span class="btn-t">Guardar preferencia</span></button>
+    </dialog>
+    <div class="ui-toast" id="ui-toast" role="status" aria-live="polite"></div>
   </body>
 </html>

@@ -43,3 +43,15 @@ build/
 *.bak
 
 .vercel
+
+# Portfolio generated artifacts
+dist/
+node_modules/
+test-results/
+playwright-report/
+review-reports/
+.env*
+!.env.example
+
+# Commit the dependency lockfile for reproducible builds.
+!package-lock.json
