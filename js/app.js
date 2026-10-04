@@ -58,41 +58,30 @@
         };
 
         // Keep the native cursor; motion is enhancement, not navigation.
-        /* ============ MAGNETIC BUTTONS / LINKS ============ */
-        if (FINE && !REDUCE) {
-          document
-            .querySelectorAll(".btn,.nav-cta,.f-submit,.nav-link,.social")
-            .forEach(function (el) {
-              var s =
-                el.classList.contains("nav-link") ||
-                el.classList.contains("social")
-                  ? 0.25
-                  : 0.4;
-              el.addEventListener("mousemove", function (e) {
-                var r = el.getBoundingClientRect();
-                var dx = (e.clientX - (r.left + r.width / 2)) * s,
-                  dy = (e.clientY - (r.top + r.height / 2)) * s;
-                if (hasGSAP)
-                  gsap.to(el, {
-                    x: dx,
-                    y: dy,
-                    duration: 0.4,
-                    ease: "power3.out",
-                  });
-                else
-                  el.style.transform = "translate(" + dx + "px," + dy + "px)";
+        /* Magnetic feedback stays inside the button: the hit area never moves. */
+        if (FINE && !REDUCE && hasGSAP) {
+          document.querySelectorAll('.btn, .f-submit, .social').forEach(function (el) {
+            var target = el.querySelector('.btn-t, .fs-t, .arr');
+            if (!target) return;
+            function reset() {
+              gsap.to(target, { x: 0, y: 0, duration: .3, ease: 'power3.out', overwrite: 'auto' });
+            }
+            el.addEventListener('pointermove', function (e) {
+              if (e.pointerType === 'touch' || e.buttons || el.disabled ||
+                  document.activeElement === el || matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                reset(); return;
+              }
+              var r = el.getBoundingClientRect();
+              gsap.to(target, {
+                x: Math.max(-5, Math.min(5, (e.clientX - r.left - r.width / 2) * .12)),
+                y: Math.max(-3, Math.min(3, (e.clientY - r.top - r.height / 2) * .12)),
+                duration: .25, ease: 'power3.out', overwrite: 'auto',
               });
-              el.addEventListener("mouseleave", function () {
-                if (hasGSAP)
-                  gsap.to(el, {
-                    x: 0,
-                    y: 0,
-                    duration: 0.6,
-                    ease: "elastic.out(1,.4)",
-                  });
-                else el.style.transform = "";
-              });
+            }, { passive: true });
+            ['pointerleave', 'pointerdown', 'pointercancel', 'focus'].forEach(function (event) {
+              el.addEventListener(event, reset);
             });
+          });
         }
 
         /* ============ SPOTLIGHT ============ */
@@ -120,7 +109,9 @@
         /* ============ NAV ============ */
         var nav = document.getElementById("nav");
         var navlinks = document.querySelectorAll(".nav-link");
-        var sections = document.querySelectorAll("section[id]");
+        var sections = Array.from(document.querySelectorAll('section[id]')).filter(function (section) {
+          return Array.from(navlinks).some(function (link) { return link.hash === '#' + section.id; });
+        });
         var progress = document.getElementById("progress");
         function onScroll() {
           var y = scrollY || pageYOffset;
@@ -139,7 +130,10 @@
             if (y >= s.offsetTop - 200) cur = s.id;
           });
           navlinks.forEach(function (l) {
-            l.classList.toggle("active", l.getAttribute("href") === "#" + cur);
+            var active = l.getAttribute('href') === '#' + cur;
+            l.classList.toggle('active', active);
+            if (active) l.setAttribute('aria-current', 'location');
+            else l.removeAttribute('aria-current');
           });
         }
         addEventListener("scroll", onScroll, { passive: true });
@@ -154,8 +148,9 @@
           .forEach(function (a) {
             if (a.getAttribute("onclick")) return;
             a.addEventListener("click", function (e) {
+              if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+              if (open && a.closest('#nav')) return; // The menu handler closes before scrolling.
               e.preventDefault();
-              if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
               goTo(a.getAttribute("href"));
             });
           });
@@ -524,7 +519,6 @@
                     info.querySelector(".panel-title"),
                     {
                       opacity: 0,
-                      yPercent: 40,
                       duration: 0.7,
                       ease: "power3.out",
                     },
@@ -565,7 +559,6 @@
                     info.querySelectorAll(".panel-links .btn"),
                     {
                       opacity: 0,
-                      y: 12,
                       duration: 0.45,
                       stagger: 0.08,
                       ease: "power2.out",
