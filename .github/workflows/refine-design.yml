@@ -1,0 +1,65 @@
+name: Refine verified design
+on:
+  push:
+    branches: [feat/art-direction-20261004]
+    paths: [.github/workflows/refine-design.yml]
+permissions:
+  contents: write
+jobs:
+  refine:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      CHROME_PATH: /usr/bin/google-chrome
+      AGENT_BROWSER_EXECUTABLE_PATH: /usr/bin/google-chrome
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/art-direction-20261004
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Apply review corrections
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re,json,html
+          p=Path('js/app.js');s=p.read_text()
+          old="Array.from(document.querySelectorAll('#nav .nav-actions a, #nav .nav-actions button, #nav-overlay a')).filter(visible)"
+          assert old in s
+          p.write_text(s.replace(old,"focusable(nav.querySelector('.nav-actions')).concat(focusable(overlay))"))
+          p=Path('css/design.css');s=p.read_text()
+          assert '.hero-location>span{margin-left:18px;opacity:.8}' in s
+          p.write_text(s.replace('.hero-location>span{margin-left:18px;opacity:.8}', '.hero-location>span{margin-left:18px;opacity:1}'))
+          for slug,name in [('kicord','KiCord'),('papigegamer','PapiGEGamer.com'),('kernelos','KernelOS')]:
+              p=Path('projects')/(slug+'.html');s=p.read_text()
+              assert 'application/ld+json' not in s
+              description=html.unescape(re.search(r'<meta name="description" content="([^"]+)"',s)[1])
+              data={'@context':'https://schema.org','@type':'CreativeWork','name':name,'description':description,'url':'https://www.pabloschefer.com/projects/'+slug,'creator':{'@type':'Person','name':'Pablo Schefer Orduña','url':'https://www.pabloschefer.com/'}}
+              block='<script type="application/ld+json">'+json.dumps(data,ensure_ascii=False).replace('<','\\u003c')+'</script>'
+              p.write_text(s.replace('</head>',block+'</head>',1))
+          p=Path('README.md');s=p.read_text().replace('`css/quality.css`: refinamiento responsive, accesibilidad, formulario y preferencias.', '`css/design.css`: sistema editorial completo, temas, responsive, formulario y preferencias.')
+          s+='\n## Dirección visual y movimiento\n\nLa portada utiliza una pieza generativa en Canvas 2D, sin dependencias WebGL. `js/motion.js` coordina GSAP, las entradas al hacer scroll y la pausa de animaciones. La preferencia local `ps-motion` y la del sistema se respetan en todas las páginas. El canvas deja de renderizar fuera de pantalla o con la pestaña oculta. Los casos de estudio del modal se generan en el build desde las páginas canónicas: no hay dos copias editoriales independientes.\n'
+          p.write_text(s)
+          p=Path('CHANGELOG.md');p.write_text('## 2026-10-04 — Editorial design and motion\n\n- Rebuilt homepage, project pages, privacy and 404 around a shared visual system.\n- Added a pausable generative hero, scroll reveals and restrained project motion.\n- Preserved contact, consent, keyboard navigation, no-JS links and project metadata.\n- Consolidated modal content into build-generated templates from canonical pages.\n- Added motion, viewport and reduced-motion regression checks.\n\n'+p.read_text())
+          PY
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+      - name: Save corrections on feature branch only
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add js/app.js css/design.css projects/*.html README.md CHANGELOG.md
+          git commit -m 'fix: keyboard focus and light contrast; preserve project metadata'
+          git push origin HEAD:feat/art-direction-20261004
+      - run: npm run test:e2e
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: refined-art-direction
+          path: |
+            review-reports/
+            playwright-report/
+            test-results/
+          retention-days: 3
