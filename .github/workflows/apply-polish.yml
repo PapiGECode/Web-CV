@@ -1,0 +1,47 @@
+name: Apply focused portfolio polish
+on:
+  push:
+    branches: [fix/subtle-polish-20261004]
+    paths: [scripts/apply-polish.mjs, tests/polish.spec.js, .github/workflows/apply-polish.yml]
+permissions:
+  contents: write
+concurrency:
+  group: focused-portfolio-polish
+  cancel-in-progress: true
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CHROME_PATH: /usr/bin/google-chrome
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/subtle-polish-20261004
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: node scripts/apply-polish.mjs
+      - run: npm ci
+      - run: npm audit --audit-level=high
+      - run: npm test
+      - run: npm run build
+      - run: npm run test:e2e
+      - name: Save only tested changes to the feature branch
+        run: |
+          git diff --exit-code -- index.html css/styles.css projects api server js/contact.js js/shared.js
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add css/quality.css js/app.js
+          git commit -m 'fix: polish existing controls and motion without changing the design'
+          git push origin HEAD:fix/subtle-polish-20261004
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: subtle-polish-review
+          path: |
+            review-reports/
+            playwright-report/
+            test-results/
+          retention-days: 3
