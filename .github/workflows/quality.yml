@@ -1,7 +1,7 @@
 name: Portfolio quality
 on:
   push:
-    branches: [master, feat/art-direction-20261004]
+    branches: [master, feat/quality-contact-20261004]
   pull_request:
     branches: [master]
   workflow_dispatch:
@@ -25,7 +25,6 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm audit --audit-level=high
-      - run: node --check js/motion.js
       - run: npm test
       - run: npm run build
       - run: npm run test:e2e
@@ -39,7 +38,7 @@ jobs:
           "$AB" open http://localhost:3000
           "$AB" wait --load networkidle
           "$AB" wait '#hero h1'
-          "$AB" eval 'JSON.stringify({ready:window.__portfolioReady,motion:document.documentElement.dataset.motion,theme:document.documentElement.className})' > review-reports/browser-diagnostics.txt
+          "$AB" eval 'JSON.stringify({ready:window.__portfolioReady,theme:document.documentElement.className,scripts:Array.from(document.scripts).map(s=>s.src)})' > review-reports/browser-diagnostics.txt
           "$AB" errors > review-reports/browser-errors.txt
           "$AB" snapshot -i > review-reports/interactive-elements.txt
           "$AB" screenshot review-reports/desktop-motion.png
