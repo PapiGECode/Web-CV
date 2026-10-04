@@ -23,11 +23,15 @@
       // Actual visible hit targets stay >=44px even when the 390px canvas shrinks.
       const target = Math.max(62,Math.ceil(45 / scale));
       root.style.setProperty('--pf-hit',`${target}px`);
-      const bottom = Math.max(86,target + 28);
+      const bottom = Math.max(96,target + 42);
       root.style.setProperty('--pf-bottom-height',`${bottom}px`);
       root.querySelector('.pf-bottom').style.height = `${bottom}px`;
       scroll.style.bottom = `${bottom}px`;
       app.style.height = `${screen.clientHeight / scale}px`;
+      // Every pane can reach the same sticky-tab position, even when its copy is short.
+      const tabbar = root.querySelector('.pf-tabs');
+      root.style.setProperty('--pf-viewport-height',`${Math.max(0,screen.clientHeight / scale - 102 - bottom)}px`);
+      root.style.setProperty('--pf-tabbar-height',`${tabbar.offsetHeight}px`);
       app.style.transform = `scale(${scale})`;
     };
     const clock = () => {
@@ -43,7 +47,7 @@
     const activate = (index,focus=false) => {
       tabs.forEach((tab,i) => { tab.setAttribute('aria-selected',String(i===index)); tab.tabIndex = i===index ? 0 : -1; panels[i].hidden = i!==index; });
       // Keep the chosen panel visible without moving the page or stealing focus.
-      scroll.scrollTo({top:root.querySelector('.pf-tabs').offsetTop,behavior:'instant'});
+      scroll.scrollTo({top:Math.max(0,root.querySelector('.pf-tabs').offsetTop - 8),behavior:'instant'});
       if (focus) tabs[index].focus({preventScroll:true});
     };
     tabs.forEach((tab,index) => {

@@ -258,3 +258,52 @@ html.light #skills .cap-tag { background:#17140f04; }
 @media (min-width:981px) {
   #bento-projects-grid > .bento-card.bento-col-2 { grid-column:span 1; }
 }
+
+/* 2026-10-04: refine the existing project UI, not the hero/footer identity. */
+.panel-metrics { align-items:stretch; gap:.55rem; margin-block:1.3rem 1.4rem; }
+.panel-metrics .metric-pill {
+  flex:1 1 120px; min-width:0; display:flex; flex-direction:column;
+  align-items:flex-start; justify-content:center; gap:.3rem;
+  padding:.75rem .85rem; border-radius:14px; border-color:var(--line-2);
+  letter-spacing:0; line-height:1.4; transition:background-color .2s,border-color .2s;
+}
+.panel-metrics .metric-pill:hover { transform:none; }
+.panel-metrics .metric-val { font-size:.75rem; }
+.panel-metrics .metric-lbl { color:var(--ash); font-size:.7rem; overflow-wrap:anywhere; }
+.panel-info .panel-desc { line-height:1.8; }
+.panel-info .panel-tags { gap:.45rem; margin-bottom:1.5rem; }
+.panel-info .panel-tag { border-color:var(--line-2); padding:.35rem .75rem; }
+.panel-info .panel-links { align-items:stretch; gap:.65rem; }
+.panel-links .btn { justify-content:center; }
+/* Consistent nested radii and stable hit targets outside the device. */
+#skills .cap-card, #bento-projects-grid .bento-card { border-radius:22px; }
+#skills .cap-stat-box { border-radius:14px; gap:.75rem; }
+#skills .cap-evidence-list { line-height:1.8; }
+#bento-projects-grid .bento-card { will-change:auto; }
+#bento-projects-grid .bento-card:hover { transform:none; }
+#bento-projects-grid .bento-top { gap:.6rem; align-items:flex-start; }
+#bento-projects-grid .bento-meta-left { flex-wrap:wrap; min-width:0; }
+#bento-projects-grid .bento-card-title { font-size:1.3rem; line-height:1.3; text-wrap:balance; }
+#bento-projects-grid .bento-desc { font-size:.9rem; line-height:1.75; }
+#bento-projects-grid .bento-tag { border-radius:8px; padding:.3rem .55rem; }
+#bento-projects-grid .bento-actions a { min-height:44px; display:inline-flex; align-items:center; border-radius:10px; }
+#bento-projects-grid .bento-actions a:focus-visible { outline-offset:3px; }
+.contact-address { padding-block:1rem; margin-bottom:0; border-bottom:1px solid var(--line); }
+.copy-email-inline { border-radius:999px; padding:.5rem .9rem; justify-content:center; }
+#contact .f-input:focus-visible, #contact .f-textarea:focus-visible {
+  outline:2px solid var(--bone); outline-offset:5px; border-radius:4px;
+}
+#contact .f-textarea { resize:vertical; min-height:140px; }
+/* Match neighboring case-study cards without altering their content or layout. */
+.pp-visual:has(.project-phone), .cs-hero-card:has(.project-phone) { border-radius:30px; }
+.pp-card, .pp-next { border-radius:20px; }
+.pp-toc a { display:inline-flex; align-items:center; min-height:44px; }
+@media(max-width:680px) {
+  .panel-metrics .metric-pill { flex-basis:110px; padding:.7rem .8rem; }
+  .panel-links .btn { flex:1 1 125px; padding-inline:1rem; }
+  #bento-projects-grid .bento-card { padding:1.4rem; }
+  .contact-address { gap:.65rem; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .panel-metrics .metric-pill { transition:none; }
+}
