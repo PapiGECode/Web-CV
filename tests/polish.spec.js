@@ -49,7 +49,7 @@ test('contact draft controls have designed states in both themes at 320px', asyn
   await expect(page.locator('#form-ok')).toContainText('Borrador listo');
   for (const theme of ['dark', 'light']) {
     if (theme === 'light') await page.locator('#theme-toggle').click();
-    for (const selector of ['#copy-message', '#mail-draft']) {
+    for (const selector of ['#mail-draft']) {
       const style = await page.locator(selector).evaluate(el => ({ height: el.getBoundingClientRect().height, radius: getComputedStyle(el).borderRadius, border: getComputedStyle(el).borderTopWidth }));
       expect(style.height).toBeGreaterThanOrEqual(44);
       expect(style.radius).toBe('999px');

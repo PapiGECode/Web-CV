@@ -41,5 +41,17 @@
         }
       ]
     }
+  ],
+  "redirects": [
+    {
+      "source": "/projects/papigegamer",
+      "destination": "/projects/portfolio",
+      "permanent": true
+    },
+    {
+      "source": "/projects/papigegamer.html",
+      "destination": "/projects/portfolio",
+      "permanent": true
+    }
   ]
 }
