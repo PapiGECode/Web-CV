@@ -75,6 +75,18 @@ await sharp(Buffer.from(svg)).jpeg({ quality: 88 }).toFile(output('assets/previe
 const pages = ['index.html', '404.html', 'privacidad.html', 'projects/kicord.html', 'projects/papigegamer.html', 'projects/kernelos.html'];
 for (const file of pages) {
   let html = await fs.readFile(input(file), 'utf8');
+  // Build modal content from the canonical project pages; never maintain a second copy.
+  if (file === 'index.html') {
+    let templates = '';
+    for (const [slug, id] of [['kicord', 'kicord'], ['papigegamer', 'papige'], ['kernelos', 'kernelos']]) {
+      const project = await fs.readFile(input('projects', slug + '.html'), 'utf8');
+      const match = project.match(/<!-- CASE_START -->([\s\S]*?)<!-- CASE_END -->/);
+      if (!match) throw new Error('Missing case content: ' + slug);
+      const body = match[1].replace(/\sid="([^"]+)"/g, ` id="modal-${id}-$1"`).replace(/href="#([^"]+)"/g, `href="#modal-${id}-$1"`);
+      templates += `<template id="case-template-${id}">${body}</template>`;
+    }
+    html = html.replace('<!-- CASE_TEMPLATES -->', templates);
+  }
   // Absolute asset references are safe from clean URLs and nested project routes.
   html = html.replace(/(href|src)="((?:css|js|assets)\/[^\"]+)"/g, '$1="/$2"');
   for (const [before, after] of replacements) html = html.split(`"${before}"`).join(`"${after}"`);

@@ -10,7 +10,7 @@ Requiere Node.js 24. Ejecuta `npm ci`, `npm run build` y `npm run dev`. La vista
 
 - `index.html`: contenido principal y proyectos secundarios indexables.
 - `projects/*.html`: casos de estudio con URL, metadatos y navegación propios.
-- `css/quality.css`: refinamiento responsive, accesibilidad, formulario y preferencias.
+- `css/design.css`: sistema editorial completo, temas, responsive, formulario y preferencias.
 - `js/app.js`: interacción y animaciones de portada; `shared.js`: tema, preferencias y copiar.
 - `js/contact.js`: formulario independiente de las animaciones, validación y estados de envío.
 - `server/contact.js`: validación y entrega Resend; `api/contact.js`: adaptador Edge.
@@ -42,3 +42,7 @@ El workflow `Portfolio quality` valida, compila y prueba antes de revisar/fusion
 ## Licencias
 
 Consulta `LICENSE`. Se conservan los avisos originales de GSAP/Lenis y las licencias de las fuentes autoalojadas. No atribuyas la autoría de esas dependencias al portfolio.
+
+## Dirección visual y movimiento
+
+La portada utiliza una pieza generativa en Canvas 2D, sin dependencias WebGL. `js/motion.js` coordina GSAP, las entradas al hacer scroll y la pausa de animaciones. La preferencia local `ps-motion` y la del sistema se respetan en todas las páginas. El canvas deja de renderizar fuera de pantalla o con la pestaña oculta. Los casos de estudio del modal se generan en el build desde las páginas canónicas: no hay dos copias editoriales independientes.
