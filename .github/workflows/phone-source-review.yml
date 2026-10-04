@@ -1,0 +1,27 @@
+name: Phone source review
+on:
+  push:
+    branches: [fix/project-facts-contrast-20261004]
+    paths: [.github/workflows/phone-source-review.yml]
+permissions:
+  contents: read
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Download and verify the supplied public bezel
+        run: |
+          python3 - <<'PY'
+          import urllib.request, pathlib, hashlib
+          url = 'https://raw.githubusercontent.com/PapiGECode/thiagoiutu-portfolio/main/assets/iphone18-pro-max-bezel.png'
+          data = urllib.request.urlopen(url, timeout=30).read()
+          assert hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest() == 'ac8552a83124d3241f76b4baacd8a5c5f783740b'
+          pathlib.Path('iphone18-pro-max-bezel.png').write_bytes(data)
+          print('Verified owner-supplied bezel:',len(data),'bytes')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: verified-phone-bezel
+          path: iphone18-pro-max-bezel.png
+          retention-days: 2
