@@ -27,7 +27,10 @@
       }
       document.querySelectorAll('.reveal').forEach(function (el) {
         if (el.closest('#hero')) return;
-        gs.fromTo(el, { y: 24, opacity: .35 }, { y: 0, opacity: 1, duration: .65, ease: 'power2.out', clearProps: 'transform,opacity', scrollTrigger: { trigger: el, start: 'top 94%', once: true } });
+        // A link must not move between pointer-down and pointer-up when scrolling reveals it.
+        var interactive = el.matches('a,button,summary') || el.querySelector('a,button,input,textarea,summary');
+        var distance = interactive ? 0 : 24;
+        gs.fromTo(el, { y: distance, opacity: .35 }, { y: 0, opacity: 1, duration: .65, ease: 'power2.out', clearProps: 'transform,opacity', scrollTrigger: { trigger: el, start: 'top 94%', once: true } });
       });
       if (matchMedia('(min-width: 961px) and (pointer: fine)').matches) {
         document.querySelectorAll('.project-device').forEach(function (el) {
