@@ -1,3 +1,11 @@
+## 2026-10-04 — Editorial design and motion
+
+- Rebuilt homepage, project pages, privacy and 404 around a shared visual system.
+- Added a pausable generative hero, scroll reveals and restrained project motion.
+- Preserved contact, consent, keyboard navigation, no-JS links and project metadata.
+- Consolidated modal content into build-generated templates from canonical pages.
+- Added motion, viewport and reduced-motion regression checks.
+
 ## 2026-10-04 — Quality, contact and opt-in measurement
 
 - Refined project-first hierarchy, responsive type and actions; fixed mobile overflow and empty notification artifact.

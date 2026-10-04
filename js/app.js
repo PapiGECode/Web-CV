@@ -137,7 +137,7 @@
       if (e.key === 'Escape') { e.preventDefault(); closeCase(); } else trap(e, focusable(modal));
     } else if (open) {
       if (e.key === 'Escape') { e.preventDefault(); setMenu(false); }
-      else trap(e, Array.from(document.querySelectorAll('#nav .nav-actions a, #nav .nav-actions button, #nav-overlay a')).filter(visible));
+      else trap(e, focusable(nav.querySelector('.nav-actions')).concat(focusable(overlay)));
     }
   });
   function syncHash() {
