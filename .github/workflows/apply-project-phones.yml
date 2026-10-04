@@ -69,6 +69,26 @@ jobs:
           Path('/tmp/phone-change-paths.json').write_text(json.dumps(paths))
           print('Verified source, output checksums, original bezel and preserved hero/base CSS.')
           PY
+      - name: Apply findings from real Chromium review
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('js/project-phones.js');s=p.read_text()
+          assert 'Math.max(62,44 / scale)' in s and 'target + 25' in s
+          s=s.replace('Math.max(62,44 / scale)','Math.max(62,Math.ceil(45 / scale))').replace('target + 25','target + 28')
+          p.write_text(s)
+          p=Path('css/project-phones.css');s=p.read_text();assert 'overscroll-behavior:auto' in s
+          p.write_text(s.replace('overscroll-behavior:auto','overscroll-behavior:contain'))
+          p=Path('tests/phones.spec.js');s=p.read_text()
+          # The original test assumed >70px of scroll range; the real pane has 48px.
+          # Measure from the top and verify both internal movement and edge containment.
+          s=s.replace('el=>el.scrollTop=70','el=>el.scrollTop=0')
+          s=s.replace("expect(await phone.locator('.pf-scroll').evaluate(el=>el.scrollTop)).toBeGreaterThan(70);", "await expect.poll(()=>phone.locator('.pf-scroll').evaluate(el=>el.scrollTop)).toBeGreaterThan(0);")
+          anchor="expect(await phone.locator('.phone-bezel').evaluate(el=>getComputedStyle(el).pointerEvents)).toBe('none');"
+          assert anchor in s
+          s=s.replace(anchor,"await phone.locator('.pf-scroll').evaluate(el=>el.scrollTop=el.scrollHeight);\n  await page.mouse.wheel(0,300);await page.waitForTimeout(150);\n  expect(Math.abs(await page.evaluate(()=>scrollY)-y)).toBeLessThan(2);\n  "+anchor)
+          p.write_text(s)
+          PY
       - run: npm ci
       - run: npm audit --audit-level=high
       - run: npm test
