@@ -1,0 +1,80 @@
+name: Apply reviewed design
+on:
+  push:
+    branches: [feat/art-direction-20261004]
+    paths: [.design/manifest.json]
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      CHROME_PATH: /usr/bin/google-chrome
+      AGENT_BROWSER_EXECUTABLE_PATH: /usr/bin/google-chrome
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/art-direction-20261004
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Verify source and destination integrity
+        run: |
+          python3 - <<'PY'
+          import pathlib,hashlib,base64,gzip,json
+          root=pathlib.Path.cwd()
+          manifest=json.loads((root/'.design/manifest.json').read_text())
+          parts=[]
+          for part in manifest['parts']:
+              data=(root/part['path']).read_bytes()
+              assert hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()==part['blob'], 'Unexpected staged blob'
+              text=data.decode()
+              for start,end,replacement in reversed(part['repairs']):
+                  text=text[:start]+replacement+text[end:]
+              parts.append(text)
+          binary=base64.b64decode(''.join(parts),validate=True)
+          assert hashlib.sha256(binary).hexdigest()==manifest['sha256'], 'Source transfer checksum mismatch'
+          records=json.loads(gzip.decompress(binary))
+          prepared=[]
+          for row in records:
+              rel=pathlib.PurePosixPath(row['path'])
+              assert not rel.is_absolute() and not any(x in rel.parts for x in ['..','.git','.github','.design'])
+              target=root/rel
+              if row['base'] is None:
+                  assert not target.exists(),f'Unexpected file: {rel}'
+              else:
+                  assert hashlib.sha256(target.read_bytes()).hexdigest()==row['base'],f'Concurrent source change: {rel}'
+              data=row['text'].encode()
+              assert hashlib.sha256(data).hexdigest()==row['sha'],f'Invalid output: {rel}'
+              prepared.append((target,data))
+          for target,data in prepared:
+              target.parent.mkdir(parents=True,exist_ok=True)
+              target.write_bytes(data)
+          pathlib.Path('/tmp/design-paths.json').write_text(json.dumps([row['path'] for row in records]))
+          print(f'Applied {len(prepared)} reviewed files with exact content verification.')
+          PY
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+      - name: Save source on isolated feature branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          python3 - <<'PY'
+          import json,subprocess
+          subprocess.run(['git','add','--',*json.load(open('/tmp/design-paths.json'))],check=True)
+          PY
+          git rm -- .design/manifest.json .design/part*.b64
+          git commit -m 'feat: new editorial portfolio design and accessible motion system'
+          git push origin HEAD:feat/art-direction-20261004
+      - run: npm run test:e2e
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: art-direction-review
+          path: |
+            review-reports/
+            playwright-report/
+            test-results/
+          retention-days: 3
