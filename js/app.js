@@ -411,35 +411,13 @@
                 scrollTrigger: { trigger: "#portrait", start: "top 85%" },
               });
 
-              /* CAPABILITIES cards */
-              gsap.utils.toArray(".cap-card").forEach(function (card) {
-                var tl = gsap.timeline({
-                  scrollTrigger: { trigger: card, start: "top 88%" },
+              /* Evidence remains opaque, even with restored scroll, reduced motion or failed JS. */
+              gsap.utils.toArray('.cap-card').forEach(function (card) {
+                gsap.fromTo(card, { y: 16 }, {
+                  y: 0, opacity: 1, duration: .55, ease: 'power3.out',
+                  clearProps: 'opacity,transform',
+                  scrollTrigger: { trigger: card, start: 'top 90%', once: true },
                 });
-                tl.to(card, { opacity: 1, duration: 0.1 })
-                  .from(
-                    card,
-                    {
-                      y: 28,
-                      opacity: 0,
-                      duration: 0.7,
-                      ease: "power3.out",
-                      clearProps: "transform",
-                    },
-                    0,
-                  )
-                  .from(
-                    card.querySelectorAll(".cap-tag"),
-                    {
-                      y: 10,
-                      opacity: 0,
-                      duration: 0.4,
-                      stagger: 0.03,
-                      ease: "power2.out",
-                      clearProps: "transform",
-                    },
-                    0.2,
-                  );
               });
 
               /* WORK panels: phone tilt + bgmark parallax + ambient + outgoing scale */
@@ -870,422 +848,266 @@
 
         /* ============ CASE STUDY EXPERIENCES ENGINE ============ */
         var CASE_STUDIES = {
-          kicord: {
-            id: "kicord",
-            number: "01",
-            badge: "Producto Open Source",
-            title: "KiCord",
-            tagline:
-              "Extensión avanzada para Discord con arquitectura modular de plugins y mejoras de UX",
-            statusDot: "oss",
-            statusText: "Open Source · En desarrollo activo",
-            heroVisual: "/assets/phone-kicord.webp",
-            heroAlt: "Vista conceptual de la web de KiCord",
-            tint: "rgba(150, 170, 255, 0.12)",
-            meta: [
-              { label: "Mi Papel", value: "Creador y Desarrollador Principal" },
-              { label: "Cronología", value: "2023 — Presente" },
-              {
-                label: "Ecosistema",
-                value: "Plugins desacoplados / Modding seguro",
-              },
-              { label: "Estado", value: "Open Source Activo" },
-            ],
-            links: [
-              {
-                label: "Visitar web oficial",
-                url: "https://kicord.es",
-                isPrimary: true,
-              },
-              {
-                label: "Repositorio GitHub",
-                url: "https://github.com/PapiGECode",
-                isPrimary: false,
-              },
-            ],
-            overview:
-              "<b>KiCord</b> es una extensión avanzada y marco de extensibilidad para Discord desarrollada íntegramente en <b>TypeScript</b>. Nació de la necesidad de dotar a los usuarios y comunidades de herramientas reales de personalización, ergonomía y mejoras funcionales sin penalizar la velocidad, la estabilidad ni la seguridad del cliente oficial.",
-            problem: {
-              subtitle:
-                "Rigidez funcional, falta de extensibilidad nativa y sobrecarga de recursos",
-              description:
-                "El cliente oficial de Discord no ofrece mecanismos nativos para personalizar la interfaz ni para cargar extensiones modulares. Las herramientas comunitarias tradicionales solían ser complejas, inestables o consumir demasiada memoria con cada actualización, provocando bloqueos o cierres inesperados en los clientes de los usuarios.",
-            },
-            solution: {
-              subtitle:
-                "Núcleo modular ligero, carga en caliente y tipado estricto",
-              description:
-                "Desarrollé KiCord implementando un núcleo ultraligero y desacoplado que gestiona el ciclo de vida completo de los plugins (inicialización, inyección controlada, desmontaje limpio y destrucción). Los usuarios pueden habilitar funciones según su flujo de trabajo sin reiniciar el cliente ni comprometer la estabilidad del sistema.",
-            },
-            technicalHighlights: [
-              {
-                tag: "Arquitectura Core",
-                title: "Sistema de Plugins Desacoplados",
-                text: "Cada funcionalidad vive como un plugin aislado con ciclo de vida predecible. Si un módulo experimenta una excepción, el núcleo lo intercepta y aísla sin interrumpir el funcionamiento general de Discord.",
-              },
-              {
-                tag: "Type Safety",
-                title: "Desarrollo en TypeScript Estricto",
-                text: "Definición rigurosa de interfaces, contratos de eventos y tipos para interceptar el DOM y las APIs internas del cliente con total seguridad en tiempo de compilación.",
-              },
-              {
-                tag: "PoC Avanzada",
-                title: "Extensibilidad Extrema (KiCord DOOM)",
-                text: "Creación del plugin KiCord-DOOM-Plugin en TypeScript, ejecutando el clásico juego dentro del entorno de Discord como prueba de concepto de la versatilidad y rendimiento de la API de plugins.",
-              },
-              {
-                tag: "Ergonomía & UX",
-                title: "Diseño & Microinteracciones",
-                text: "Integración estética no intrusiva que complementa la identidad nativa de Discord, con microinteracciones fluidas, atajos de teclado y mínimo impacto en el rendimiento.",
-              },
-            ],
-            stack: [
-              {
-                category: "Lenguaje & Núcleo",
-                items: ["TypeScript", "JavaScript (ESNext)", "Node.js"],
-              },
-              {
-                category: "Plataforma & APIs",
-                items: [
-                  "Discord Internal APIs",
-                  "DOM & Event Interception",
-                  "Electron Runtime",
-                ],
-              },
-              {
-                category: "Estilos & UI",
-                items: ["CSS Modular", "Theming Adaptativo", "Microinteracciones"],
-              },
-              {
-                category: "Herramientas & Despliegue",
-                items: ["Git", "GitHub OSS", "Vercel", "CI/CD"],
-              },
-            ],
-            metrics: [
-              {
-                val: "Open Source",
-                lbl: "Código libre y transparente",
-                dot: "oss",
-              },
-              { val: "Modular", lbl: "Arquitectura basada en plugins", dot: "" },
-              {
-                val: "TypeScript",
-                lbl: "Tipado estricto en el 100% del core",
-                dot: "",
-              },
-              {
-                val: "Activo",
-                lbl: "Mantenimiento y evolución continua",
-                dot: "live",
-              },
-            ],
-            gallery: [
-              {
-                type: "image",
-                src: "/assets/phone-kicord.webp",
-                caption: "KiCord interfaz móvil y visualización conceptual",
-                label: "Mockup de Producto",
-              },
-              {
-                type: "placeholder",
-                title: "Panel de configuración y gestor de plugins",
-                badge: "Galería Técnica",
-                note: "Estructura preparada para capturas en alta resolución del gestor interno de plugins.",
-              },
-            ],
-            video: {
-              title: "Demostración en vídeo",
-              note: "Estructura preparada para demo interactiva o walkthrough en vídeo del funcionamiento de KiCord.",
-            },
-            nextId: "papige",
-            nextTitle: "PapiGEGamer.com",
-          },
-          papige: {
-            id: "papige",
-            number: "02",
-            badge: "Plataforma Web",
-            title: "PapiGEGamer.com",
-            tagline:
-              "Portfolio interactivo y telemetría de comunidades en tiempo real",
-            statusDot: "live",
-            statusText: "Activo · En Producción",
-            heroVisual: "/assets/phone-papige.webp",
-            heroAlt: "PapiGEGamer.com en iPhone",
-            tint: "rgba(150, 255, 190, 0.1)",
-            meta: [
-              { label: "Mi Papel", value: "Diseño & Desarrollo Full-Stack" },
-              { label: "Cronología", value: "2024 — Presente" },
-              {
-                label: "Enfoque",
-                value: "Telemetría en tiempo real & Asistente interactivo",
-              },
-              { label: "Estado", value: "Activo en Producción" },
-            ],
-            links: [
-              {
-                label: "Visitar web oficial",
-                url: "https://papigegamer.com",
-                isPrimary: true,
-              },
-              {
-                label: "Repositorio GitHub",
-                url: "https://github.com/PapiGECode",
-                isPrimary: false,
-              },
-            ],
-            overview:
-              "<b>PapiGEGamer.com</b> es una plataforma web desarrollada con <b>React y TypeScript</b> concebida como hub interactivo. Centraliza la actividad técnica de proyectos personales, métricas en vivo de servidores de Discord y repositorios de GitHub, integrando además a <b>NEXO</b>, un asistente conversacional interactivo.",
-            problem: {
-              subtitle:
-                "Portfolios estáticos sin conexión con la actividad real",
-              description:
-                "La mayoría de portfolios técnicos son páginas planas que quedan desactualizadas rápidamente y no reflejan la actividad cotidiana en comunidades ni el ritmo real de commits o despliegues. Se requería una plataforma viva con telemetría en tiempo real y una experiencia interactiva guiada.",
-            },
-            solution: {
-              subtitle:
-                "Conexión reactiva a APIs externas y asistente inteligente NEXO",
-              description:
-                "Desarrollé una arquitectura web reactiva que consume las APIs de Discord y GitHub para mostrar estado y estadísticas en vivo. Además, implementé a NEXO, un asistente guiado que facilita a los visitantes formular preguntas sobre la trayectoria, proyectos y stack del desarrollador de forma ágil.",
-            },
-            technicalHighlights: [
-              {
-                tag: "Asistente Virtual",
-                title: "Motor de NEXO",
-                text: "Módulo interactivo diseñado para responder consultas frecuentes, guiar la navegación del usuario y ofrecer un recorrido interactivo por el portafolio.",
-              },
-              {
-                tag: "Integraciones",
-                title: "Telemetría de APIs (Discord & GitHub)",
-                text: "Sincronización de actividad, presencia en línea, estado de servidores y conteo de repositorios mediante llamadas seguras a APIs de terceros.",
-              },
-              {
-                tag: "Frontend",
-                title: "React + TypeScript Moderno",
-                text: "Componentes funcionales modulares, renderizado condicional optimizado y separación limpia de la lógica de negocio y presentación.",
-              },
-              {
-                tag: "Infraestructura",
-                title: "Despliegue Continuo en Vercel",
-                text: "Integración continua vinculada al repositorio Git para despliegues instantáneos con CDN global y latencia de carga ultra-reducida.",
-              },
-            ],
-            stack: [
-              {
-                category: "Frontend & UI",
-                items: ["React", "TypeScript", "HTML5 Semántico", "CSS3 Moderno"],
-              },
-              {
-                category: "APIs & Servicios",
-                items: [
-                  "Discord REST API",
-                  "GitHub REST API",
-                  "Webhooks",
-                ],
-              },
-              {
-                category: "Lógica & Estado",
-                items: [
-                  "Motor Asistente NEXO",
-                  "Gestión de Estado React",
-                  "Custom Hooks",
-                ],
-              },
-              {
-                category: "DevOps & Dominio",
-                items: ["Vercel", "Git", "GitHub", "Gestión DNS"],
-              },
-            ],
-            metrics: [
-              { val: "Activo", lbl: "Servicio en línea 24/7", dot: "live" },
-              {
-                val: "React + TS",
-                lbl: "Frontend reactivo y fuertemente tipado",
-                dot: "",
-              },
-              {
-                val: "NEXO",
-                lbl: "Asistente conversacional propio",
-                dot: "",
-              },
-              {
-                val: "APIs en vivo",
-                lbl: "Conexión directa con Discord y GitHub",
-                dot: "",
-              },
-            ],
-            gallery: [
-              {
-                type: "image",
-                src: "/assets/phone-papige.webp",
-                caption: "PapiGEGamer.com vista móvil y experiencia interactiva",
-                label: "Mockup de Plataforma",
-              },
-              {
-                type: "placeholder",
-                title: "Capturas de la interfaz de NEXO y telemetría",
-                badge: "Galería Técnica",
-                note: "Estructura preparada para capturas del asistente NEXO y los paneles de telemetría.",
-              },
-            ],
-            video: {
-              title: "Demostración en vídeo",
-              note: "Estructura lista para vídeo interactivo mostrando la interacción en vivo con NEXO.",
-            },
-            nextId: "kernelos",
-            nextTitle: "KernelOS",
-          },
-          kernelos: {
-            id: "kernelos",
-            number: "03",
-            badge: "Comunidad & Producto",
-            title: "KernelOS",
-            tagline:
-              "Ecosistema de CustomOS para gaming de baja latencia y soporte masivo",
-            statusDot: "live",
-            statusText: "50.000+ usuarios activos · Escala masiva",
-            heroVisual: "/assets/phone-kernelos.webp",
-            heroAlt: "Vista de la web de KernelOS",
-            tint: "rgba(255, 180, 140, 0.1)",
-            meta: [
-              {
-                label: "Mi Papel",
-                value: "Soporte Técnico, Comunidad & Producto",
-              },
-              { label: "Cronología", value: "2022 — Presente" },
-              {
-                label: "Enfoque",
-                value: "Gaming de baja latencia, triaje de fallos y soporte",
-              },
-              { label: "Comunidad", value: "+50K activos / +1.5M históricos" },
-            ],
-            links: [
-              {
-                label: "Ver perfil en KernelOS",
-                url: "https://kernelos.org/",
-                isPrimary: true,
-              },
-              {
-                label: "GitHub",
-                url: "https://github.com/PapiGECode",
-                isPrimary: false,
-              },
-            ],
-            overview:
-              "<b>KernelOS</b> es un ecosistema de CustomOS optimizado para gaming competitivo y ultra-baja latencia. Con más de <b>50.000 usuarios activos</b> y más de <b>1,5 millones de usuarios históricos</b>, mi labor abarca el soporte técnico avanzado, la prevención de incidencias a gran escala y la canalización de necesidades de la comunidad hacia el equipo de desarrollo de producto.",
-            problem: {
-              subtitle:
-                "Diversidad extrema de hardware y fallos críticos en sistemas modificados",
-              description:
-                "La optimización agresiva del kernel y servicios de Windows provoca conflictos con configuraciones atípicas de placas base, drivers de audio USB y procesadores. Atender a decenas de miles de gamers exige identificar rápidamente patrones de error entre miles de mensajes diarios sin colapsar al equipo principal de desarrollo.",
-            },
-            solution: {
-              subtitle:
-                "Triaje estructurado, diagnóstico de latencia y retroalimentación directa",
-              description:
-                "Establecí protocolos de atención técnica, documentación de solución de problemas (troubleshooting) y análisis de logs/volcados de memoria. Este flujo transforma incidencias aisladas en recomendaciones técnicas y ajustes preventivos para las siguientes compilaciones de KernelOS.",
-            },
-            technicalHighlights: [
-              {
-                tag: "Soporte a Escala",
-                title: "Triaje y Atención a +50.000 Miembros",
-                text: "Resolución de incidencias complejas de instalación, dependencias de software y rendimiento en Discord con guías técnicas de autoayuda.",
-              },
-              {
-                tag: "Diagnóstico",
-                title: "Análisis de Latencia DPC / ISR",
-                text: "Identificación y resolución de picos de micro-stuttering, problemas de interrupciones de drivers y asignación de afinidad de CPU.",
-              },
-              {
-                tag: "Voz de Producto",
-                title: "Canalización de Feedback",
-                text: "Filtrado y priorización de peticiones comunitarias para la hoja de ruta de nuevas versiones del sistema operativo.",
-              },
-              {
-                tag: "Prevención",
-                title: "Seguridad y Moderación Técnica",
-                text: "Supervisión de seguridad de herramientas complementarias compartidas por la comunidad para evitar malware o scripts dañinos.",
-              },
-            ],
-            stack: [
-              {
-                category: "Sistemas & Kernel",
-                items: [
-                  "Windows Internals",
-                  "Registro de Windows",
-                  "Optimización de Kernel",
-                  "PowerShell / Batch",
-                ],
-              },
-              {
-                category: "Diagnóstico",
-                items: [
-                  "LatencyMon",
-                  "Visor de Eventos",
-                  "MSI Utility",
-                  "DPC Latency Checker",
-                ],
-              },
-              {
-                category: "Comunidad & Operaciones",
-                items: [
-                  "Discord a Gran Escala",
-                  "KernelOS Portal",
-                  "Sistemas de Tickets",
-                ],
-              },
-              {
-                category: "Metodologías",
-                items: [
-                  "Triaje de incidencias",
-                  "Documentación técnica",
-                  "Control de calidad (QA)",
-                ],
-              },
-            ],
-            metrics: [
-              {
-                val: "50K+",
-                lbl: "Usuarios activos en la comunidad",
-                dot: "live",
-              },
-              {
-                val: "1.5M+",
-                lbl: "Descargas y usuarios históricos",
-                dot: "",
-              },
-              {
-                val: "CustomOS",
-                lbl: "Enfoque en latencia mínima y gaming",
-                dot: "",
-              },
-              {
-                val: "Soporte",
-                lbl: "Gestión técnica, comunidad y producto",
-                dot: "oss",
-              },
-            ],
-            gallery: [
-              {
-                type: "image",
-                src: "/assets/phone-kernelos.webp",
-                caption: "KernelOS visualización conceptual y alcance",
-                label: "Mockup de Comunidad",
-              },
-              {
-                type: "placeholder",
-                title: "Documentación y guías de soporte de KernelOS",
-                badge: "Galería Operativa",
-                note: "Estructura preparada para manuales técnicos y registros de soporte a usuarios.",
-              },
-            ],
-            video: {
-              title: "Demostración en vídeo",
-              note: "Estructura lista para benchmarks y análisis de latencia comparativa de KernelOS.",
-            },
-            nextId: "kicord",
-            nextTitle: "KiCord",
-          },
-        };
+  "kicord": {
+    "id": "kicord",
+    "slug": "kicord",
+    "title": "KiCord",
+    "number": "01",
+    "badge": "Cliente de Discord",
+    "statusDot": "live",
+    "statusText": "Código cerrado",
+    "tagline": "Cliente modificado de Discord de código cerrado, con plugins y opciones de personalización.",
+    "tint": "rgba(150, 170, 255, 0.06)",
+    "meta": [
+      {
+        "label": "Tipo de proyecto",
+        "value": "Cliente modificado"
+      },
+      {
+        "label": "Mi participación",
+        "value": "Desarrollo del cliente"
+      }
+    ],
+    "links": [
+      {
+        "label": "Visitar KiCord",
+        "url": "https://kicord.es",
+        "isPrimary": true
+      }
+    ],
+    "overview": "KiCord es un cliente modificado de Discord de código cerrado. Mi trabajo se centra en su desarrollo, la personalización de la experiencia y la integración de plugins. Los repositorios públicos de plugins relacionados son proyectos separados: no convierten el cliente KiCord en open source.",
+    "problem": {
+      "subtitle": "El contexto",
+      "description": "Ampliar las opciones de personalización y las funciones del cliente de Discord, manteniendo una experiencia de uso coherente."
+    },
+    "solution": {
+      "subtitle": "Mi enfoque",
+      "description": "Desarrollar y mantener el cliente con opciones de personalización, integración de plugins y mejoras de interfaz. KiCord no es un producto oficial de Discord."
+    },
+    "technicalHighlights": [
+      {
+        "tag": "01",
+        "title": "Cliente modificado",
+        "text": "Cambios de interfaz y funcionalidades sobre la experiencia de Discord."
+      },
+      {
+        "tag": "02",
+        "title": "Personalización",
+        "text": "Opciones para adaptar la apariencia y el comportamiento del cliente."
+      },
+      {
+        "tag": "03",
+        "title": "Plugins",
+        "text": "Integración de funcionalidades adicionales mediante plugins."
+      },
+      {
+        "tag": "04",
+        "title": "Código cerrado",
+        "text": "El código del cliente KiCord no se distribuye públicamente como código abierto."
+      }
+    ],
+    "stack": [
+      {
+        "category": "Tecnologías y enfoque",
+        "items": [
+          "Discord",
+          "Personalización",
+          "Plugins",
+          "UX"
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "val": "Código cerrado",
+        "lbl": "Modelo del cliente"
+      },
+      {
+        "val": "Discord",
+        "lbl": "Plataforma"
+      },
+      {
+        "val": "Plugins",
+        "lbl": "Extensibilidad"
+      }
+    ],
+    "nextId": "papige",
+    "nextTitle": "PabloSchefer.com"
+  },
+  "papige": {
+    "id": "papige",
+    "slug": "portfolio",
+    "title": "PabloSchefer.com",
+    "number": "02",
+    "badge": "Portfolio personal",
+    "statusDot": "live",
+    "statusText": "Esta misma web",
+    "tagline": "El portfolio que estás visitando: HTML, CSS, JavaScript y animaciones GSAP.",
+    "tint": "rgba(150, 255, 190, 0.05)",
+    "meta": [
+      {
+        "label": "Tipo de proyecto",
+        "value": "Portfolio estático"
+      },
+      {
+        "label": "Mi participación",
+        "value": "Desarrollo y mantenimiento"
+      }
+    ],
+    "links": [
+      {
+        "label": "Ver código de la web",
+        "url": "https://github.com/PapiGECode/Web-CV",
+        "isPrimary": true
+      }
+    ],
+    "overview": "PabloSchefer.com es esta misma web, mantenida en el repositorio Web-CV. Presenta proyectos, experiencia y contacto mediante HTML estático, CSS y JavaScript. Las animaciones utilizan GSAP y las funciones de Vercel gestionan la actividad de GitHub y el contacto.",
+    "problem": {
+      "subtitle": "El contexto",
+      "description": "Presentar proyectos y trayectoria con una identidad visual propia, sin perder legibilidad, accesibilidad ni facilidad de navegación."
+    },
+    "solution": {
+      "subtitle": "Mi enfoque",
+      "description": "Una web estática con mejora progresiva: contenido accesible sin JavaScript, animaciones GSAP, imágenes adaptables y funciones pequeñas en Vercel. El contacto informa claramente de si prepara un borrador o dispone de envío directo."
+    },
+    "technicalHighlights": [
+      {
+        "tag": "01",
+        "title": "HTML, CSS y JavaScript",
+        "text": "Contenido estático y comportamiento progresivo, sin una aplicación React detrás de esta web."
+      },
+      {
+        "tag": "02",
+        "title": "GSAP y responsive",
+        "text": "Animaciones y composiciones adaptadas a escritorio, tablet y móvil."
+      },
+      {
+        "tag": "03",
+        "title": "Funciones de Vercel",
+        "text": "Actividad de GitHub con caché y formulario con estados de entrega explícitos."
+      },
+      {
+        "tag": "04",
+        "title": "Pruebas y publicación",
+        "text": "Validación de recursos, pruebas de interfaz y despliegue desde GitHub."
+      }
+    ],
+    "stack": [
+      {
+        "category": "Tecnologías y enfoque",
+        "items": [
+          "HTML",
+          "CSS",
+          "JavaScript",
+          "GSAP",
+          "Vercel"
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "val": "Esta web",
+        "lbl": "Proyecto mostrado"
+      },
+      {
+        "val": "HTML / CSS / JS",
+        "lbl": "Implementación"
+      },
+      {
+        "val": "Vercel",
+        "lbl": "Alojamiento"
+      }
+    ],
+    "nextId": "kernelos",
+    "nextTitle": "KernelOS"
+  },
+  "kernelos": {
+    "id": "kernelos",
+    "slug": "kernelos",
+    "title": "KernelOS",
+    "number": "03",
+    "badge": "ISO personalizada de Windows",
+    "statusDot": "live",
+    "statusText": "Colaboración en soporte",
+    "tagline": "ISO personalizada de Windows orientada a gaming. Mi contribución está en soporte y comunidad.",
+    "tint": "rgba(255, 180, 140, 0.05)",
+    "meta": [
+      {
+        "label": "Tipo de proyecto",
+        "value": "ISO custom de Windows"
+      },
+      {
+        "label": "Mi participación",
+        "value": "Soporte técnico y comunidad"
+      }
+    ],
+    "links": [
+      {
+        "label": "Visitar KernelOS",
+        "url": "https://kernelos.org/",
+        "isPrimary": true
+      }
+    ],
+    "overview": "KernelOS es una ISO personalizada de Windows orientada a gaming. En este portfolio aparece como una colaboración en soporte técnico y comunidad, no como un sistema operativo creado por mí. Mi participación consiste en ayudar con incidencias, orientar a usuarios y trasladar problemas recurrentes.",
+    "problem": {
+      "subtitle": "El contexto",
+      "description": "Una ISO personalizada puede comportarse de forma distinta según el hardware, los controladores y la configuración de cada equipo."
+    },
+    "solution": {
+      "subtitle": "Mi enfoque",
+      "description": "Acompañar a los usuarios en el diagnóstico, clasificar las incidencias y documentar los problemas reproducibles. Esta labor de soporte es distinta de la autoría y del desarrollo de la ISO."
+    },
+    "technicalHighlights": [
+      {
+        "tag": "01",
+        "title": "ISO personalizada",
+        "text": "Una imagen de Windows modificada, no un sistema operativo desarrollado desde cero."
+      },
+      {
+        "tag": "02",
+        "title": "Diagnóstico",
+        "text": "Orientación sobre incidencias de configuración, drivers y compatibilidad."
+      },
+      {
+        "tag": "03",
+        "title": "Soporte comunitario",
+        "text": "Ayuda a usuarios y organización de consultas técnicas."
+      },
+      {
+        "tag": "04",
+        "title": "Feedback técnico",
+        "text": "Comunicación de problemas reproducibles y necesidades recurrentes."
+      }
+    ],
+    "stack": [
+      {
+        "category": "Tecnologías y enfoque",
+        "items": [
+          "Windows",
+          "ISO custom",
+          "Soporte",
+          "Comunidad"
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "val": "Windows",
+        "lbl": "Sistema base"
+      },
+      {
+        "val": "ISO custom",
+        "lbl": "Tipo de proyecto"
+      },
+      {
+        "val": "Soporte",
+        "lbl": "Mi colaboración"
+      }
+    ],
+    "nextId": "kicord",
+    "nextTitle": "KiCord"
+  }
+};
 
         var csModal = document.getElementById("case-study-modal");
         var csScroller = document.getElementById("cs-scroller");
@@ -1331,7 +1153,7 @@
             })
             .join("");
 
-          var routeSlug = data.id === "papige" ? "papigegamer" : data.id;
+          var routeSlug = data.slug || data.id;
           linksHtml +=
             '<a href="/projects/' +
             routeSlug +
@@ -1402,45 +1224,8 @@
             })
             .join("");
 
-          var galleryHtml = data.gallery.filter(function(g) { return g.type === "image"; })
-            .map(function (g) {
-              if (g.type === "image") {
-                return (
-                  '<div class="cs-gallery-item">' +
-                  '<div class="cs-gallery-media">' +
-                  '<img src="' +
-                  g.src +
-                  '" alt="' +
-                  (g.caption || "") +
-                  '" loading="lazy" decoding="async" width="501" height="1024" draggable="false" />' +
-                  "</div>" +
-                  '<div class="cs-gallery-foot">' +
-                  '<div class="cs-gallery-caption">' +
-                  g.caption +
-                  "</div>" +
-                  '<div class="cs-gallery-tag">' +
-                  g.label +
-                  "</div>" +
-                  "</div>" +
-                  "</div>"
-                );
-              } else {
-                return (
-                  '<div class="cs-gallery-placeholder">' +
-                  '<span class="badge">' +
-                  g.badge +
-                  "</span>" +
-                  '<div class="title">' +
-                  g.title +
-                  "</div>" +
-                  '<p class="desc">' +
-                  g.note +
-                  "</p>" +
-                  "</div>"
-                );
-              }
-            })
-            .join("");
+          var phoneTemplate = document.getElementById('project-phone-template-' + data.id);
+          var phoneHtml = phoneTemplate ? phoneTemplate.innerHTML : '';
 
           return (
             '<div class="cs-hero">' +
@@ -1472,11 +1257,8 @@
             data.tint +
             '">' +
             '<div class="cs-hero-card-glow" aria-hidden="true"></div>' +
-            '<img class="cs-hero-mockup" src="' +
-            data.heroVisual +
-            '" alt="' +
-            data.heroAlt +
-            '" loading="lazy" decoding="async" width="501" height="1024" draggable="false" />' +
+            phoneHtml +
+            '<p class="phone-caption">Vista de presentación interactiva.</p>' +
             "</div>" +
             "</div>" +
             '<div class="cs-sec">' +
@@ -1494,7 +1276,7 @@
             "</div>" +
             '<div class="cs-sec">' +
             '<div class="cs-sec-label">Reto &amp; Solución</div>' +
-            '<h2 class="cs-sec-title">Problema y Enfoque Desarrollado</h2>' +
+            '<h2 class="cs-sec-title">Contexto y participación</h2>' +
             '<div class="cs-compare-grid">' +
             '<div class="cs-compare-card problem">' +
             '<div class="cs-compare-badge">' +
@@ -1511,7 +1293,7 @@
             '<div class="cs-compare-card solution">' +
             '<div class="cs-compare-badge">' +
             '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>' +
-            "<span>Solución Desarrollada</span>" +
+            "<span>Mi enfoque</span>" +
             "</div>" +
             '<div class="cs-compare-sub">' +
             data.solution.subtitle +
@@ -1523,8 +1305,8 @@
             "</div>" +
             "</div>" +
             '<div class="cs-sec">' +
-            '<div class="cs-sec-label">Ingeniería &amp; Core</div>' +
-            '<h2 class="cs-sec-title">Arquitectura &amp; Aspectos Técnicos</h2>' +
+            '<div class="cs-sec-label">Detalles del proyecto</div>' +
+            '<h2 class="cs-sec-title">Aspectos técnicos y participación</h2>' +
             '<div class="cs-tech-grid">' +
             highlightsHtml +
             "</div>" +
@@ -1538,16 +1320,9 @@
             "</div>" +
             '<div class="cs-sec">' +
             '<div class="cs-sec-label">Impacto</div>' +
-            '<h2 class="cs-sec-title">Métricas &amp; Datos Clave</h2>' +
+            '<h2 class="cs-sec-title">Datos del proyecto</h2>' +
             '<div class="cs-metrics-grid">' +
             metricsHtml +
-            "</div>" +
-            "</div>" +
-            '<div class="cs-sec">' +
-            '<div class="cs-sec-label">Multimedia</div>' +
-            '<h2 class="cs-sec-title">Galería de Capturas &amp; Mockups</h2>' +
-            '<div class="cs-gallery-grid">' +
-            galleryHtml +
             "</div>" +
             "</div>" +
             '<button type="button" class="cs-next-card" data-next-case="' +
@@ -1573,6 +1348,7 @@
           [document.getElementById('main'), nav, ov, document.querySelector('footer')].forEach(function(el) { if(el) el.inert = locked; });
           if (!locked) ov.inert = true;
           document.documentElement.classList.toggle('modal-locked', locked);
+          document.dispatchEvent(new Event('project-phone:visibility'));
         }
         function openCaseStudy(id, pushState) {
           var data = CASE_STUDIES[id];
@@ -1581,11 +1357,13 @@
           if (!alreadyOpen && !lastCaseStudyTrigger) lastCaseStudyTrigger = document.activeElement;
           csTopNum.textContent = data.number;
           csTopName.textContent = data.title;
+          if (window.ProjectPhones) window.ProjectPhones.destroy(csContent);
           csContent.innerHTML = renderCaseStudy(data);
           csScroller.scrollTop = 0;
           csModal.inert = false;
           csModal.classList.add('cs-open');
           csModal.setAttribute('aria-hidden', 'false');
+          if (window.ProjectPhones) window.ProjectPhones.mount(csContent);
           setCaseBackground(true);
           if (lenis) lenis.stop();
           csBtnClose.focus({ preventScroll: true });
@@ -1599,6 +1377,7 @@
           if (navigate !== false && history.state && history.state.portfolioModal) {
             history.back(); return;
           }
+          if (window.ProjectPhones) window.ProjectPhones.destroy(csContent);
           csModal.classList.remove('cs-open');
           csModal.setAttribute('aria-hidden', 'true');
           setCaseBackground(false);

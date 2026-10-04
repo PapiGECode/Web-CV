@@ -24,6 +24,8 @@ http.createServer(async (req, res) => {
       const result = await handler(request);
       res.writeHead(result.status, Object.fromEntries(result.headers)); res.end(Buffer.from(await result.arrayBuffer())); return;
     }
+    const redirect = (config.redirects || []).find(rule => rule.source === url.pathname);
+    if (redirect) { res.writeHead(redirect.permanent ? 308 : 307, { Location: redirect.destination }); res.end(); return; }
     let relative = decodeURIComponent(url.pathname).replace(/^\//, '') || 'index.html';
     if (!path.extname(relative)) relative += '.html';
     let file = path.resolve(root, relative), status = 200;

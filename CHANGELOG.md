@@ -1,3 +1,12 @@
+## 2026-10-04 — Project accuracy, visible evidence and contact cleanup
+
+- Correct KiCord to a closed-source Discord client, the portfolio to this HTML/CSS/JS website, and KernelOS to a custom Windows ISO with a support/community contribution.
+- Curate three public repository collaborations with adaptation/maintenance descriptions.
+- Remove conflicting opacity animations from evidence cards; keep them visible by default and strengthen both-theme contrast.
+- Move email copying into contact; remove message copying and duplicated footer actions.
+- Replace image mockups with themed interactive phones using the supplied bezel, scoped tabs, keyboard navigation and static no-JS content.
+- Redirect the former project URL to /projects/portfolio; preserve existing hero/footer design.
+
 ## 2026-10-04 — Quality, contact and opt-in measurement
 
 - Refined project-first hierarchy, responsive type and actions; fixed mobile overflow and empty notification artifact.

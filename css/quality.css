@@ -224,3 +224,37 @@ html.light .status-archive { color:#475569; }
 @media (prefers-reduced-motion:reduce) {
   .draft-actions a, .draft-actions button, .f-label { transition:none; }
 }
+
+/* Evidence cards are readable by default: content must never depend on opacity tweens. */
+#skills .cap-card { --cap-muted:#bdb8af; --cap-accent:#8fbea5; background:#19191c; border-color:var(--line-2); border-top:2px solid var(--cap-accent); opacity:1; box-shadow:0 8px 24px #0002; transition:border-color .2s,box-shadow .2s; }
+#skills .cap-card:nth-child(2) { --cap-accent:#8fb9d2; }
+#skills .cap-card:nth-child(3) { --cap-accent:#b5a3d2; }
+#skills .cap-card:nth-child(4) { --cap-accent:#d2b28b; }
+#skills .cap-card:hover, #skills .cap-card:focus-within { background:#1d1d21; border-color:var(--cap-accent); transform:none; }
+#skills .cap-lead, #skills .cap-num, #skills .cap-sec-label, #skills .cap-badge, #skills .cap-tag, #skills .cap-stat-desc { color:var(--cap-muted); }
+#skills .cap-title, #skills .cap-evidence-item, #skills .cap-stat-val { color:var(--bone); }
+#skills .cap-stat-box { background:#222226; border-color:var(--line-2); flex-wrap:wrap; }
+#skills .cap-badge-dot { background:var(--cap-accent); box-shadow:none; }
+#skills .cap-tag { background:#ffffff06; border-color:var(--line-2); }
+#skills .cap-evidence-link { text-decoration:underline; text-underline-offset:.2em; border-bottom:0; }
+html.light #skills .cap-card { --cap-muted:#514b43; --cap-accent:#376e53; background:#faf7f1; }
+html.light #skills .cap-card:nth-child(2) { --cap-accent:#316886; }
+html.light #skills .cap-card:nth-child(3) { --cap-accent:#70568f; }
+html.light #skills .cap-card:nth-child(4) { --cap-accent:#896433; }
+html.light #skills .cap-card:hover, html.light #skills .cap-card:focus-within { background:#fffdf9; }
+html.light #skills .cap-stat-box { background:#eee8de; }
+html.light #skills .cap-tag { background:#17140f04; }
+.contact-address { display:flex; flex-wrap:wrap; align-items:center; gap:.5rem .85rem; margin-bottom:.65rem; }
+.contact-address > a { overflow-wrap:anywhere; font-size:clamp(.9rem,1.4vw,1.15rem); color:var(--bone); }
+.copy-email-inline { display:inline-flex; align-items:center; min-height:44px; padding:.35rem .65rem; color:var(--ash); background:transparent; border:1px solid var(--line-2); border-radius:8px; font:500 .72rem/1.4 var(--font-mono); }
+.copy-email-inline:hover, .copy-email-inline:focus-visible { color:var(--bone); border-color:var(--bone); }
+.draft-actions:not(:has(a:not([hidden]))) { display:none; }
+.bento-status-badge { flex-shrink:1; }
+.bento-top { flex-wrap:wrap; }
+@media(max-width:680px) { #skills .cap-stat-desc { text-align:left; } .contact-address { align-items:flex-start; } }
+@media(forced-colors:active) { #skills .cap-card { border:1px solid CanvasText; } }
+
+/* Three curated projects fill one desktop row; retain the existing tablet/mobile grid. */
+@media (min-width:981px) {
+  #bento-projects-grid > .bento-card.bento-col-2 { grid-column:span 1; }
+}

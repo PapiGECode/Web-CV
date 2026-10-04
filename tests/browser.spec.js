@@ -119,7 +119,7 @@ test('no JavaScript: content, project links, CV and email still work', async ({ 
   const context = await browser.newContext({ javaScriptEnabled: false }); const page = await context.newPage();
   await page.goto(process.env.TEST_BASE_URL || 'http://localhost:3000');
   await expect(page.locator('h1')).toBeVisible();
-  await expect(page.locator('.bento-card')).toHaveCount(7);
+  await expect(page.locator('.bento-card')).toHaveCount(3);
   await expect(page.locator('a[download]').first()).toBeVisible();
   await page.locator('.panel-title a').first().click(); await expect(page).toHaveURL(/projects\/kicord/);
   await context.close();

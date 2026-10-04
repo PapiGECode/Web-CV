@@ -74,7 +74,7 @@
     updateDraft(p);
     if (!available) {
       draft.hidden = false;
-      show('Borrador listo', 'Abre tu aplicación de correo para revisar y enviar el mensaje. También puedes copiarlo.');
+      show('Borrador listo', 'Abre tu aplicación de correo para revisar y enviar el mensaje.');
       draft.focus();
       return;
     }
@@ -118,10 +118,6 @@
       form.removeAttribute('aria-busy');
       setLabel();
     }
-  });
-  document.getElementById('copy-message')?.addEventListener('click', async () => {
-    try { await navigator.clipboard.writeText(text(value())); show('Mensaje copiado', 'Ya puedes pegarlo en tu aplicación de correo.'); }
-    catch { show('Copia manual', 'Selecciona el texto de los campos y cópialo con tu teclado.'); }
   });
   setLabel();
   updateDraft();
