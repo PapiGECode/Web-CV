@@ -253,3 +253,8 @@ html.light #skills .cap-tag { background:#17140f04; }
 .bento-top { flex-wrap:wrap; }
 @media(max-width:680px) { #skills .cap-stat-desc { text-align:left; } .contact-address { align-items:flex-start; } }
 @media(forced-colors:active) { #skills .cap-card { border:1px solid CanvasText; } }
+
+/* Three curated projects fill one desktop row; retain the existing tablet/mobile grid. */
+@media (min-width:981px) {
+  #bento-projects-grid > .bento-card.bento-col-2 { grid-column:span 1; }
+}
