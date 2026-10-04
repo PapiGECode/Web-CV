@@ -420,130 +420,22 @@
                 });
               });
 
-              /* WORK panels: phone tilt + bgmark parallax + ambient + outgoing scale */
-              gsap.utils.toArray(".panel").forEach(function (panel, i) {
-                var phone = panel.querySelector(".phone") || panel.querySelector(".phone-mockup"),
-                  mark = panel.querySelector(".panel-bgmark");
-                if (FINE) {
-                  gsap.fromTo(
-                    phone,
-                    { y: 26 },
-                    {
-                      y: -26,
-                      ease: "none",
-                      scrollTrigger: {
-                        trigger: panel,
-                        start: "top bottom",
-                        end: "bottom top",
-                        scrub: 0.7,
-                      },
-                    },
-                  );
-                } else {
-                  gsap.fromTo(
-                    phone,
-                    { rotateY: -12, rotateX: 5, y: 26 },
-                    {
-                      rotateY: 8,
-                      rotateX: -3,
-                      y: -26,
-                      ease: "none",
-                      scrollTrigger: {
-                        trigger: panel,
-                        start: "top bottom",
-                        end: "bottom top",
-                        scrub: 0.7,
-                      },
-                    },
-                  );
+              /* Project controls stay in place; only decorative/non-interactive content moves. */
+              gsap.utils.toArray(".panel").forEach(function (panel) {
+                var mark = panel.querySelector(".panel-bgmark");
+                if (mark) {
+                  gsap.fromTo(mark, { yPercent: 18 }, {
+                    yPercent: -18, ease: "none",
+                    scrollTrigger: { trigger: panel, start: "top bottom", end: "bottom top", scrub: .7 },
+                  });
                 }
-                gsap.fromTo(
-                  mark,
-                  { yPercent: 18 },
-                  {
-                    yPercent: -18,
-                    ease: "none",
-                    scrollTrigger: {
-                      trigger: panel,
-                      start: "top bottom",
-                      end: "bottom top",
-                      scrub: 0.7,
-                    },
-                  },
-                );
-                // reveal contents on enter
-                var info = panel.querySelector(".panel-info");
-                var tl = gsap.timeline({
-                  scrollTrigger: { trigger: panel, start: "top 60%" },
+                // Do not animate the phone stage, title links, metrics or action hit areas.
+                // The old long opacity sequence delayed readable copy and targeted removed mockups.
+                var copy = panel.querySelectorAll(".panel-num,.panel-desc,.panel-tags");
+                gsap.fromTo(copy, { y: 10 }, {
+                  y: 0, duration: .55, stagger: .04, ease: "power3.out", clearProps: "transform",
+                  scrollTrigger: { trigger: panel, start: "top 85%", once: true },
                 });
-                tl.from(
-                  panel.querySelector(".ph-stage"),
-                  {
-                    rotationX: 16,
-                    y: 80,
-                    opacity: 0,
-                    transformOrigin: "50% 100%",
-                    duration: 1.1,
-                    ease: "power3.out",
-                  },
-                  0,
-                )
-                  .from(
-                    info.querySelector(".panel-num"),
-                    { opacity: 0, x: -14, duration: 0.5, ease: "power2.out" },
-                    0.1,
-                  )
-                  .from(
-                    info.querySelector(".panel-title"),
-                    {
-                      opacity: 0,
-                      duration: 0.7,
-                      ease: "power3.out",
-                    },
-                    "-=.2",
-                  );
-                var metrics = info.querySelectorAll(".metric-pill");
-                if (metrics && metrics.length) {
-                  tl.from(
-                    metrics,
-                    {
-                      opacity: 0,
-                      y: 10,
-                      duration: 0.4,
-                      stagger: 0.05,
-                      ease: "power2.out",
-                    },
-                    "-=.3",
-                  );
-                }
-                tl.from(
-                    info.querySelector(".panel-desc"),
-                    { opacity: 0, y: 18, duration: 0.6, ease: "power2.out" },
-                    "-=.35",
-                  )
-                  .from(
-                    info.querySelectorAll(".panel-tag"),
-                    {
-                      opacity: 0,
-                      y: 12,
-                      scale: 0.9,
-                      duration: 0.4,
-                      stagger: 0.05,
-                      ease: "back.out(1.7)",
-                    },
-                    "-=.3",
-                  )
-                  .from(
-                    info.querySelectorAll(".panel-links .btn"),
-                    {
-                      opacity: 0,
-                      duration: 0.45,
-                      stagger: 0.08,
-                      ease: "power2.out",
-                      clearProps: "transform",
-                    },
-                    "-=.2",
-                  );
               });
 
               /* Bento projects anim — cards rendered dynamically, triggered by bento-projects-grid */
