@@ -34,3 +34,6 @@ html.phone-preview { overscroll-behavior:contain; }
 .phone-preview .phone-preview-cover { min-height:170px; padding:24px; }
 .phone-preview .panel-visual:has(.project-phone) { padding:0; }
 @media(prefers-reduced-motion:reduce) { .live-phone-presentation * { transition:none!important; animation:none!important; } }
+
+/* Only the embedded portfolio offsets its navigation below the physical camera. */
+.phone-preview #nav { top:28px; }

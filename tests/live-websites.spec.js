@@ -82,7 +82,8 @@ test('no JavaScript provides real links without starting a recursion chain',asyn
 });
 test('embedded portfolio visits never emit duplicate measurement events',async({page,context})=>{
   const events=[];await context.route('**/api/metrics',r=>{events.push({body:r.request().postData(),url:r.request().frame().url()});return r.fulfill({status:204});});
-  await context.addInitScript(()=>localStorage.setItem('ps-measurement','true'));
+  await context.addInitScript(()=>localStorage.setItem('ps-measurement','yes'));
   await ready(page,390);const {frame}=await view(page,'portfolio');await frame.waitForFunction(()=>window.__portfolioReady);await frame.evaluate(()=>dispatchEvent(new Event('portfolio:consent')));
+  await expect.poll(()=>events.filter(e=>!e.url.includes('phone-preview')).length).toBeGreaterThan(0);
   expect(events.filter(e=>e.url.includes('phone-preview'))).toHaveLength(0);
 });
