@@ -78,7 +78,7 @@ test('blocked external pages leave visible external controls without false succe
 });
 test('no JavaScript provides real links without starting a recursion chain',async({browser})=>{
   const context=await browser.newContext({javaScriptEnabled:false,viewport:{width:390,height:844}});
-  try{await stubKiCord(context);const p=await context.newPage();await p.goto('http://localhost:3000');await expect(p.locator('.stack [data-project-phone]')).toHaveCount(3);await expect(p.locator('iframe')).toHaveCount(0);for(const key of keys){const tools=p.locator(`[data-phone-presentation=${key}] .live-phone-tools`);await tools.scrollIntoViewIfNeeded();await expect(tools.locator('a')).toBeVisible();await expect(tools.locator('button')).toBeHidden();}}finally{await context.close();}
+  try{await stubKiCord(context);const p=await context.newPage();await p.goto(process.env.TEST_BASE_URL || 'http://localhost:3000');await expect(p.locator('.stack [data-project-phone]')).toHaveCount(3);await expect(p.locator('iframe')).toHaveCount(0);for(const key of keys){const tools=p.locator(`[data-phone-presentation=${key}] .live-phone-tools`);await tools.scrollIntoViewIfNeeded();await expect(tools.locator('a')).toBeVisible();await expect(tools.locator('button')).toBeHidden();}}finally{await context.close();}
 });
 test('embedded portfolio visits never emit duplicate measurement events',async({page,context})=>{
   const events=[];await context.route('**/api/metrics',r=>{events.push({body:r.request().postData(),url:r.request().frame().url()});return r.fulfill({status:204});});

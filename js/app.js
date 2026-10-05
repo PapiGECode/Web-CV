@@ -1150,7 +1150,6 @@
             '">' +
             '<div class="cs-hero-card-glow" aria-hidden="true"></div>' +
             phoneHtml +
-            '<p class="phone-caption">' + (data.id === 'kicord' ? 'Web real de KiCord · versión móvil. Si no aparece, ábrela aparte.' : 'Vista de presentación interactiva.') + '</p>' +
             "</div>" +
             "</div>" +
             '<div class="cs-sec">' +

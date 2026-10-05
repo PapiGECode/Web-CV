@@ -5,6 +5,8 @@ import path from 'node:path';
 import { createContactHandler } from '../server/contact.js';
 import { createMetricsHandler } from '../server/metrics.js';
 const root = path.resolve('dist');
+const port = Number(process.env.PORT || 3000);
+if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error('Invalid preview port');
 const env = { ...process.env, NODE_ENV: 'development' };
 const contact = createContactHandler({ env });
 const metrics = createMetricsHandler({ env });
@@ -12,7 +14,7 @@ const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '
 const config = JSON.parse(await fs.readFile('vercel.json', 'utf8'));
 http.createServer(async (req, res) => {
   try {
-    const url = new URL(req.url, 'http://localhost:3000');
+    const url = new URL(req.url, `http://localhost:${port}`);
     for (const h of config.headers[0].headers) res.setHeader(h.key, h.value.replace('; upgrade-insecure-requests', ''));
     if (url.pathname.startsWith('/api/')) {
       if (url.pathname === '/api/github-activity') { res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify({ ok: true, source: 'fallback' })); return; }
@@ -34,4 +36,4 @@ http.createServer(async (req, res) => {
     const bytes = await fs.readFile(file);
     res.writeHead(status, { 'Content-Type': types[path.extname(file)] || 'application/octet-stream' }); res.end(bytes);
   } catch (e) { console.error(e.message); res.writeHead(500); res.end('Preview error'); }
-}).listen(3000, '0.0.0.0', () => console.log('Portfolio preview: http://localhost:3000'));
+}).listen(port, '0.0.0.0', () => console.log(`Portfolio preview: http://localhost:${port}`));

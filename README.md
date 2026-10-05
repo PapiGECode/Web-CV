@@ -45,6 +45,10 @@ Consulta `LICENSE`. Se conservan los avisos originales de GSAP/Lenis y las licen
 
 ## Teléfonos de proyectos
 
-KiCord carga la web real https://www.kicord.es/es en un iframe de 390 CSS px escalado dentro de la carcasa original. No se copia, proxifica ni simula su web. El resto de teléfonos conserva sus interfaces temáticas.
+Los tres dispositivos muestran webs reales: KiCord, PabloSchefer.com y KernelOS. El viewport de 390 CSS px ocupa toda la pantalla recortada por la carcasa original. Los controles para recargar y abrir el sitio aparte están debajo, sin barras falsas dentro del display.
 
-scripts/live-kicord.mjs genera el marco; js/live-kicord.js ajusta tamaño, recarga y ciclo de vida. La CSP permite marcos únicamente de kicord.es y www.kicord.es. Se conserva sandbox sin navegación de la página superior. El enlace externo siempre está disponible; un evento load no se presenta como confirmación de éxito. Cloudflare y las políticas del sitio externo pueden afectar la carga según la conexión del visitante. Las pruebas de integración usan un documento remoto simulado, separado de la comprobación real en navegador.
+`scripts/project-phones.mjs` genera plantillas inertes y `js/project-phones.js` crea las vistas cerca de la zona visible. El portfolio usa la misma web en `/?phone-preview=1`, relativo al origen actual para funcionar también en los despliegues de prueba. Una página del portfolio incrustada no inicia otros iframes, incluso al navegar a otro caso de estudio. Su medición se desactiva para no duplicar visitas. Sin JavaScript se conservan enlaces directos reales.
+
+La CSP permite exclusivamente el propio origen y los dominios de KiCord y KernelOS. Los sitios externos conservan su sandbox sin navegación del documento superior. No se copian páginas ni se eliminan protecciones de terceros. El enlace externo siempre permanece disponible: un evento load no equivale a confirmar la carga correcta. Los modales eliminan sus marcos al cerrarse sin navegar a about:blank.
+
+Las pruebas sustituyen solo los sitios externos por documentos explícitos de prueba. El iframe del portfolio carga la página real construida. La comprobación de los dos sitios externos en un navegador real se realiza aparte. Para aislar la vista previa puede usarse PORT; para probar contra ella, TEST_BASE_URL.
