@@ -1,0 +1,53 @@
+name: KiCord live framing review
+on:
+  push:
+    branches: [feat/kicord-live-phone-20261005]
+    paths: [.github/workflows/kicord-live-review.yml]
+permissions:
+  contents: read
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci
+      - name: Snapshot source and inspect real site
+        run: |
+          mkdir -p live-review
+          git archive --format=tar.gz HEAD > live-review/source.tar.gz
+          node --input-type=module <<'JS'
+          import fs from 'node:fs/promises';
+          import { chromium } from '@playwright/test';
+          const browser = await chromium.launch({ executablePath: '/usr/bin/google-chrome', args: ['--no-sandbox'] });
+          const context = await browser.newContext({ viewport: {width:390,height:844} });
+          const results = [];
+          for (const url of ['https://kicord.es/', 'https://www.kicord.es/']) {
+            const page = await context.newPage();
+            const row = { requested: url, errors: [] };
+            page.on('pageerror', error => row.errors.push(error.message));
+            try {
+              const res = await page.goto(url, {waitUntil:'domcontentloaded', timeout:45000});
+              row.status = res?.status();
+              const h = await res?.allHeaders();
+              row.headers = Object.fromEntries(Object.entries(h || {}).filter(([k]) => ['content-security-policy','x-frame-options','cf-mitigated','server'].includes(k)));
+              await page.waitForTimeout(7000);
+              row.url = page.url(); row.title = await page.title();
+              row.text = (await page.locator('body').innerText()).slice(0,3500);
+              await page.screenshot({path:`live-review/${url.includes('www.')?'www':'apex'}-mobile.png`});
+            } catch (error) { row.failure = error.message; }
+            results.push(row); await page.close();
+          }
+          await fs.writeFile('live-review/probe.json', JSON.stringify(results,null,2));
+          console.log(JSON.stringify(results,null,2));
+          await browser.close();
+          JS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: kicord-live-source-review
+          path: live-review/
+          retention-days: 3
