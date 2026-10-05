@@ -32,7 +32,13 @@ for(const width of [320,390,768,1440]) test(`all real websites fill the entire p
 });
 for(const key of ['kicord','kernelos']) test(`${key}: remote navigation and scrolling stay in the matching frame`,async({page})=>{
   await ready(page);const {phone,frame}=await view(page,key);const url=page.url();
-  await frame.locator('#remote-navigation').click();await expect.poll(()=>frame.url()).toContain(key==='kicord'?'/es/plugins':'/changelogs');expect(page.url()).toBe(url);
+  const link=frame.locator('#remote-navigation');await link.scrollIntoViewIfNeeded();
+  const local=await link.evaluate(el=>{const r=el.getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height,viewport:innerWidth};});
+  const display=await phone.locator('iframe').boundingBox();const ratio=display.width/local.viewport;
+  // Chromium's OOP iframe locator coordinates can omit the parent's CSS scale.
+  // Use actual screen coordinates so this remains a genuine pointer-navigation test.
+  await page.mouse.click(display.x+(local.x+local.width/2)*ratio,display.y+(local.y+local.height/2)*ratio);
+  await expect.poll(()=>frame.url()).toContain(key==='kicord'?'/es/plugins':'/changelogs');expect(page.url()).toBe(url);
   const y=await page.evaluate(()=>scrollY),box=await phone.locator('iframe').boundingBox();
   await page.mouse.move(box.x+box.width/2,box.y+box.height/2);await page.mouse.wheel(0,180);
   await expect.poll(()=>frame.evaluate(()=>scrollY)).toBeGreaterThan(0);expect(Math.abs(await page.evaluate(()=>scrollY)-y)).toBeLessThan(2);
@@ -48,8 +54,8 @@ test('the actual portfolio never creates recursive frames, including inside case
 });
 test('a distant device stays unloaded; only its own reload button resets its website',async({page})=>{
   await ready(page,390);await expect(page.locator('.stack [data-live-phone=kernelos] iframe')).toHaveCount(0);
-  const first=await view(page,'kicord');await first.frame.locator('#remote-navigation').click();
-  const other=await view(page,'kernelos');await other.frame.locator('#remote-navigation').click();
+  const first=await view(page,'kicord');await first.frame.locator('#remote-navigation').press('Enter');
+  const other=await view(page,'kernelos');await other.frame.locator('#remote-navigation').press('Enter');
   await other.tools.locator('button').click();await expect.poll(()=>other.frame.url()).toBe(sources.kernelos);expect(first.frame.url()).toContain('/es/plugins');
 });
 test('closing and reopening every case removes only its frame and retains browser history',async({page})=>{

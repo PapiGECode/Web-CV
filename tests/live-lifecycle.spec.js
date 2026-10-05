@@ -12,10 +12,11 @@ for(const [index,key] of [[0,'kicord'],[1,'portfolio'],[2,'kernelos']]) {
     const frame=await(await device.locator('iframe').elementHandle()).contentFrame();
     if(key==='portfolio') {
       await frame.waitForFunction(()=>window.__portfolioReady);
-      await frame.locator('.panel-title a').first().click();
+      await frame.locator('.panel-title a').first().press('Enter');
       await expect(frame.locator('#case-study-modal')).toHaveAttribute('aria-hidden','false');
     } else {
-      await frame.locator('#remote-navigation').click();
+      // Keyboard activation isolates history behavior from scaled-frame pointer coordinates.
+      await frame.locator('#remote-navigation').press('Enter');
       await expect.poll(()=>frame.url()).toContain(key==='kicord'?'/es/plugins':'/changelogs');
     }
     await page.locator('#cs-btn-close').click();
@@ -35,7 +36,7 @@ test('older browsers without Navigation API close a navigated frame without leav
   const device=page.locator('#case-study-modal [data-live-phone=kernelos]');await device.scrollIntoViewIfNeeded();
   await expect(device.locator('iframe')).toHaveCount(1);
   const frame=await(await device.locator('iframe').elementHandle()).contentFrame();
-  await frame.locator('#remote-navigation').click();await expect.poll(()=>frame.url()).toContain('/changelogs');
+  await frame.locator('#remote-navigation').press('Enter');await expect.poll(()=>frame.url()).toContain('/changelogs');
   await page.locator('#cs-btn-close').click();await expect(page.locator('#case-study-modal')).toHaveAttribute('aria-hidden','true');
   expect(new URL(page.url()).pathname).toBe(original.pathname);await expect(page).not.toHaveURL(/#case-study-/);
 });
