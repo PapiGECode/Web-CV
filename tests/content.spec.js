@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, stubKiCord } from './fixtures.js';
 import AxeBuilder from '@axe-core/playwright';
 import fs from 'node:fs/promises';
 
@@ -38,7 +38,7 @@ for (const width of [390, 1440]) {
 
 test('evidence survives absent JS and reduced motion', async ({ browser, page }) => {
   const context = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 390, height: 844 } });
-  const p = await context.newPage(); await p.goto(process.env.TEST_BASE_URL || 'http://localhost:3000');
+  await stubKiCord(context); const p = await context.newPage(); await p.goto(process.env.TEST_BASE_URL || 'http://localhost:3000');
   const opacities = await p.locator('.cap-card').evaluateAll(cards => cards.map(c => getComputedStyle(c).opacity));
   expect(opacities).toEqual(['1','1','1','1']);
   await context.close();

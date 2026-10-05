@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, stubKiCord } from './fixtures.js';
 import AxeBuilder from '@axe-core/playwright';
 import fs from 'node:fs/promises';
 const captures = 'review-reports';
@@ -116,7 +116,7 @@ test('measurement default off; consent can be enabled and revoked', async ({ pag
   await page.waitForTimeout(300); expect(events).toHaveLength(count);
 });
 test('no JavaScript: content, project links, CV and email still work', async ({ browser }) => {
-  const context = await browser.newContext({ javaScriptEnabled: false }); const page = await context.newPage();
+  const context = await browser.newContext({ javaScriptEnabled: false }); await stubKiCord(context); const page = await context.newPage();
   await page.goto(process.env.TEST_BASE_URL || 'http://localhost:3000');
   await expect(page.locator('h1')).toBeVisible();
   await expect(page.locator('.bento-card')).toHaveCount(3);

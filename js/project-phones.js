@@ -84,8 +84,8 @@
     controllers.set(root,() => { signal.abort(); resize?.disconnect(); visible?.disconnect(); clearTimeout(timer); controllers.delete(root); });
   }
   const roots = scope => [...(scope.matches?.('[data-project-phone]')?[scope]:[]),...scope.querySelectorAll('[data-project-phone]')];
-  function mount(scope=document) { roots(scope).forEach(init); }
-  function destroy(scope) { roots(scope).forEach(root => controllers.get(root)?.()); }
+  function mount(scope=document) { roots(scope).forEach(init); window.KiCordLivePhone?.mount(scope); }
+  function destroy(scope) { roots(scope).forEach(root => controllers.get(root)?.()); window.KiCordLivePhone?.destroy(scope); }
   window.ProjectPhones=Object.freeze({mount,destroy});
   mount();
   window.addEventListener('pagehide',() => [...controllers.values()].forEach(dispose => dispose()));

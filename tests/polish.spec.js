@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, stubKiCord } from './fixtures.js';
 import AxeBuilder from '@axe-core/playwright';
 import fs from 'node:fs/promises';
 
