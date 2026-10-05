@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, stubKiCord } from './fixtures.js';
 import fs from 'node:fs/promises';
 
 async function ready(page, width, motion='reduce') {
@@ -14,7 +14,7 @@ async function ready(page, width, motion='reduce') {
 for(const width of [320,390,768,1440]) {
   test(`concentric phone surfaces and stable pane position at ${width}px`,async({page})=>{
     await ready(page,width);
-    for(const key of ['kicord','portfolio','kernelos']) {
+    for(const key of ['portfolio','kernelos']) {
       const phone=page.locator(`.stack [data-project-phone="${key}"]`);
       await phone.scrollIntoViewIfNeeded();
       const curves=await phone.evaluate(el=>{

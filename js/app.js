@@ -1150,7 +1150,7 @@
             '">' +
             '<div class="cs-hero-card-glow" aria-hidden="true"></div>' +
             phoneHtml +
-            '<p class="phone-caption">Vista de presentación interactiva.</p>' +
+            '<p class="phone-caption">' + (data.id === 'kicord' ? 'Web real de KiCord · versión móvil. Si no aparece, ábrela aparte.' : 'Vista de presentación interactiva.') + '</p>' +
             "</div>" +
             "</div>" +
             '<div class="cs-sec">' +
@@ -1233,7 +1233,7 @@
 
         var lastCaseStudyTrigger = null;
         function caseStudyFocusable() {
-          return Array.from(csModal.querySelectorAll('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'))
+          return Array.from(csModal.querySelectorAll('a[href], button:not([disabled]), iframe[title], [tabindex]:not([tabindex="-1"])'))
             .filter(function(el) { return el.getClientRects().length > 0; });
         }
         function setCaseBackground(locked) {

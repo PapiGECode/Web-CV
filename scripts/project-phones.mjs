@@ -1,3 +1,4 @@
+import { renderLiveKiCord } from './live-kicord.mjs';
 /** Project presentation phones. Same viewport geometry as the supplied Thiago phone.
  * All content is prerendered; enhancement adds scoped tabs and preview controls.
  * No YouTube calls, account controls or simulated product statistics are needed.
@@ -19,17 +20,6 @@ const escape = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<'
 const row = (name,title,text) => `<div class="pf-feature"><span class="pf-feature-icon">${icon(name)}</span><div><h4>${title}</h4><p>${text}</p></div></div>`;
 const outLink = (url,label) => `<a class="pf-row-link" href="${url}" target="_blank" rel="noopener noreferrer">${label}${icon('arrow')}</a>`;
 const projects = {
-  kicord: {
-    name:'KiCord', domain:'kicord.es', category:'Cliente de Discord', badge:'Código cerrado', logo:'/assets/kicord-logo.webp',
-    lead:'Tu Discord. A tu manera.', description:'Personalización, plugins y una experiencia de uso propia.',
-    banner:'<span class="pf-banner-kicker">DISCORD, A TU MANERA.</span><strong>KiCord<span>✦</span></strong><span class="pf-banner-lines" aria-hidden="true"></span>',
-    tabs:[
-      ['Inicio', `<div class="pf-welcome"><p class="pf-kicker">Una experiencia propia</p><h3>Más posibilidades.<br>El mismo punto de encuentro.</h3><p>Un cliente modificado para personalizar cómo utilizas Discord.</p></div>${row('sliders','Personalización','Apariencia y experiencia de uso.')}${row('layers','Plugins','Funciones adicionales en el cliente.')}`],
-      ['Funciones', `${row('sliders','Interfaz a medida','Personalización de la apariencia y del comportamiento.')}${row('layers','Integración de plugins','Un espacio para funcionalidades adicionales.')}${row('lock','Cliente de código cerrado','Los plugins públicos relacionados son proyectos independientes.')}<p class="pf-note">KiCord no es un producto oficial de Discord. Esta pantalla es una presentación interactiva, no el cliente.</p>`],
-      ['Aspecto', `<p class="pf-kicker">Prueba visual</p><h3 class="pf-heading">Explora el estilo.</h3><p class="pf-copy">Cambia el acento de esta vista de presentación.</p><div class="pf-palette" aria-label="Color de esta vista"><button type="button" data-phone-accent="violet" aria-pressed="true">Violeta</button><button type="button" data-phone-accent="mint" aria-pressed="false">Menta</button><button type="button" data-phone-accent="amber" aria-pressed="false">Ámbar</button></div><div class="pf-preview-card"><span class="pf-preview-orb" aria-hidden="true">✦</span><div><strong>Tu espacio.</strong><p>Una interfaz con personalidad.</p></div><span class="pf-preview-chip">Vista previa</span></div><p class="pf-note">Solo cambia el color de este teléfono. No modifica ajustes de Discord.</p>`]
-    ],
-    url:'https://kicord.es', action:'Visitar KiCord', bottom:'Cliente · Código cerrado'
-  },
   portfolio: {
     name:'Pablo Schefer', domain:'pabloschefer.com', category:'Portfolio personal', badge:'Esta misma web', logo:null,
     lead:'Ideas convertidas en software útil.', description:'Desarrollo web, automatización y herramientas para comunidades.',
@@ -55,6 +45,7 @@ const projects = {
 };
 
 export function renderProjectPhone(key, uid) {
+  if (key === "kicord") return renderLiveKiCord(uid);
   const data = projects[key];
   if (!data || !/^[a-z0-9-]+$/.test(uid)) throw Error('Invalid project phone');
   const logo = data.logo ? `<img src="${data.logo}" width="80" height="80" alt="" loading="lazy" decoding="async" />` : '<span class="pf-monogram" aria-hidden="true">PS</span>';

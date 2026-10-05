@@ -45,6 +45,6 @@ Consulta `LICENSE`. Se conservan los avisos originales de GSAP/Lenis y las licen
 
 ## Teléfonos de proyectos
 
-Los teléfonos son HTML/CSS/JavaScript, no capturas ni iframes de la web completa. `scripts/project-phones.mjs` genera su contenido estático, `css/project-phones.css` define el viewport y `js/project-phones.js` añade pestañas y un reloj local. Se reutiliza la carcasa `iphone18-pro-max-bezel.png` facilitada por el propietario desde su repositorio de ThiagoIUTU. No se consulta `/api/youtube-channel` ni se usa una clave de YouTube: los tres teléfonos presentan proyectos distintos, no un canal de vídeo. Las vistas son demostraciones de presentación, no apps móviles de KiCord o KernelOS.
+KiCord carga la web real https://www.kicord.es/es en un iframe de 390 CSS px escalado dentro de la carcasa original. No se copia, proxifica ni simula su web. El resto de teléfonos conserva sus interfaces temáticas.
 
-La interfaz existe sin JavaScript; con JavaScript las instancias se ajustan con ResizeObserver, tienen IDs únicos y limpian sus observadores al cerrar o sustituir un modal. Los controles mantienen un área visible mínima de 44px. El color de la demo de KiCord solo cambia en esa instancia.
+scripts/live-kicord.mjs genera el marco; js/live-kicord.js ajusta tamaño, recarga y ciclo de vida. La CSP permite marcos únicamente de kicord.es y www.kicord.es. Se conserva sandbox sin navegación de la página superior. El enlace externo siempre está disponible; un evento load no se presenta como confirmación de éxito. Cloudflare y las políticas del sitio externo pueden afectar la carga según la conexión del visitante. Las pruebas de integración usan un documento remoto simulado, separado de la comprobación real en navegador.

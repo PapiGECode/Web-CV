@@ -82,6 +82,11 @@ for (const file of pages) {
     const templates = [['kicord','kicord'],['papige','portfolio'],['kernelos','kernelos']].map(([id,key]) => `<template id="project-phone-template-${id}">${renderProjectPhone(key,'modal-'+key)}</template>`).join('');
     html = html.replace('<!-- PROJECT_PHONE_TEMPLATES -->', templates);
   }
+  if (file === 'index.html' || file === 'projects/kicord.html') {
+    html = html.replace('</head>', '<link rel="stylesheet" href="/css/live-kicord.css" /></head>');
+    html = html.replace('<script defer src="/js/project-phones.js"></script>', '<script defer src="/js/live-kicord.js"></script><script defer src="/js/project-phones.js"></script>');
+    html = html.replace('Vista de presentación interactiva.', 'Web real de KiCord · versión móvil. Si no aparece, ábrela aparte.');
+  }
   // Absolute asset references are safe from clean URLs and nested project routes.
   html = html.replace(/(href|src)="((?:css|js|assets)\/[^\"]+)"/g, '$1="/$2"');
   for (const [before, after] of replacements) html = html.split(`"${before}"`).join(`"${after}"`);

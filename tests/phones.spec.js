@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, stubKiCord } from './fixtures.js';
 import AxeBuilder from '@axe-core/playwright';
 import fs from 'node:fs/promises';
 
@@ -18,8 +18,8 @@ test('three interactive phones replace the image mockups without nested clickabl
   await ready(page,'/',1440,'dark','no-preference');
   await expect(page.locator('.stack [data-project-phone]')).toHaveCount(3);
   await expect(page.locator('.phone-mockup')).toHaveCount(0);
-  await expect(page.locator('iframe')).toHaveCount(0);
-  for(const key of ['kicord','portfolio','kernelos']){
+  await expect(page.locator('iframe')).toHaveCount(1);
+  for(const key of ['portfolio','kernelos']){
     const phone=page.locator(`.stack [data-project-phone="${key}"]`);
     await phone.scrollIntoViewIfNeeded();
     expect(await phone.evaluate(el=>el.closest('a,button')===null)).toBe(true);
@@ -39,10 +39,10 @@ test('three interactive phones replace the image mockups without nested clickabl
 
 test('phone tabs support arrows, Home and End with linked unique panels',async({page})=>{
   await ready(page);
-  const phone=page.locator('.stack [data-project-phone=kicord]');
+  const phone=page.locator('.stack [data-project-phone=portfolio]');
   await phone.locator('[role=tab]').first().focus();
   await page.keyboard.press('ArrowRight'); await expect(phone.locator('[role=tab]').nth(1)).toBeFocused();
-  await expect(phone.locator('[role=tabpanel]:visible')).toContainText('Interfaz a medida');
+  await expect(phone.locator('[role=tabpanel]:visible')).toContainText('Trabajo y colaboraciones');
   await page.keyboard.press('End'); await expect(phone.locator('[role=tab]').last()).toBeFocused();
   await page.keyboard.press('Home'); await expect(phone.locator('[role=tab]').first()).toBeFocused();
   await page.keyboard.press('ArrowLeft'); await expect(phone.locator('[role=tab]').last()).toBeFocused();
@@ -52,24 +52,10 @@ test('phone tabs support arrows, Home and End with linked unique panels',async({
   })); expect(relations).toBe(true);
 });
 
-test('KiCord preview color changes are scoped and do not mutate the website theme',async({page})=>{
-  await ready(page);
-  const phone=page.locator('.stack [data-project-phone=kicord]');
-  const other=page.locator('.stack [data-project-phone=kernelos]');
-  const theme=await page.locator('html').getAttribute('class');
-  const before=await other.evaluate(el=>getComputedStyle(el).getPropertyValue('--pf-accent'));
-  await phone.locator('[data-phone-tab="2"]').click();
-  await phone.locator('[data-phone-accent=mint]').click();
-  await expect(phone.locator('[data-phone-accent=mint]')).toHaveAttribute('aria-pressed','true');
-  expect(await phone.evaluate(el=>getComputedStyle(el).getPropertyValue('--pf-accent'))).toBe('#8cdbb3');
-  expect(await other.evaluate(el=>getComputedStyle(el).getPropertyValue('--pf-accent'))).toBe(before);
-  expect(await page.locator('html').getAttribute('class')).toBe(theme);
-});
-
 for(const width of [320,390]){
   test(`phone geometry, mobile hit targets and card separation at ${width}px`,async({page})=>{
     await ready(page,'/',width,'light');
-    for(const key of ['kicord','portfolio','kernelos']){
+    for(const key of ['portfolio','kernelos']){
       const phone=page.locator(`.stack [data-project-phone="${key}"]`);
       await phone.scrollIntoViewIfNeeded();
       const geometry=await phone.evaluate(el=>{
@@ -99,7 +85,7 @@ for(const width of [320,390]){
 
 test('phone scrolling uses the inner surface and the bezel never intercepts controls',async({page})=>{
   await ready(page);
-  const phone=page.locator('.stack [data-project-phone=kicord]');await phone.scrollIntoViewIfNeeded();
+  const phone=page.locator('.stack [data-project-phone=portfolio]');await phone.scrollIntoViewIfNeeded();
   await phone.locator('[data-phone-tab="1"]').click();
   await phone.locator('.pf-scroll').evaluate(el=>el.scrollTop=0);
   const y=await page.evaluate(()=>scrollY);
@@ -121,8 +107,10 @@ test('case-study phones mount, dispose and remount without duplicate IDs or brok
     await page.locator('.panel-title a').nth(i%3).click();
     const modal=page.locator('#case-study-modal');await expect(modal).toHaveAttribute('aria-hidden','false');
     await expect(modal.locator('[data-phone-enhanced]')).toHaveCount(1);
-    await modal.locator('[role=tab]').nth(1).click();
-    await expect(modal.locator('[role=tabpanel]:visible')).toHaveCount(1);
+    if(i%3===0) { await expect(modal.locator('iframe.pf-live-frame')).toHaveCount(1); } else {
+      await modal.locator('[role=tab]').nth(1).click();
+      await expect(modal.locator('[role=tabpanel]:visible')).toHaveCount(1);
+    }
     const duplicate=await page.evaluate(()=>{const ids=[...document.querySelectorAll('[id]')].map(e=>e.id);return ids.length!==new Set(ids).size;});
     expect(duplicate).toBe(false);
     await page.keyboard.press('Escape');await expect(modal).toHaveAttribute('aria-hidden','true');
@@ -133,7 +121,7 @@ test('case-study phones mount, dispose and remount without duplicate IDs or brok
 for(const theme of ['dark','light']){
   test(`phone panes have no serious accessibility violations in ${theme} theme`,async({page})=>{
     await ready(page,'/',390,theme);
-    for(const key of ['kicord','portfolio','kernelos']){
+    for(const key of ['portfolio','kernelos']){
       const phone=page.locator(`.stack [data-project-phone="${key}"]`);await phone.scrollIntoViewIfNeeded();
       for(let i=0;i<3;i++){
         await phone.locator('[data-phone-tab]').nth(i).click();
@@ -149,15 +137,15 @@ for(const theme of ['dark','light']){
 test('phones offer real content without JavaScript and no external runtime dependencies',async({browser})=>{
   const ctx=await browser.newContext({javaScriptEnabled:false,viewport:{width:390,height:844}});
   try{
-    const page=await ctx.newPage();await page.goto(process.env.TEST_BASE_URL||'http://localhost:3000');
+    await stubKiCord(ctx); const page=await ctx.newPage();await page.goto(process.env.TEST_BASE_URL||'http://localhost:3000');
     await expect(page.locator('.stack [data-project-phone]')).toHaveCount(3);
-    const phone=page.locator('.stack [data-project-phone=kicord]');
+    const phone=page.locator('.stack [data-project-phone=portfolio]');
     await phone.scrollIntoViewIfNeeded();
-    await expect(phone.locator('.pf-profile')).toContainText('KiCord');
+    await expect(phone.locator('.pf-profile')).toContainText('Pablo Schefer');
     await expect(phone.locator('.pf-tabs')).toBeHidden();
-    await expect(phone.locator('[role=tabpanel]').first()).toContainText('Más posibilidades.');
-    await expect(phone.locator('.pf-bottom a')).toHaveAttribute('href','https://kicord.es');
-    await expect(page.locator('iframe')).toHaveCount(0);
+    await expect(phone.locator('[role=tabpanel]').first()).toContainText('El portfolio que estás visitando');
+    await expect(phone.locator('.pf-bottom a')).toHaveAttribute('href','https://github.com/PapiGECode/Web-CV');
+    await expect(page.locator('iframe.pf-live-frame')).toHaveCount(1);
     await page.screenshot({path:'review-reports/phone-no-js.png'});
   }finally{await ctx.close();}
 });
