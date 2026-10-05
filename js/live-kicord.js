@@ -51,14 +51,15 @@
     listen(document, 'visibilitychange', clock);
     listen(document, 'project-phone:visibility', clock);
     listen(window, 'pageshow', () => { fit(); clock(); });
-    if (!frame.hasAttribute('src')) frame.setAttribute('src', URL);
     root.dataset.phoneEnhanced = 'true';
     reload.hidden = false;
     fit(); clock();
     controllers.set(root, () => {
       abort.abort(); resize?.disconnect(); visible?.disconnect(); clearTimeout(timer);
-      // Stop the remote page when a case study closes (including videos/3D work).
-      frame.removeAttribute('src');
+      // Detach a closing dialog's browsing context instead of navigating to about:blank.
+      // Navigating on close would overwrite the browser's forward-history entry.
+      // Main-page frames are left intact for the browser's back/forward cache.
+      if (root.closest('#case-study-modal')) frame.remove();
       reload.hidden = true;
       delete root.dataset.phoneEnhanced;
       controllers.delete(root);

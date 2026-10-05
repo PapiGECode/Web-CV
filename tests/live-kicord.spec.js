@@ -27,7 +27,7 @@ for (const width of [320,390,768,1440]) test(`live KiCord has 390px viewport ins
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
   await fs.mkdir('review-reports',{recursive:true});await phone.screenshot({path:`review-reports/live-frame-fixture-${width}.png`});
 });
-test('real-frame integration: inner navigation and scrolling remain inside the device',async({page})=>{
+test('remote-frame integration: inner navigation and scrolling remain inside the device',async({page})=>{
   const {phone,frame}=await open(page);
   const parent=page.url(); await frame.locator('a').click();await expect.poll(()=>frame.url()).toContain('/es/plugins');
   expect(page.url()).toBe(parent);
@@ -45,14 +45,14 @@ test('reload resets KiCord only, leaving the portfolio and KernelOS unchanged',a
   await expect(other.locator('[role=tab]').first()).toHaveAttribute('aria-selected','true');
   expect(await page.locator('html').getAttribute('class')).toBe(theme);
 });
-test('modal cleans up its remote iframe and remounts; the main phone is retained',async({page})=>{
+test('modal detaches its remote browsing context and remounts without changing the main phone',async({page})=>{
   await open(page,390);
   for(let i=0;i<2;i++) {
     await page.locator('.panel-title a').first().click();
     const modal=page.locator('#case-study-modal');await expect(modal).toHaveAttribute('aria-hidden','false');
     await expect(modal.locator('iframe')).toHaveAttribute('src','https://www.kicord.es/es');
     await page.locator('#cs-btn-close').click(); await expect(modal).toHaveAttribute('aria-hidden','true');
-    await expect(modal.locator('iframe')).not.toHaveAttribute('src',/./);
+    await expect(modal.locator('iframe')).toHaveCount(0);
     await expect(page.locator('.stack iframe')).toHaveAttribute('src','https://www.kicord.es/es');
   }
 });
