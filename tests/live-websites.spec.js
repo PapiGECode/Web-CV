@@ -20,7 +20,7 @@ for(const width of [320,390,768,1440]) test(`all real websites fill the entire p
   await ready(page,width);
   for(const key of keys) {
     const {phone,frame,tools}=await view(page,key);
-    expect(await frame.evaluate(()=>innerWidth)).toBe(390);
+    expect(await frame.evaluate(()=>innerWidth)).toBe(key==='kernelos'?430:390);
     await expect(phone.locator('iframe')).toHaveAttribute('src',sources[key]);
     await expect(phone.locator('.pf-status,.pf-toolbar,.pf-bottom,.pf-tabs')).toHaveCount(0);
     const g=await phone.evaluate(el=>{const s=el.querySelector('.pf-screen').getBoundingClientRect(),f=el.querySelector('iframe').getBoundingClientRect(),b=el.getBoundingClientRect(),t=el.parentElement.querySelector('.live-phone-tools').getBoundingClientRect();return {edges:['top','right','bottom','left'].map(k=>Math.abs(s[k]-f[k])),toolsTop:t.top,phoneBottom:b.bottom,clip:getComputedStyle(el.querySelector('.pf-screen')).overflow,bezel:getComputedStyle(el.querySelector('.phone-bezel')).pointerEvents};});

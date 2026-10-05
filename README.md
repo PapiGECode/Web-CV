@@ -45,7 +45,7 @@ Consulta `LICENSE`. Se conservan los avisos originales de GSAP/Lenis y las licen
 
 ## Teléfonos de proyectos
 
-Los tres dispositivos muestran webs reales: KiCord, PabloSchefer.com y KernelOS. El viewport de 390 CSS px ocupa toda la pantalla recortada por la carcasa original. Los controles para recargar y abrir el sitio aparte están debajo, sin barras falsas dentro del display.
+Los tres dispositivos muestran webs reales: KiCord, PabloSchefer.com y KernelOS. El viewport móvil (390 CSS px, 430 para acomodar la cabecera de KernelOS) ocupa toda la pantalla recortada por la carcasa original. Los controles para recargar y abrir el sitio aparte están debajo, sin barras falsas dentro del display.
 
 `scripts/project-phones.mjs` genera plantillas inertes y `js/project-phones.js` crea las vistas cerca de la zona visible. El portfolio usa la misma web en `/?phone-preview=1`, relativo al origen actual para funcionar también en los despliegues de prueba. Una página del portfolio incrustada no inicia otros iframes, incluso al navegar a otro caso de estudio. Su medición se desactiva para no duplicar visitas. Sin JavaScript se conservan enlaces directos reales.
 

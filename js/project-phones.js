@@ -8,6 +8,8 @@
   function init(root) {
     if (controllers.has(root) || isPreview()) return;
     const key = root.dataset.livePhone;
+    // KernelOS uses a wider mobile layout; keep its hero controls inside the viewport.
+    const canvasWidth = key === 'kernelos' ? 430 : 390;
     const template = root.querySelector('[data-live-template]');
     const screen = root.querySelector('.pf-screen');
     const cover = root.querySelector('.phone-preview-cover');
@@ -21,8 +23,8 @@
       const styles = getComputedStyle(screen);
       const width = parseFloat(styles.width), height = parseFloat(styles.height);
       if (!(width > 0 && height > 0)) return;
-      const scale = width / 390;
-      frame.style.width = '390px';
+      const scale = width / canvasWidth;
+      frame.style.width = `${canvasWidth}px`;
       frame.style.height = `${height / scale}px`;
       frame.style.transform = `scale(${scale})`;
       root.style.setProperty('--pf-scale',String(scale));
