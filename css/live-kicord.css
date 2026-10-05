@@ -1,0 +1,10 @@
+/* Retain the approved iPhone geometry; its real web viewport is 390 CSS pixels. */
+[data-kicord-live] { --pf-live-top:110px; --pf-live-bottom:104px; --pf-live-toolbar:56px; }
+[data-kicord-live] .pf-live-toolbar { height:var(--pf-live-toolbar); padding-right:5px; }
+.pf-live-domain { font-size:13px; font-weight:600; }
+.pf-app .pf-live-reload { display:grid; place-items:center; flex:0 0 var(--pf-hit,56px); min-height:var(--pf-hit,56px); border-radius:var(--pf-radius-control,22px); color:#ece8e1; }
+.pf-app .pf-live-reload:hover { background:#ffffff12; }
+.pf-live-frame { position:absolute; top:var(--pf-live-top); left:0; width:390px; height:calc(100% - var(--pf-live-top) - var(--pf-live-bottom)); border:0; display:block; background:#080a0f; color-scheme:dark; }
+[data-kicord-live] .pf-bottom { height:var(--pf-live-bottom); }
+[data-kicord-live]:not([data-phone-enhanced]) .pf-live-frame { width:100%; }
+[data-kicord-live] .pf-live-frame:focus-visible { outline-offset:-2px; }

@@ -1,0 +1,49 @@
+name: Complete and verify live KiCord
+on:
+  push:
+    branches: [feat/kicord-live-phone-20261005]
+    paths: ['scripts/complete-live-kicord.mjs', '.github/workflows/complete-live-kicord.yml', 'js/live-kicord.js', 'tests/live-kicord.spec.js']
+permissions:
+  contents: write
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      CHROME_PATH: /usr/bin/google-chrome
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Apply reviewed integration without changing hero or footer
+        run: |
+          sha256sum index.html css/styles.css assets/iphone18-pro-max-bezel.png > /tmp/preserved.sha256
+          node scripts/complete-live-kicord.mjs
+          sha256sum -c /tmp/preserved.sha256
+          node --check js/live-kicord.js
+          node --check scripts/live-kicord.mjs
+      - run: npm ci
+      - run: npm audit --audit-level=high
+      - run: npm test
+      - run: npm run build
+      - run: npm run test:e2e
+      - name: Keep only verified source on the feature branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- scripts/project-phones.mjs scripts/build.mjs js/project-phones.js js/app.js vercel.json privacidad.html README.md tests
+          git rm -- scripts/complete-live-kicord.mjs .github/workflows/complete-live-kicord.yml
+          git commit -m 'feat: load actual mobile KiCord website inside the existing iPhone'
+          git push origin HEAD:feat/kicord-live-phone-20261005
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: live-kicord-verification
+          path: |
+            review-reports/
+            playwright-report/
+            test-results/
+          retention-days: 3
