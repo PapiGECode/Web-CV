@@ -1150,7 +1150,6 @@
             '">' +
             '<div class="cs-hero-card-glow" aria-hidden="true"></div>' +
             phoneHtml +
-            '<p class="phone-caption">' + (data.id === 'kicord' ? 'Web real de KiCord · versión móvil. Si no aparece, ábrela aparte.' : 'Vista de presentación interactiva.') + '</p>' +
             "</div>" +
             "</div>" +
             '<div class="cs-sec">' +
@@ -1232,6 +1231,7 @@
         }
 
         var lastCaseStudyTrigger = null;
+        var caseReturnKey = null, caseReturnUrl = null;
         function caseStudyFocusable() {
           return Array.from(csModal.querySelectorAll('a[href], button:not([disabled]), iframe[title], [tabindex]:not([tabindex="-1"])'))
             .filter(function(el) { return el.getClientRects().length > 0; });
@@ -1246,6 +1246,10 @@
           var data = CASE_STUDIES[id];
           if (!csModal || !data) return;
           var alreadyOpen = csModal.classList.contains('cs-open');
+          if (!alreadyOpen && pushState !== false) {
+            caseReturnKey = window.navigation && window.navigation.currentEntry ? window.navigation.currentEntry.key : null;
+            caseReturnUrl = location.pathname + location.search + location.hash;
+          }
           if (!alreadyOpen && !lastCaseStudyTrigger) lastCaseStudyTrigger = document.activeElement;
           csTopNum.textContent = data.number;
           csTopName.textContent = data.title;
@@ -1267,7 +1271,19 @@
         function closeCaseStudy(navigate) {
           if (!csModal || !csModal.classList.contains('cs-open')) return;
           if (navigate !== false && history.state && history.state.portfolioModal) {
-            history.back(); return;
+            if (window.ProjectPhones) window.ProjectPhones.destroy(csContent);
+            // Navigate to the saved parent entry, not a child iframe history step.
+            // Older browsers close safely in place rather than leaving the portfolio.
+            var settleClose = function () {
+              closeCaseStudy(false);
+              history.replaceState(null, '', caseReturnUrl || location.pathname + location.search + '#work');
+            };
+            if (caseReturnKey && window.navigation && typeof window.navigation.traverseTo === 'function') {
+              try {
+                window.navigation.traverseTo(caseReturnKey).finished.catch(settleClose);
+              } catch (_) { settleClose(); }
+            } else { settleClose(); }
+            return;
           }
           if (window.ProjectPhones) window.ProjectPhones.destroy(csContent);
           csModal.classList.remove('cs-open');

@@ -2,7 +2,8 @@ import { onCLS, onINP, onLCP, onTTFB } from 'web-vitals';
 const paths = new Set(['/', '/projects/kicord', '/projects/papigegamer', '/projects/kernelos', '/privacidad']);
 const path = location.pathname.replace(/\/$/, '') || '/';
 let started = false;
-function allowed() { return paths.has(path) && window.portfolioMeasurementAllowed?.() === true; }
+// An embedded view is not another portfolio visit and must not duplicate telemetry.
+function allowed() { return window.self === window.top && new URL(location.href).searchParams.get('phone-preview') !== '1' && paths.has(path) && window.portfolioMeasurementAllowed?.() === true; }
 function send(kind, name, value) {
   if (!allowed()) return;
   const payload = { kind, name, path };

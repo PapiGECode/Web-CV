@@ -59,7 +59,6 @@ async function webp(name, destination, width, quality = 82) {
 for (const [base, source, width] of [['pablo-casual', 'pablo-casual.png', 1024], ['pablo-profesional', 'pablo-profesional.jpg', 1122]]) {
   for (const size of [480, 800]) await webp(source, `${base}-${size}.webp`, size);
   await webp(source, `${base}.webp`, width);
-  // Every advertised srcset candidate must exist, including full-resolution variants.
   await fs.copyFile(output('assets', `${base}.webp`), output('assets', `${base}-${width}.webp`));
 }
 await fs.copyFile(input('assets/iphone18-pro-max-bezel.png'), output('assets/iphone18-pro-max-bezel.png'));
@@ -82,16 +81,11 @@ for (const file of pages) {
     const templates = [['kicord','kicord'],['papige','portfolio'],['kernelos','kernelos']].map(([id,key]) => `<template id="project-phone-template-${id}">${renderProjectPhone(key,'modal-'+key)}</template>`).join('');
     html = html.replace('<!-- PROJECT_PHONE_TEMPLATES -->', templates);
   }
-  if (file === 'index.html' || file === 'projects/kicord.html') {
-    html = html.replace('</head>', '<link rel="stylesheet" href="/css/live-kicord.css" /></head>');
-    html = html.replace('<script defer src="/js/project-phones.js"></script>', '<script defer src="/js/live-kicord.js"></script><script defer src="/js/project-phones.js"></script>');
-    html = html.replace('Vista de presentación interactiva.', 'Web real de KiCord · versión móvil. Si no aparece, ábrela aparte.');
-  }
-  // Absolute asset references are safe from clean URLs and nested project routes.
+  // Each device now includes its own external controls; remove old presentation captions.
+  html = html.replace(/<p class="phone-caption">[^<]*<\/p>/g, '');
   html = html.replace(/(href|src)="((?:css|js|assets)\/[^\"]+)"/g, '$1="/$2"');
   for (const [before, after] of replacements) html = html.split(`"${before}"`).join(`"${after}"`);
   html = html.replace('</head>', `<meta name="build-revision" content="${revision.replace(/[^a-zA-Z0-9_-]/g, '')}"><link rel="preload" href="${displayFont}" as="font" type="font/woff2" crossorigin></head>`);
-  // Fail the build instead of publishing a broken local asset or srcset candidate.
   const assets = new Set();
   for (const match of html.matchAll(/(?:src|href)="(\/(?:assets|css|js)\/[^"?#]+)(?:[?#][^"]*)?"/g)) assets.add(match[1]);
   for (const match of html.matchAll(/srcset="([^"]+)"/g)) {
