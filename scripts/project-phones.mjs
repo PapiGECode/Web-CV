@@ -11,8 +11,10 @@ export function renderProjectPhone(key, uid) {
   return `<div class="live-phone-presentation" data-phone-presentation="${key}">
   <div class="project-phone" data-project-phone="${key}" data-live-phone="${key}" role="group" aria-label="Web de ${site.name} en un teléfono">
     <div class="pf-screen">
+      <div class="pf-viewport">
       <div class="phone-preview-cover"><span class="phone-cover-label">${site.domain}</span><strong>${site.name}</strong><p>Web del proyecto</p><a href="${site.href}" target="_blank" rel="noopener noreferrer">Abrir la web ↗</a></div>
       <template data-live-template><iframe class="pf-live-frame" title="${site.name} — web real en versión móvil" data-frame-src="${site.url}" width="${key === 'kernelos' ? 430 : 390}" height="825" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"${sandbox}></iframe></template>
+      </div>
     </div>
     <img class="phone-bezel" src="/assets/iphone18-pro-max-bezel.png" width="1470" height="3000" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" />
   </div>

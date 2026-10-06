@@ -1,9 +1,9 @@
-import {test,expect,stubKiCord} from './fixtures.js';
+import {test,expect,stubKiCord,remoteFixture} from './fixtures.js';
 import fs from 'node:fs/promises';
 const keys=['kicord','portfolio','kernelos'];
 const sources={kicord:'https://www.kicord.es/es',portfolio:'/?phone-preview=1',kernelos:'https://kernelos.org/'};
-async function ready(page,width=1440,path='/') {
-  await page.setViewportSize({width,height:960});await page.emulateMedia({reducedMotion:'reduce',colorScheme:'dark'});
+async function ready(page,width=1440,path='/',theme='dark') {
+  await page.setViewportSize({width,height:960});await page.emulateMedia({reducedMotion:'reduce',colorScheme:theme});
   await page.route('**/api/contact',r=>r.fulfill({json:{available:false}}));await page.goto(path);
   if(path==='/') await page.waitForFunction(()=>window.__portfolioReady);
   await page.evaluate(()=>document.fonts.ready);await fs.mkdir('review-reports',{recursive:true});
@@ -16,18 +16,61 @@ async function view(page,key,scope='.stack') {
   else await expect(frame.locator('h1')).toContainText('prueba de integración');
   return {phone,frame,tools:phone.locator('..').locator('.live-phone-tools')};
 }
-for(const width of [320,390,768,1440]) test(`all real websites fill the entire phone display at ${width}px`,async({page})=>{
-  await ready(page,width);
+async function expectSafeViewport(phone) {
+  await expect.poll(()=>phone.evaluate(el=>{
+    const screen=el.querySelector('.pf-screen').getBoundingClientRect();
+    const frame=el.querySelector('iframe').getBoundingClientRect();
+    const bezel=el.querySelector('.phone-bezel').getBoundingClientRect();
+    // The original 1470 × 3000 asset's island ends at approximately y=216.
+    return frame.top > bezel.top+bezel.height*216/3000
+      && Math.abs(frame.top-screen.top-screen.height*.07)<1.5
+      && ['right','bottom','left'].every(edge=>Math.abs(screen[edge]-frame[edge])<1.5);
+  })).toBe(true);
+}
+for(const theme of ['dark','light']) for(const width of [320,390,768,1440]) test(`all real websites fill the safe phone viewport at ${width}px in ${theme}`,async({page})=>{
+  await ready(page,width,'/',theme);
   for(const key of keys) {
     const {phone,frame,tools}=await view(page,key);
     expect(await frame.evaluate(()=>innerWidth)).toBe(key==='kernelos'?430:390);
     await expect(phone.locator('iframe')).toHaveAttribute('src',sources[key]);
     await expect(phone.locator('.pf-status,.pf-toolbar,.pf-bottom,.pf-tabs')).toHaveCount(0);
-    const g=await phone.evaluate(el=>{const s=el.querySelector('.pf-screen').getBoundingClientRect(),f=el.querySelector('iframe').getBoundingClientRect(),b=el.getBoundingClientRect(),t=el.parentElement.querySelector('.live-phone-tools').getBoundingClientRect();return {edges:['top','right','bottom','left'].map(k=>Math.abs(s[k]-f[k])),toolsTop:t.top,phoneBottom:b.bottom,clip:getComputedStyle(el.querySelector('.pf-screen')).overflow,bezel:getComputedStyle(el.querySelector('.phone-bezel')).pointerEvents};});
-    expect(g.edges.every(x=>x<1.5)).toBe(true);expect(g.toolsTop).toBeGreaterThan(g.phoneBottom+7);expect(g.clip).toBe('hidden');expect(g.bezel).toBe('none');
+    await expectSafeViewport(phone);
+    const g=await phone.evaluate(el=>{const b=el.getBoundingClientRect(),t=el.parentElement.querySelector('.live-phone-tools').getBoundingClientRect();return {toolsTop:t.top,phoneBottom:b.bottom,clip:getComputedStyle(el.querySelector('.pf-screen')).overflow,bezel:getComputedStyle(el.querySelector('.phone-bezel')).pointerEvents};});
+    expect(g.toolsTop).toBeGreaterThan(g.phoneBottom+7);expect(g.clip).toBe('hidden');expect(g.bezel).toBe('none');
     expect(await tools.locator('a,button').evaluateAll(nodes=>nodes.every(el=>el.getBoundingClientRect().height>=44))).toBe(true);
     expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
-    await phone.locator('..').screenshot({path:`review-reports/live-${key}-${width}.png`});
+    await phone.locator('..').screenshot({path:`review-reports/live-${key}-${width}-${theme}.png`});
+  }
+});
+for(const key of keys) test(`${key}: canonical phone keeps its top navigation clickable below the island`,async({page})=>{
+  if(key!=='portfolio') {
+    const path=key==='kicord'?'/es/plugins':'/changelogs';
+    const body=remoteFixture(key,path).replace('<main>',`<header style="height:44px;display:flex;justify-content:center"><a id="top-navigation" href="${path}" style="display:block;padding:12px">Navigation</a></header><main>`);
+    await page.route(key==='kicord'?'https://www.kicord.es/**':'https://kernelos.org/**',r=>r.fulfill({contentType:'text/html; charset=utf-8',body}));
+  }
+  await ready(page,390,`/projects/${key}`);
+  const {phone,frame}=await view(page,key,'.pp-visual');
+  await expectSafeViewport(phone);
+  const control=frame.locator(key==='portfolio'?'#nav-burger':'#top-navigation');
+  await expect(control).toBeVisible();
+  const local=await control.evaluate(el=>{const r=el.getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2,width:innerWidth};});
+  const display=await phone.locator('iframe').boundingBox(),scale=display.width/local.width;
+  await page.mouse.click(display.x+local.x*scale,display.y+local.y*scale);
+  if(key==='portfolio') await expect(control).toHaveAttribute('aria-expanded','true');
+  else await expect.poll(()=>frame.url()).toContain(key==='kicord'?'/es/plugins':'/changelogs');
+  expect(new URL(page.url()).pathname).toBe(`/projects/${key}`);
+});
+test('mounted phones resize their remaining viewport without replacing browsing contexts',async({page})=>{
+  await ready(page,390);
+  const phones=[];
+  for(const key of keys) phones.push(await view(page,key));
+  for(const width of [1440,320,768,390]) {
+    await page.setViewportSize({width,height:960});
+    for(const {phone,frame} of phones) {
+      await phone.scrollIntoViewIfNeeded();await expectSafeViewport(phone);
+      expect(await(await phone.locator('iframe').elementHandle()).contentFrame()).toBe(frame);
+      expect(await frame.evaluate(()=>innerWidth)).toBe(await phone.getAttribute('data-live-phone')==='kernelos'?430:390);
+    }
   }
 });
 for(const key of ['kicord','kernelos']) test(`${key}: remote navigation and scrolling stay in the matching frame`,async({page})=>{
@@ -62,7 +105,7 @@ test('closing and reopening every case removes only its frame and retains browse
   await ready(page,390);await view(page,'kicord');
   for(let i=0;i<keys.length;i++) {
     await page.locator('.panel-title a').nth(i).click();const modal=page.locator('#case-study-modal');await expect(modal).toHaveAttribute('aria-hidden','false');
-    await view(page,keys[i],'#case-study-modal');await page.locator('#cs-btn-close').click();await expect(modal).toHaveAttribute('aria-hidden','true');await expect(modal.locator('iframe')).toHaveCount(0);
+    const {phone}=await view(page,keys[i],'#case-study-modal');await expectSafeViewport(phone);await page.locator('#cs-btn-close').click();await expect(modal).toHaveAttribute('aria-hidden','true');await expect(modal.locator('iframe')).toHaveCount(0);
     await page.goForward();await expect(modal).toHaveAttribute('aria-hidden','false');await view(page,keys[i],'#case-study-modal');await page.locator('#cs-btn-close').click();await expect(modal).toHaveAttribute('aria-hidden','true');
   }
   await expect(page.locator('.stack [data-live-phone=kicord] iframe')).toHaveCount(1);
