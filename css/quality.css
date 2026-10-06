@@ -356,3 +356,32 @@ html.light .status-archive { color:#475569; }
   #portrait .portrait-img { transform: none !important; }
   #portrait::before { opacity: 0; }
 }
+
+/* Ink-like focus and typing feedback without moving fields or the caret. */
+.f-field .f-label { display: flex; align-items: center; gap: .65rem; }
+.f-field .f-label::after {
+  content: '';
+  width: .3rem;
+  height: .3rem;
+  border-radius: 50%;
+  background: currentColor;
+  transform: scale(0);
+  opacity: 0;
+  transition: transform .3s var(--ease), opacity .3s;
+}
+.f-field:focus-within .f-label::after,
+.f-field:has(.f-input:not(:placeholder-shown), .f-textarea:not(:placeholder-shown)) .f-label::after { transform: scale(1); opacity: .6; }
+.f-field .f-input, .f-field .f-textarea {
+  background-image: linear-gradient(var(--bone), var(--bone));
+  background-repeat: no-repeat;
+  background-position: left bottom;
+  background-size: 0 1px;
+  transition: background-size .45s var(--ease), border-color .3s;
+}
+.f-field:focus-within .f-input, .f-field:focus-within .f-textarea { background-size: 100% 1px; }
+.f-field.is-typing .f-label::after { animation: typing-ink .65s ease-in-out infinite alternate; }
+@keyframes typing-ink { from { opacity: .35; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .f-field .f-input, .f-field .f-textarea, .f-field .f-label::after { transition: none; }
+  .f-field.is-typing .f-label::after { animation: none; opacity: 1; }
+}
