@@ -9,3 +9,6 @@
 - Each child must pass Portfolio quality through workflow_dispatch.
 - Production is confirmed only after READY and an exact domain build-revision match.
 - Detailed task and verification evidence: odd/tasks/editorial-portfolio-refinement.md.
+
+## CI synchronization correction
+The modal traversal regression waits for the remote fixture navigation link before Tab. CI traced the previous failure to entering about:blank before its response arrived; the loaded-frame focus assertion remains unchanged. Local check/unit/build and five repeated lifecycle runs (25/25) passed.
