@@ -76,7 +76,7 @@ await sharp(Buffer.from(svg)).jpeg({ quality: 88 }).toFile(output('assets/previe
 
 const generatedPages = new Map(projects.map(project => [`projects/${project.slug}.html`, project]));
 const projectTemplate = await fs.readFile(input('projects/template.html'), 'utf8');
-const pages = [...new Set(['index.html', '404.html', 'privacidad.html', 'projects/portfolio.html', 'projects/kernelos.html', ...generatedPages.keys()])];
+const pages = [...new Set(['index.html', '404.html', 'privacidad.html', ...generatedPages.keys()])];
 for (const file of pages) {
   let html = generatedPages.has(file) ? renderProjectPage(projectTemplate, generatedPages.get(file)) : await fs.readFile(input(file), 'utf8');
   html = html.replace(/<div data-phone-placeholder="([a-z]+)" data-phone-instance="([a-z-]+)"><\/div>/g, (_, key, uid) => renderProjectPhone(key, uid));
