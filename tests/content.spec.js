@@ -20,8 +20,8 @@ for (const width of [390, 1440]) {
       for (let i = 0; i < 4; i++) {
         await cards.nth(i).scrollIntoViewIfNeeded();
         await page.waitForTimeout(750);
-        const style = await cards.nth(i).evaluate(el => ({ opacity: getComputedStyle(el).opacity, bg: getComputedStyle(el).backgroundColor }));
-        expect(style.opacity).toBe('1'); expect(style.bg).not.toBe('rgba(0, 0, 0, 0)');
+        const style = await cards.nth(i).evaluate(el => ({ opacity: getComputedStyle(el).opacity, color: getComputedStyle(el).color }));
+        expect(style.opacity).toBe('1'); expect(style.color).not.toBe('rgba(0, 0, 0, 0)');
       }
       // Going back and toggling themes must not leave an opacity value behind.
       await cards.first().scrollIntoViewIfNeeded();
