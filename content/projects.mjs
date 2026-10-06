@@ -16,4 +16,20 @@ export const projects = [
       { title: 'Código cerrado', text: 'El código del cliente KiCord no se distribuye como código abierto.' },
     ],
   },
+  {
+    id: 'papige', slug: 'portfolio', number: '02', title: 'PabloSchefer.com',
+    category: 'Portfolio personal', status: 'Esta misma web',
+    summary: 'Esta misma web: HTML, CSS y JavaScript, animaciones GSAP y funciones de Vercel.',
+    role: 'Diseño, desarrollo y mantenimiento',
+    overview: 'PabloSchefer.com es esta misma web, mantenida en Web-CV. Presenta proyectos, experiencia y contacto mediante HTML estático, CSS y JavaScript. GSAP aporta movimiento; pequeñas funciones de Vercel gestionan la actividad de GitHub y el contacto.',
+    approach: 'Una identidad editorial con mejora progresiva: contenido accesible sin JavaScript, imágenes adaptables y estados de contacto que distinguen un borrador de un envío aceptado.',
+    tags: ['HTML', 'CSS', 'JavaScript', 'GSAP', 'Vercel'],
+    links: [{ label: 'Ver código de la web', url: 'https://github.com/PapiGECode/Web-CV' }],
+    phone: 'portfolio', next: 'kernelos',
+    details: [
+      { title: 'Contenido indexable', text: 'Páginas estáticas de proyecto y navegación útil sin depender de una aplicación React.' },
+      { title: 'Accesibilidad y movimiento', text: 'Pruebas de teclado, temas, tamaños de pantalla y preferencias de movimiento.' },
+      { title: 'Contacto transparente', text: 'La interfaz distingue entre preparar un correo y la entrega aceptada por el proveedor.' },
+    ],
+  },
 ];
