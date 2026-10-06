@@ -326,6 +326,8 @@ html.light .status-archive { color:#475569; }
 .community-links a { display: flex; justify-content: space-between; align-items: center; gap: 1rem; min-height: 64px; padding-block: .8rem; border-bottom: 1px solid var(--line); color: var(--bone); font-size: .9rem; overflow-wrap: anywhere; }
 .community-links a:hover { border-color: var(--bone); }
 .community-links a span { flex-shrink: 0; }
+.community-links img { width: 40px; height: 40px; flex: 0 0 40px; object-fit: contain; border-radius: 10px; background: #fff; }
+.community-links .community-name { min-width: 0; flex: 1; }
 @media (max-width: 900px) {
   #skills .editorial-evidence .cap-card { grid-template-columns: 1fr 1.2fr; }
   #skills .editorial-evidence .cap-lead { grid-column: 1; }

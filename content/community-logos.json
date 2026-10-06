@@ -1,0 +1,56 @@
+[
+  {
+    "login": "EpicGames",
+    "id": 6615685,
+    "avatar_url": "https://avatars.githubusercontent.com/u/6615685?v=4",
+    "html_url": "https://github.com/EpicGames",
+    "api_url": "https://api.github.com/orgs/EpicGames",
+    "source_file": "community-epicgames.png",
+    "verified_on": "2026-10-06"
+  },
+  {
+    "login": "Design-and-Code",
+    "id": 83478816,
+    "avatar_url": "https://avatars.githubusercontent.com/u/83478816?v=4",
+    "html_url": "https://github.com/Design-and-Code",
+    "api_url": "https://api.github.com/orgs/Design-and-Code",
+    "source_file": "community-design-and-code.png",
+    "verified_on": "2026-10-06"
+  },
+  {
+    "login": "Thread-Development",
+    "id": 96688074,
+    "avatar_url": "https://avatars.githubusercontent.com/u/96688074?v=4",
+    "html_url": "https://github.com/Thread-Development",
+    "api_url": "https://api.github.com/orgs/Thread-Development",
+    "source_file": "community-thread-development.png",
+    "verified_on": "2026-10-06"
+  },
+  {
+    "login": "See-Bot",
+    "id": 109852486,
+    "avatar_url": "https://avatars.githubusercontent.com/u/109852486?v=4",
+    "html_url": "https://github.com/See-Bot",
+    "api_url": "https://api.github.com/orgs/See-Bot",
+    "source_file": "community-see-bot.png",
+    "verified_on": "2026-10-06"
+  },
+  {
+    "login": "Open-Hub-Community",
+    "id": 180554047,
+    "avatar_url": "https://avatars.githubusercontent.com/u/180554047?v=4",
+    "html_url": "https://github.com/Open-Hub-Community",
+    "api_url": "https://api.github.com/orgs/Open-Hub-Community",
+    "source_file": "community-open-hub-community.jpg",
+    "verified_on": "2026-10-06"
+  },
+  {
+    "login": "K1R4L-BS",
+    "id": 317450999,
+    "avatar_url": "https://avatars.githubusercontent.com/u/317450999?v=4",
+    "html_url": "https://github.com/K1R4L-BS",
+    "api_url": "https://api.github.com/orgs/K1R4L-BS",
+    "source_file": "community-k1r4l-bs.png",
+    "verified_on": "2026-10-06"
+  }
+]
