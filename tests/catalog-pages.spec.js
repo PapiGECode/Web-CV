@@ -75,3 +75,27 @@ test('every branded illustration decodes as an image in the production preview',
     await expect.poll(() => image.evaluate(el => el.complete && el.naturalWidth > 0)).toBe(true);
   }
 });
+
+for (const theme of ['dark', 'light']) {
+  test(`Thiago outlined lettering stays visible on every surface in ${theme}`, async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce', colorScheme: theme });
+    const assertOutline = async (scope) => {
+      const lettering = scope.locator('.project-art-thiagoiutu em');
+      await expect(lettering).toBeVisible();
+      await expect(lettering).toHaveCSS('-webkit-text-stroke-color', 'rgb(21, 25, 22)');
+      await expect(lettering).toHaveCSS('-webkit-text-stroke-width', '1px');
+      await expect(lettering).toHaveCSS('color', 'rgba(0, 0, 0, 0)');
+    };
+    await page.goto('/#work');
+    await page.waitForFunction(() => window.__portfolioReady);
+    await assertOutline(page.locator('.project-index'));
+    await page.locator('.panel-title [data-open-case=thiagoiutu]').click();
+    await assertOutline(page.locator('#cs-content'));
+    await page.keyboard.press('Escape');
+    await page.goto('/projects/thiagoiutu');
+    await assertOutline(page.locator('main'));
+    await page.locator('.project-art-thiagoiutu').screenshot({
+      path: `review-reports/thiago-outline-${theme}.png`
+    });
+  });
+}
