@@ -57,7 +57,7 @@ Capabilities become readable numbered editorial rows with concrete evidence rath
 - Real browser screenshots inspected; mocked external tests reported separately from real public-site checks.
 
 ## Progress / next step
-T1–T11 completed and independently verified locally; publication remains unauthorized. Preserve all valid completed work. Final follow-up memory synchronization is pending runtime session registration.
+T1–T14 completed and independently verified locally; publication remains unauthorized. Preserve all valid completed work. Final follow-up memory synchronization is pending runtime session registration.
 
 ### T1 evidence and review slice
 - Complete `.btn`/`.f-submit` surfaces and labels move together, bounded to 5px horizontally and 3px vertically with a transform-corrected baseline. Native press kills the tween without resetting position; release/cancel resets only after native activation has completed. No pointer capture or synthetic click. Keyboard, touch and live reduced-motion changes remain stable.
@@ -171,7 +171,7 @@ Checks: npm run check; npm test; npm run build; focused Playwright for catalog/c
 - Authorized locally: remove white backing from organization logos, serve requested PNG, change animated footer word from Pablo to Schefer without changing hero identity. Baseline 749d536; public master fetched unchanged f8b06ae. Existing .atl untouched; no remote delivery authority.
 - [x] T12 — Inspect logo alpha/source backgrounds; remove CSS white background (confirmed quality.css line329); serve optimized PNG preserving original official marks and transparency. No destructive removal of white lettering or invented logos. Route delegated direct: build/CSS/markup/tests. Use imagegen only if actual pixel editing is needed, not for simple format conversion or CSS fixes. Forecast 60–120 authored lines.
 - [x] T13 — Replace footer signature and accessible name with SCHEFER; adapt seven-letter sizing to 320/390/768/1440, preserving existing animation, no-JS/reduced motion and fixed hit targets. Route delegated direct: markup/CSS/animation/tests. Forecast 40–80 authored lines.
-- [ ] T14 — Independent verification and parent readback/check, local preview. Route delegated verification. Forecast 10–20 documentation lines.
+- [x] T14 — Independent verification and parent readback/check, local preview. Route delegated verification. Forecast 10–20 documentation lines.
 - TDD unspecified; ordinary regression checks. Writer runs npm run check, npm test, npm run build and focused/full npm run test:e2e. Check PNG MIME/decode/transparency, no CSS white backing, all six logos both themes, footer seven-letter fit/role/name/animation/reduced motion/no-JS. RDD remains off; feature-branch-chain retained. Memory mirror remains pending runtime registration, no agent-attributed memory calls allowed. No dependencies planned.
 
 ### T12 — Native PNG logos without added backing
@@ -188,3 +188,9 @@ Checks: npm run check; npm test; npm run build; focused Playwright for catalog/c
 - Rollback boundary: footer text/accessibility label, mobile sizing and responsive letter spacing with associated footer/content/polish assertions. No backend, dependency, source logo pixels, hero identity or phone geometry changes. No remote operation or server restart. .atl untouched.
 - T12–T13 are locally complete; T14 remains unchecked for independent parent verification. Runtime memory registration remains unavailable per parent guard: no Engram write/session registration performed; full document mirror and session summary remain pending, with all recovery evidence retained here.
 - T13 work-unit commit: 1047949 (65 additions + 6 deletions = 71 authored lines). T12/T13 behavior units total 128 authored changed lines. Independent T14 remains pending; local preview3102 serves the verified build.
+
+### T14 — Verified surname and logo close
+- Independent read-only verification at d7c340a: npm test 13/13; npm run test:e2e 153/153 in 1.5 minutes, no failures/skips; git diff --check passed. Footer SCHEFER seven-character accessible signature fits full animation endpoint at all four widths/both themes, no-JS/reduced motion and additional 1440→320→768→390 resize. Hero unchanged.
+- All six local PNGs decode at 96px with correct MIME, no CSS white backing/external image requests/page errors. EpicGames original alpha retained; five opaque originals unchanged. No claim that converting to PNG removes their original artwork backgrounds.
+- Parent structural diff readback, desktop/mobile footer and community screenshots, npm run check and diff-check passed. Writer build passed; independent build/install/audit not repeated, dependencies unchanged. RDD remains off/unmanaged; no native review. No source defects found.
+- All tasks complete locally; preview http://localhost:3102/#work. No publication/remote mutation authorized or performed. Engram mirror/session summary remain pending runtime identity registration; this document retains final recovery evidence. Rollback of this documentation unit does not change website behavior.
