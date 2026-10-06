@@ -58,30 +58,87 @@
         };
 
         // Keep the native cursor; motion is enhancement, not navigation.
-        /* Magnetic feedback stays inside the button: the hit area never moves. */
-        if (FINE && !REDUCE && hasGSAP) {
-          document.querySelectorAll('.btn, .f-submit, .social').forEach(function (el) {
-            var target = el.querySelector('.btn-t, .fs-t, .arr');
-            if (!target) return;
+        /* Move the entire button, but never between native pointerdown and click. */
+        var motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
+        if (hasGSAP) {
+          document.querySelectorAll('.btn, .f-submit').forEach(function (el) {
+            var pressed = null, releaseTimer;
             function reset() {
-              gsap.to(target, { x: 0, y: 0, duration: .3, ease: 'power3.out', overwrite: 'auto' });
+              if (pressed !== null) return;
+              gsap.killTweensOf(el, 'x,y');
+              gsap.set(el, { x: 0, y: 0 });
             }
             el.addEventListener('pointermove', function (e) {
-              if (e.pointerType === 'touch' || e.buttons || el.disabled ||
-                  document.activeElement === el || matchMedia('(prefers-reduced-motion: reduce)').matches) {
+              if (pressed !== null) return;
+              if (e.pointerType !== 'mouse' || e.buttons || el.disabled ||
+                  document.activeElement === el || motionPreference.matches || !FINE) {
                 reset(); return;
               }
+              // Subtract our transform: the attraction never feeds back into its baseline.
               var r = el.getBoundingClientRect();
-              gsap.to(target, {
-                x: Math.max(-5, Math.min(5, (e.clientX - r.left - r.width / 2) * .12)),
-                y: Math.max(-3, Math.min(3, (e.clientY - r.top - r.height / 2) * .12)),
+              var x = Number(gsap.getProperty(el, 'x')), y = Number(gsap.getProperty(el, 'y'));
+              gsap.to(el, {
+                x: Math.max(-5, Math.min(5, (e.clientX - r.left + x - r.width / 2) * .12)),
+                y: Math.max(-3, Math.min(3, (e.clientY - r.top + y - r.height / 2) * .12)),
                 duration: .25, ease: 'power3.out', overwrite: 'auto',
               });
             }, { passive: true });
-            ['pointerleave', 'pointerdown', 'pointercancel', 'focus'].forEach(function (event) {
+            el.addEventListener('pointerdown', function (e) {
+              clearTimeout(releaseTimer);
+              pressed = e.pointerId;
+              gsap.killTweensOf(el, 'x,y');
+            });
+            function release(e) {
+              if (e.pointerId !== pressed) return;
+              // Native click follows pointerup in the same task. Do not move its target first.
+              releaseTimer = setTimeout(function () { pressed = null; reset(); }, 0);
+            }
+            addEventListener('pointerup', release, true);
+            addEventListener('pointercancel', release, true);
+            addEventListener('blur', function () { pressed = null; reset(); });
+            ['pointerleave', 'focus', 'keydown'].forEach(function (event) {
               el.addEventListener(event, reset);
             });
+            motionPreference.addEventListener('change', reset);
           });
+        }
+
+        /* One continuous timeline: ease speed, never restart the marquee phase. */
+        var marquee = document.querySelector('.marquee');
+        if (marquee && hasGSAP && typeof Element.prototype.animate === 'function') {
+          var track = marquee.querySelector('.marquee-track');
+          var travel = track.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-50%)' }],
+            { duration: 38000, iterations: Infinity });
+          var speed = { value: 0 }, visible = false, hovering = false, focused = false;
+          var animations = [];
+          function rate() { animations.forEach(function (animation) { animation.playbackRate = speed.value; }); }
+          function updateMarquee() {
+            gsap.killTweensOf(speed);
+            animations = marquee.getAnimations({ subtree: true });
+            if (!visible || document.hidden || motionPreference.matches) {
+              speed.value = 0; rate();
+              animations.forEach(function (animation) { animation.pause(); });
+              return;
+            }
+            rate();
+            animations.forEach(function (animation) { animation.play(); });
+            gsap.to(speed, {
+              value: hovering || focused ? 0 : 1, duration: .8, ease: 'power2.out', onUpdate: rate,
+              onComplete: function () { if (speed.value === 0) animations.forEach(function (animation) { animation.pause(); }); },
+            });
+          }
+          travel.pause();
+          if ('IntersectionObserver' in window) {
+            new IntersectionObserver(function (entries) {
+              visible = entries[0].isIntersecting; updateMarquee();
+            }).observe(marquee);
+          } else { visible = true; updateMarquee(); }
+          marquee.addEventListener('pointerenter', function (e) { hovering = e.pointerType === 'mouse'; updateMarquee(); });
+          marquee.addEventListener('pointerleave', function () { hovering = false; updateMarquee(); });
+          marquee.addEventListener('focusin', function () { focused = true; updateMarquee(); });
+          marquee.addEventListener('focusout', function (e) { focused = marquee.contains(e.relatedTarget); updateMarquee(); });
+          motionPreference.addEventListener('change', updateMarquee);
+          document.addEventListener('visibilitychange', updateMarquee);
         }
 
         /* ============ SPOTLIGHT ============ */
@@ -413,7 +470,7 @@
 
               /* Evidence remains opaque, even with restored scroll, reduced motion or failed JS. */
               gsap.utils.toArray('.cap-card').forEach(function (card) {
-                gsap.fromTo(card, { y: 16 }, {
+                gsap.fromTo(card.querySelectorAll('.cap-num,.cap-desc'), { y: 16 }, {
                   y: 0, opacity: 1, duration: .55, ease: 'power3.out',
                   clearProps: 'opacity,transform',
                   scrollTrigger: { trigger: card, start: 'top 90%', once: true },
@@ -441,13 +498,11 @@
               /* Bento projects anim — cards rendered dynamically, triggered by bento-projects-grid */
               gsap.to(".bento-card", {
                 opacity: 1,
-                y: 0,
                 duration: 0.7,
                 stagger: 0.08,
                 ease: "power3.out",
                 scrollTrigger: { trigger: "#bento-projects-grid", start: "top 85%" },
               });
-              gsap.set(".bento-card", { y: 30 });
               gsap.to(".bento-projects-head", {
                 opacity: 1,
                 duration: 0.6,
@@ -471,7 +526,7 @@
                 });
               }
               gsap.to(
-                ".contact-sub,.socials .social,.form .f-field,.form .f-submit",
+                ".contact-sub",
                 {
                   opacity: 1,
                   y: 0,
@@ -482,7 +537,7 @@
                 },
               );
               gsap.set(
-                ".contact-sub,.socials .social,.form .f-field,.form .f-submit",
+                ".contact-sub",
                 { y: 20 },
               );
               gsap.fromTo(
@@ -639,32 +694,11 @@
             });
           });
           document.querySelectorAll(".bento-card").forEach(function (card) {
-            var rY = gsap.quickTo(card, "rotationY", {
-              duration: 0.5,
-              ease: "power2.out",
-            });
-            var rX = gsap.quickTo(card, "rotationX", {
-              duration: 0.5,
-              ease: "power2.out",
-            });
-            var yy = gsap.quickTo(card, "y", {
-              duration: 0.5,
-              ease: "power2.out",
-            });
             card.addEventListener("mousemove", function (e) {
               var r = card.getBoundingClientRect();
-              var nx = (e.clientX - r.left) / r.width - 0.5,
-                ny = (e.clientY - r.top) / r.height - 0.5;
+              if (motionPreference.matches) return;
               card.style.setProperty("--mouse-x", (e.clientX - r.left) + "px");
               card.style.setProperty("--mouse-y", (e.clientY - r.top) + "px");
-              rY(nx * 6);
-              rX(-ny * 5);
-              yy(-5);
-            });
-            card.addEventListener("mouseleave", function () {
-              rY(0);
-              rX(0);
-              yy(0);
             });
           });
         }
@@ -1266,7 +1300,7 @@
           if (pushState !== false) {
             history[alreadyOpen ? 'replaceState' : 'pushState']({ portfolioModal: true, caseStudy: id }, '', '#case-study-' + id);
           }
-          if (hasGSAP && !REDUCE) gsap.fromTo(csContent, { opacity: .7, y: 8 }, { opacity: 1, y: 0, duration: .22 });
+          if (hasGSAP && !REDUCE) gsap.fromTo(csContent, { opacity: .7 }, { opacity: 1, duration: .22 });
         }
         function closeCaseStudy(navigate) {
           if (!csModal || !csModal.classList.contains('cs-open')) return;
@@ -1329,4 +1363,3 @@
           });
         }
       })();
-    
