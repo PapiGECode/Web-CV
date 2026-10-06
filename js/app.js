@@ -746,8 +746,12 @@
         var lastCaseStudyTrigger = null;
         var caseReturnKey = null, caseReturnUrl = null;
         function caseStudyFocusable() {
-          return Array.from(csModal.querySelectorAll('a[href], button:not([disabled]), iframe[title], [tabindex]:not([tabindex="-1"])'))
-            .filter(function(el) { return el.getClientRects().length > 0; });
+          return Array.from(csModal.querySelectorAll('a[href], button:not([disabled]), summary, iframe[title], [tabindex]:not([tabindex="-1"])'))
+            .filter(function(el) {
+              var closedDetails = el.closest('details:not([open])');
+              return (!closedDetails || closedDetails.querySelector('summary') === el)
+                && el.getClientRects().length > 0 && getComputedStyle(el).visibility !== 'hidden';
+            });
         }
         function setCaseBackground(locked) {
           [document.getElementById('main'), nav, ov, document.querySelector('footer')].forEach(function(el) { if(el) el.inert = locked; });
@@ -805,7 +809,12 @@
           csModal.classList.remove('cs-open');
           csModal.setAttribute('aria-hidden', 'true');
           setCaseBackground(false);
-          if (lastCaseStudyTrigger && lastCaseStudyTrigger.isConnected) lastCaseStudyTrigger.focus({ preventScroll: true });
+          // Restore after native fragment traversal has completed its own focus reset.
+          requestAnimationFrame(function () {
+            if (!csModal.classList.contains('cs-open') && lastCaseStudyTrigger && lastCaseStudyTrigger.isConnected) {
+              lastCaseStudyTrigger.focus({ preventScroll: true });
+            }
+          });
           csModal.inert = true;
           if (lenis) lenis.start();
           if (navigate !== false) history.replaceState(null, '', location.pathname + location.search + '#work');

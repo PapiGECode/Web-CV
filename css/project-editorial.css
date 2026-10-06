@@ -52,3 +52,48 @@
   .pp-hero .project-art { aspect-ratio: 4 / 3; margin-top: 2rem; }
   .project-art-note { left: 1.2rem; right: 1.2rem; bottom: 1.2rem; font-size: .5rem; }
 }
+/* A project-led index: open composition, clear roles, no moving card containers. */
+.project-index .work-entry {
+  position: relative;
+  top: auto;
+  min-height: 0;
+  padding: clamp(3rem, 6vw, 6rem) 0;
+  border-top: 1px solid var(--line-2);
+  background: transparent;
+  backdrop-filter: none;
+}
+.project-index .work-entry::before { display: none; }
+.work-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: clamp(2rem, 6vw, 6rem); align-items: center; }
+.work-layout > * { min-width: 0; }
+.work-entry:nth-child(even) .project-art { order: -1; }
+.work-entry:nth-child(even) .work-layout { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); }
+.project-index .panel-title { font-size: clamp(2.5rem, 4vw, 4.2rem); line-height: 1; margin-bottom: 1.5rem; letter-spacing: -.065em; }
+.project-index .panel-title a { text-decoration: none; }
+.project-index .panel-title a:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .15em; }
+.work-role { color: var(--cream); font-size: .85rem; font-weight: 600; margin-bottom: .9rem; }
+.work-status { color: var(--ash); font: .65rem/1.6 var(--font-mono); margin-block: 1rem; }
+.project-index .panel-tags { gap: .5rem 1rem; }
+.project-index .panel-tag { border: 0; padding: 0; border-radius: 0; background: transparent; font-size: .65rem; }
+.project-index .project-art { aspect-ratio: 1.35; }
+.project-index .project-art strong { font-size: clamp(2rem, 3.3vw, 3.8rem); }
+.project-index .project-art-portfolio strong, .project-index .project-art-thiagoiutu strong { font-size: clamp(3rem, 5vw, 5.5rem); }
+.work-notes { margin-top: 3rem; }
+.work-notes .bento-title { font-size: clamp(1.5rem, 3vw, 2.2rem); }
+.work-notes #bento-projects-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3rem; }
+.work-notes #bento-projects-grid .bento-card { border: 0; border-top: 1px solid var(--line-2); border-radius: 0; background: transparent; box-shadow: none; padding: 2rem 0; }
+.work-notes .bento-card::before, .work-notes .bento-status-badge, .work-notes .bento-num, .work-notes .bento-specs-row { display: none; }
+.work-notes .bento-card-inner { padding: 0; }
+.work-notes .bento-card-title { font-size: 1.3rem; }
+@media (max-width: 900px) {
+  .work-layout, .work-entry:nth-child(even) .work-layout { grid-template-columns: 1fr; gap: 2rem; }
+  .work-entry:nth-child(even) .project-art { order: 0; }
+  .project-index .panel-title { font-size: clamp(2.2rem, 8vw, 4rem); }
+  .project-index .project-art { aspect-ratio: 1.65; }
+  .project-index .project-art strong { font-size: clamp(2rem, 6vw, 4rem); }
+  .project-index .project-art-portfolio strong, .project-index .project-art-thiagoiutu strong { font-size: clamp(3rem, 10vw, 6rem); }
+}
+@media (max-width: 680px) {
+  .work-notes #bento-projects-grid { grid-template-columns: 1fr; gap: 0; }
+  .work-notes .bento-head-meta { display: none; }
+  .project-index .project-art { aspect-ratio: 4 / 3; }
+}
