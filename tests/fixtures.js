@@ -9,5 +9,5 @@ export async function stubKiCord(context) {
   for (const host of ['thiagoiutu.com', 'papigegamer.com']) await context.route(`https://${host}/**`, r=>r.fulfill({contentType:'text/html; charset=utf-8',body:remoteFixture(host,'/next')}));
   await context.route(/^https:\/\/(?:www\.)?kernelos\.org\//, r=>r.fulfill({contentType:'text/html; charset=utf-8',body:remoteFixture('KernelOS','/changelogs')}));
 }
-  
+
 export const test=base.extend({liveWebsiteStubs:[async({context},use)=>{await stubKiCord(context);await use();},{auto:true}]});
