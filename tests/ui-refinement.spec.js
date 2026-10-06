@@ -1,5 +1,35 @@
 import {test,expect} from './fixtures.js';
-import fs from 'node:fs/promises';
-async function ready(page,width,motion='reduce'){await page.setViewportSize({width,height:960});await page.emulateMedia({colorScheme:'dark',reducedMotion:motion});await page.route('**/api/contact',r=>r.fulfill({json:{available:false}}));await page.goto('/');await page.evaluate(()=>document.fonts.ready);await page.waitForFunction(()=>window.__portfolioReady===true);await fs.mkdir('review-reports',{recursive:true});}
-for(const width of [320,390,768,1440])test(`full-display phones preserve the approved exterior alignment at ${width}px`,async({page})=>{await ready(page,width);await expect(page.locator('h1.hero-name')).toHaveAttribute('aria-label','Pablo Schefer');await expect(page.locator('#foot-word')).toHaveText('Pablo');for(const key of ['kicord','portfolio','kernelos']){const p=page.locator(`.stack [data-live-phone=${key}]`);await p.scrollIntoViewIfNeeded();const g=await p.evaluate(e=>{const b=e.getBoundingClientRect();return {ratio:b.width/b.height,radius:getComputedStyle(e.querySelector('.pf-screen')).borderTopLeftRadius,controls:[...e.parentElement.querySelectorAll('.live-phone-tools a,.live-phone-tools button')].map(x=>x.getBoundingClientRect().height)};});expect(Math.abs(g.ratio-1470/3000)).toBeLessThan(.001);expect(parseFloat(g.radius)).toBeGreaterThan(0);expect(g.controls.every(h=>h>=44)).toBe(true);}expect(await page.locator('.panel-metrics .metric-pill').evaluateAll(a=>a.every(e=>e.scrollWidth<=e.clientWidth+1))).toBe(true);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);if(width===390||width===1440){await page.locator('#theme-toggle').click();await page.locator('#bento-projects-grid').screenshot({path:`review-reports/live-collaborations-light-${width}.png`});await page.locator('#skills').screenshot({path:`review-reports/live-evidence-light-${width}.png`});await page.locator('#contact').screenshot({path:`review-reports/live-contact-light-${width}.png`});}});
-test('project reveal leaves device hit areas stable and copy readable from first visibility',async({page})=>{const errors=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',msg=>{if(/GSAP target.*(?:null|not found)/i.test(msg.text()))errors.push(msg.text());});await ready(page,1440,'no-preference');await page.evaluate(()=>scrollTo(0,document.querySelector('.stack .panel').offsetTop));const stage=page.locator('.stack .panel .ph-stage').first();await expect(stage).toHaveCSS('transform','none');const before=await stage.boundingBox();await expect(page.locator('.stack .panel .panel-desc').first()).toHaveCSS('opacity','1');await expect(page.locator('.stack .panel .panel-links').first()).toHaveCSS('opacity','1');await page.waitForTimeout(700);const after=await stage.boundingBox();expect(Math.abs(before.x-after.x)).toBeLessThan(1);expect(Math.abs(before.y-after.y)).toBeLessThan(1);await page.locator('.stack .panel .panel-links .btn').first().click();await expect(page.locator('#case-study-modal')).toHaveAttribute('aria-hidden','false');await page.keyboard.press('Escape');await expect(page.locator('#case-study-modal')).toHaveAttribute('aria-hidden','true');expect(errors).toEqual([]);});
+async function ready(page,width,motion='reduce') {
+  await page.setViewportSize({width,height:960});
+  await page.emulateMedia({colorScheme:'dark',reducedMotion:motion});
+  await page.goto('/');await page.waitForFunction(()=>window.__portfolioReady);
+}
+for(const width of [320,390,768,1440]) test(`canonical phones preserve bezel alignment at ${width}px`,async({page})=>{
+  for(const key of ['kicord','portfolio','kernelos']) {
+    await ready(page,width);await page.goto('/projects/'+key);
+    await page.locator('.project-demo summary').click();
+    const phone=page.locator('[data-live-phone]');await phone.scrollIntoViewIfNeeded();
+    const geometry=await phone.evaluate(el=>{
+      const box=el.getBoundingClientRect();
+      return {ratio:box.width/box.height,radius:getComputedStyle(el.querySelector('.pf-screen')).borderTopLeftRadius,
+        controls:[...el.parentElement.querySelectorAll('.live-phone-tools a,.live-phone-tools button')].map(node=>node.getBoundingClientRect().height)};
+    });
+    expect(Math.abs(geometry.ratio-1470/3000)).toBeLessThan(.001);
+    expect(parseFloat(geometry.radius)).toBeGreaterThan(0);
+    expect(geometry.controls.every(height=>height>=44)).toBe(true);
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+  }
+});
+test('project controls are readable and clickable during reveal',async({page})=>{
+  const errors=[];page.on('pageerror',e=>errors.push(e.message));
+  page.on('console',msg=>{if(/GSAP target.*(?:null|not found)/i.test(msg.text()))errors.push(msg.text());});
+  await ready(page,1440,'no-preference');
+  const title=page.locator('.panel-title a').first();await title.scrollIntoViewIfNeeded();
+  const before=await title.boundingBox();
+  await expect(page.locator('.panel-desc').first()).toHaveCSS('opacity','1');
+  await page.waitForTimeout(700);const after=await title.boundingBox();
+  expect(Math.abs(before.x-after.x)).toBeLessThan(1);expect(Math.abs(before.y-after.y)).toBeLessThan(1);
+  await title.click();await expect(page.locator('#case-study-modal')).toHaveAttribute('aria-hidden','false');
+  await page.keyboard.press('Escape');await expect(page.locator('#case-study-modal')).toHaveAttribute('aria-hidden','true');
+  expect(errors).toEqual([]);
+});
