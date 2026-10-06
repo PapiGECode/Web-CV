@@ -417,14 +417,6 @@
                 scrollTrigger: { trigger: ".certs", start: "top 90%" },
               });
               gsap.set(".certs .cert", { y: 14 });
-              /* portrait reveal */
-              gsap.from("#portrait", {
-                clipPath: "inset(100% 0 0 0)",
-                duration: 1.1,
-                ease: "power3.out",
-                scrollTrigger: { trigger: "#portrait", start: "top 85%" },
-              });
-
               /* Evidence remains opaque, even with restored scroll, reduced motion or failed JS. */
               gsap.utils.toArray('.cap-card').forEach(function (card) {
                 gsap.fromTo(card.querySelectorAll('.cap-num,.cap-desc'), { y: 16 }, {
