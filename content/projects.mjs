@@ -32,4 +32,20 @@ export const projects = [
       { title: 'Contacto transparente', text: 'La interfaz distingue entre preparar un correo y la entrega aceptada por el proveedor.' },
     ],
   },
+  {
+    id: 'kernelos', slug: 'kernelos', number: '03', title: 'KernelOS',
+    category: 'ISO personalizada de Windows', status: 'Colaboración en soporte',
+    summary: 'ISO personalizada de Windows orientada a gaming. Mi contribución está en soporte técnico y comunidad.',
+    role: 'Soporte técnico y comunidad',
+    overview: 'KernelOS es una ISO personalizada de Windows orientada a gaming. Aquí aparece como una colaboración en soporte técnico y comunidad, no como un sistema operativo creado por mí.',
+    approach: 'Ayudar con incidencias, orientar a usuarios y trasladar problemas recurrentes. Esta labor de soporte es distinta de la autoría y del desarrollo de la ISO.',
+    tags: ['Windows', 'Diagnóstico', 'Soporte', 'Comunidad'],
+    links: [{ label: 'Visitar KernelOS', url: 'https://kernelos.org/' }],
+    phone: 'kernelos', next: 'kicord',
+    details: [
+      { title: 'Diagnóstico', text: 'Orientación sobre configuración, controladores y compatibilidad.' },
+      { title: 'Comunidad', text: 'Ayuda a usuarios y organización de consultas técnicas.' },
+      { title: 'Feedback técnico', text: 'Comunicación de problemas reproducibles y necesidades recurrentes.' },
+    ],
+  },
 ];
