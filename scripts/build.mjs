@@ -68,6 +68,12 @@ for (const [source, width] of [['kicord-mark', 512], ['papige-logo', 360], ['thi
   const bytes = await sharp(input('assets', source + '.png')).resize({ width, withoutEnlargement: true }).webp({ quality: 86 }).toBuffer();
   await hashedFile('assets/' + source + '.webp', bytes);
 }
+// Official public organization avatars, served locally rather than through GitHub.
+const communityLogos = JSON.parse(await fs.readFile(input('content/community-logos.json'), 'utf8'));
+for (const logo of communityLogos) {
+  const bytes = await sharp(input('assets', logo.source_file)).resize(96, 96).webp({ quality: 90 }).toBuffer();
+  await hashedFile(`assets/community-${logo.login.toLowerCase()}.webp`, bytes);
+}
 await hashedFile('assets/robleis-wordmark.svg', await fs.readFile(input('assets/robleis-wordmark.svg')));
 for (const theme of ['dark', 'light']) await sharp(input('assets', `favicon-${theme}.png`)).resize(32, 32).png({ palette: true, compressionLevel: 9 }).toFile(output('assets', `favicon-${theme}-32.png`));
 for (const [file, size] of [['apple-touch-icon-180.png', 180], ['icon-192.png', 192], ['icon-512.png', 512]]) {

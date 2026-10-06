@@ -15,6 +15,16 @@ for(const width of [320,390,768,1440]) for(const theme of ['dark','light']) {
     for(const name of communities) {
       const link=skills.locator(`.community-links a[href="https://github.com/${name}"]`);
       await expect(link).toBeVisible();
+      const logo = link.locator('img');
+      await logo.scrollIntoViewIfNeeded();
+      await expect(logo).toHaveAttribute('alt', '');
+      await expect(logo).toHaveAttribute('loading', 'lazy');
+      await expect(logo).toHaveAttribute('decoding', 'async');
+      await expect(logo).toHaveAttribute('src', new RegExp(`/assets/community-${name.toLowerCase()}\\.[a-f0-9]{12}\\.webp$`));
+      await expect.poll(() => logo.evaluate(el => el.complete && el.naturalWidth === 96)).toBe(true);
+      const logoBox = await logo.boundingBox();
+      expect(logoBox.width).toBe(40);
+      expect(logoBox.height).toBe(40);
       expect((await link.boundingBox()).height).toBeGreaterThanOrEqual(44);
     }
     const first=skills.locator('.cap-card').first();
@@ -36,6 +46,10 @@ test('editorial evidence and membership links remain readable without JavaScript
   const context=await browser.newContext({javaScriptEnabled:false,viewport:{width:320,height:900}});
   const page=await context.newPage();await page.goto(process.env.TEST_BASE_URL||'http://localhost:3000');
   await expect(page.locator('.community-links a')).toHaveCount(6);
+  await page.locator('.community-links').scrollIntoViewIfNeeded();
+  for (const logo of await page.locator('.community-links img').all()) {
+    await expect.poll(() => logo.evaluate(el => el.complete && el.naturalWidth === 96)).toBe(true);
+  }
   expect(await page.locator('.cap-card').evaluateAll(rows=>rows.map(el=>getComputedStyle(el).opacity))).toEqual(['1','1','1','1']);
   await page.locator('#skills a[href="/projects/thiagoiutu"]').click();
   await expect(page.locator('h1')).toHaveText('ThiagoIUTU');
