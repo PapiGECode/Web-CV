@@ -117,3 +117,17 @@ test('marquee eases velocity without phase reset; stars, offscreen and live redu
   await page.locator('#contact').scrollIntoViewIfNeeded(); await page.waitForTimeout(100);
   expect((await state()).every(a => a.state === 'paused')).toBe(true);
 });
+
+test('canonical and freshly mounted modal buttons share whole-surface feedback', async ({ page }) => {
+  await ready(page);
+  for (const modal of [true, false]) {
+    if (modal) await page.locator('.panel-title a').first().click();
+    else await page.goto('/projects/kicord');
+    const button = page.locator(modal ? '#cs-content .pp-actions .btn' : '.pp-actions .btn').first();
+    await button.scrollIntoViewIfNeeded(); const before = await button.boundingBox();
+    await page.mouse.move(before.x + before.width * .8, before.y + before.height * .7);
+    await page.waitForTimeout(350);
+    expect((await button.boundingBox()).x - before.x).toBeGreaterThan(1);
+    if (modal) await page.keyboard.press('Escape');
+  }
+});

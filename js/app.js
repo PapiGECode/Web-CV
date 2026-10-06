@@ -58,50 +58,7 @@
         };
 
         // Keep the native cursor; motion is enhancement, not navigation.
-        /* Move the entire button, but never between native pointerdown and click. */
         var motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
-        if (hasGSAP) {
-          document.querySelectorAll('.btn, .f-submit').forEach(function (el) {
-            var pressed = null, releaseTimer;
-            function reset() {
-              if (pressed !== null) return;
-              gsap.killTweensOf(el, 'x,y');
-              gsap.set(el, { x: 0, y: 0 });
-            }
-            el.addEventListener('pointermove', function (e) {
-              if (pressed !== null) return;
-              if (e.pointerType !== 'mouse' || e.buttons || el.disabled ||
-                  document.activeElement === el || motionPreference.matches || !FINE) {
-                reset(); return;
-              }
-              // Subtract our transform: the attraction never feeds back into its baseline.
-              var r = el.getBoundingClientRect();
-              var x = Number(gsap.getProperty(el, 'x')), y = Number(gsap.getProperty(el, 'y'));
-              gsap.to(el, {
-                x: Math.max(-5, Math.min(5, (e.clientX - r.left + x - r.width / 2) * .12)),
-                y: Math.max(-3, Math.min(3, (e.clientY - r.top + y - r.height / 2) * .12)),
-                duration: .25, ease: 'power3.out', overwrite: 'auto',
-              });
-            }, { passive: true });
-            el.addEventListener('pointerdown', function (e) {
-              clearTimeout(releaseTimer);
-              pressed = e.pointerId;
-              gsap.killTweensOf(el, 'x,y');
-            });
-            function release(e) {
-              if (e.pointerId !== pressed) return;
-              // Native click follows pointerup in the same task. Do not move its target first.
-              releaseTimer = setTimeout(function () { pressed = null; reset(); }, 0);
-            }
-            addEventListener('pointerup', release, true);
-            addEventListener('pointercancel', release, true);
-            addEventListener('blur', function () { pressed = null; reset(); });
-            ['pointerleave', 'focus', 'keydown'].forEach(function (event) {
-              el.addEventListener(event, reset);
-            });
-            motionPreference.addEventListener('change', reset);
-          });
-        }
 
         /* One continuous timeline: ease speed, never restart the marquee phase. */
         var marquee = document.querySelector('.marquee');
@@ -786,228 +743,6 @@
         var csBtnBack = document.getElementById("cs-btn-back");
         var csBtnClose = document.getElementById("cs-btn-close");
 
-        function renderCaseStudy(data) {
-          if (data.template) return data.template.innerHTML;
-          var metaHtml = data.meta
-            .map(function (m) {
-              return (
-                '<div class="cs-meta-card">' +
-                '<div class="cs-meta-lbl">' +
-                m.label +
-                "</div>" +
-                '<div class="cs-meta-val">' +
-                m.value +
-                "</div>" +
-                "</div>"
-              );
-            })
-            .join("");
-
-          var linksHtml = data.links
-            .map(function (l) {
-              var cls = l.isPrimary ? "btn btn-solid" : "btn btn-ghost";
-              return (
-                '<a href="' +
-                l.url +
-                '" target="_blank" rel="noopener noreferrer" class="' +
-                cls +
-                '" data-cursor="OPEN">' +
-                '<span class="btn-t">' +
-                l.label +
-                '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">' +
-                '<path d="M1 11L11 1M11 1H4M11 1V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>' +
-                "</svg>" +
-                "</span>" +
-                "</a>"
-              );
-            })
-            .join("");
-
-          var routeSlug = data.slug || data.id;
-          linksHtml +=
-            '<a href="/projects/' +
-            routeSlug +
-            '" class="btn btn-ghost" data-cursor="OPEN">' +
-            '<span class="btn-t">URL permanente' +
-            '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">' +
-            '<path d="M1 11L11 1M11 1H4M11 1V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>' +
-            "</svg></span></a>";
-
-          var highlightsHtml = data.technicalHighlights
-            .map(function (h) {
-              return (
-                '<div class="cs-tech-card">' +
-                '<span class="cs-tech-tag">' +
-                h.tag +
-                "</span>" +
-                '<h4 class="cs-tech-h">' +
-                h.title +
-                "</h4>" +
-                '<p class="cs-tech-p">' +
-                h.text +
-                "</p>" +
-                "</div>"
-              );
-            })
-            .join("");
-
-          var stackHtml = data.stack
-            .map(function (s) {
-              var pills = s.items
-                .map(function (it) {
-                  return '<span class="cs-stack-pill">' + it + "</span>";
-                })
-                .join("");
-              return (
-                '<div class="cs-stack-cat">' +
-                '<div class="cs-stack-cat-title">' +
-                s.category +
-                "</div>" +
-                '<div class="cs-stack-pills">' +
-                pills +
-                "</div>" +
-                "</div>"
-              );
-            })
-            .join("");
-
-          var metricsHtml = data.metrics
-            .map(function (m) {
-              var dotHtml = m.dot
-                ? '<span class="metric-dot ' +
-                  m.dot +
-                  '" aria-hidden="true"></span>'
-                : "";
-              return (
-                '<div class="cs-metric-card">' +
-                '<div class="cs-metric-head">' +
-                dotHtml +
-                '<span class="cs-metric-val">' +
-                m.val +
-                "</span>" +
-                "</div>" +
-                '<div class="cs-metric-lbl">' +
-                m.lbl +
-                "</div>" +
-                "</div>"
-              );
-            })
-            .join("");
-
-          var phoneTemplate = document.getElementById('project-phone-template-' + data.id);
-          var phoneHtml = phoneTemplate ? phoneTemplate.innerHTML : '';
-
-          return (
-            '<div class="cs-hero">' +
-            '<div class="cs-eyebrow-row">' +
-            '<span class="cs-badge">' +
-            data.number +
-            " — " +
-            data.badge +
-            "</span>" +
-            '<span class="cs-status-chip">' +
-            '<span class="metric-dot ' +
-            data.statusDot +
-            '" aria-hidden="true"></span>' +
-            "<span>" +
-            data.statusText +
-            "</span>" +
-            "</span>" +
-            "</div>" +
-            '<h1 class="cs-title">' +
-            data.title +
-            "</h1>" +
-            '<p class="cs-tagline">' +
-            data.tagline +
-            "</p>" +
-            '<div class="cs-hero-actions">' +
-            linksHtml +
-            "</div>" +
-            '<div class="cs-hero-card" style="--cs-tint: ' +
-            data.tint +
-            '">' +
-            '<div class="cs-hero-card-glow" aria-hidden="true"></div>' +
-            phoneHtml +
-            "</div>" +
-            "</div>" +
-            '<div class="cs-sec">' +
-            '<div class="cs-sec-label">Ficha Técnica</div>' +
-            '<div class="cs-meta-grid">' +
-            metaHtml +
-            "</div>" +
-            "</div>" +
-            '<div class="cs-sec">' +
-            '<div class="cs-sec-label">Visión General</div>' +
-            '<h2 class="cs-sec-title">Descripción del Proyecto</h2>' +
-            '<p class="cs-prose">' +
-            data.overview +
-            "</p>" +
-            "</div>" +
-            '<div class="cs-sec">' +
-            '<div class="cs-sec-label">Reto &amp; Solución</div>' +
-            '<h2 class="cs-sec-title">Contexto y participación</h2>' +
-            '<div class="cs-compare-grid">' +
-            '<div class="cs-compare-card problem">' +
-            '<div class="cs-compare-badge">' +
-            '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>' +
-            "<span>El Problema</span>" +
-            "</div>" +
-            '<div class="cs-compare-sub">' +
-            data.problem.subtitle +
-            "</div>" +
-            '<div class="cs-compare-desc">' +
-            data.problem.description +
-            "</div>" +
-            "</div>" +
-            '<div class="cs-compare-card solution">' +
-            '<div class="cs-compare-badge">' +
-            '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>' +
-            "<span>Mi enfoque</span>" +
-            "</div>" +
-            '<div class="cs-compare-sub">' +
-            data.solution.subtitle +
-            "</div>" +
-            '<div class="cs-compare-desc">' +
-            data.solution.description +
-            "</div>" +
-            "</div>" +
-            "</div>" +
-            "</div>" +
-            '<div class="cs-sec">' +
-            '<div class="cs-sec-label">Detalles del proyecto</div>' +
-            '<h2 class="cs-sec-title">Aspectos técnicos y participación</h2>' +
-            '<div class="cs-tech-grid">' +
-            highlightsHtml +
-            "</div>" +
-            "</div>" +
-            '<div class="cs-sec">' +
-            '<div class="cs-sec-label">Tecnologías</div>' +
-            '<h2 class="cs-sec-title">Stack Tecnológico</h2>' +
-            '<div class="cs-stack-cat-grid">' +
-            stackHtml +
-            "</div>" +
-            "</div>" +
-            '<div class="cs-sec">' +
-            '<div class="cs-sec-label">Impacto</div>' +
-            '<h2 class="cs-sec-title">Datos del proyecto</h2>' +
-            '<div class="cs-metrics-grid">' +
-            metricsHtml +
-            "</div>" +
-            "</div>" +
-            '<button type="button" class="cs-next-card" data-next-case="' +
-            data.nextId +
-            '" data-cursor="CASE STUDY">' +
-            "<div>" +
-            '<div class="cs-next-sub">Siguiente caso de estudio</div>' +
-            '<div class="cs-next-title">' +
-            data.nextTitle +
-            "</div>" +
-            "</div>" +
-            '<div class="cs-next-arr" aria-hidden="true">→</div>' +
-            "</button>"
-          );
-        }
-
         var lastCaseStudyTrigger = null;
         var caseReturnKey = null, caseReturnUrl = null;
         function caseStudyFocusable() {
@@ -1032,12 +767,14 @@
           csTopNum.textContent = data.number;
           csTopName.textContent = data.title;
           if (window.ProjectPhones) window.ProjectPhones.destroy(csContent);
-          csContent.innerHTML = renderCaseStudy(data);
+          if (window.ButtonMotion) window.ButtonMotion.destroy(csContent);
+          csContent.replaceChildren(data.template.content.cloneNode(true));
           csScroller.scrollTop = 0;
           csModal.inert = false;
           csModal.classList.add('cs-open');
           csModal.setAttribute('aria-hidden', 'false');
           if (window.ProjectPhones) window.ProjectPhones.mount(csContent);
+          if (window.ButtonMotion) window.ButtonMotion.mount(csContent);
           setCaseBackground(true);
           if (lenis) lenis.stop();
           csBtnClose.focus({ preventScroll: true });
@@ -1064,6 +801,7 @@
             return;
           }
           if (window.ProjectPhones) window.ProjectPhones.destroy(csContent);
+          if (window.ButtonMotion) window.ButtonMotion.destroy(csContent);
           csModal.classList.remove('cs-open');
           csModal.setAttribute('aria-hidden', 'true');
           setCaseBackground(false);
