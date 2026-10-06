@@ -2428,7 +2428,7 @@
         inset: 0;
         pointer-events: none;
         opacity: 0;
-        transition: opacity 0.4s ease;
+        transition: opacity 0.55s cubic-bezier(0.4, 0, 0.2, 1);
         border-radius: inherit;
         background: radial-gradient(
           420px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
@@ -2443,8 +2443,11 @@
           0 16px 36px -10px rgba(0, 0, 0, 0.55),
           0 0 0 1px rgba(56, 189, 248, 0.2);
       }
-      .bento-card:hover .bento-border-glow {
-        opacity: 1;
+      @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+        .bento-card.is-glow-active .bento-border-glow {
+          opacity: 1;
+          transition-duration: 0.2s;
+        }
       }
       .bento-card:focus-within {
         border-color: rgba(56, 189, 248, 0.5);

@@ -642,15 +642,27 @@
               }
             });
           });
-          document.querySelectorAll(".bento-card").forEach(function (card) {
-            card.addEventListener("mousemove", function (e) {
-              var r = card.getBoundingClientRect();
-              if (motionPreference.matches) return;
-              card.style.setProperty("--mouse-x", (e.clientX - r.left) + "px");
-              card.style.setProperty("--mouse-y", (e.clientY - r.top) + "px");
-            });
-          });
         }
+
+        // Fade only the decoration; retain the last pointer position during exit.
+        (function () {
+          var glowMotion = matchMedia("(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)");
+          document.querySelectorAll(".bento-card").forEach(function (card) {
+            function clearGlow() { card.classList.remove("is-glow-active"); }
+            function trackGlow(event) {
+              if (!glowMotion.matches || event.pointerType !== "mouse") return;
+              var rect = card.getBoundingClientRect();
+              card.style.setProperty("--mouse-x", (event.clientX - rect.left) + "px");
+              card.style.setProperty("--mouse-y", (event.clientY - rect.top) + "px");
+              card.classList.add("is-glow-active");
+            }
+            card.addEventListener("pointerenter", trackGlow);
+            card.addEventListener("pointermove", trackGlow);
+            card.addEventListener("pointerleave", clearGlow);
+            card.addEventListener("pointercancel", clearGlow);
+            glowMotion.addEventListener("change", clearGlow);
+          });
+        })();
 
         /* ============ EASTER EGGS ============ */
         // design grid -> press "g"
