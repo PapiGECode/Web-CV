@@ -81,8 +81,7 @@ for (const file of pages) {
   let html = generatedPages.has(file) ? renderProjectPage(projectTemplate, generatedPages.get(file)) : await fs.readFile(input(file), 'utf8');
   html = html.replace(/<div data-phone-placeholder="([a-z]+)" data-phone-instance="([a-z-]+)"><\/div>/g, (_, key, uid) => renderProjectPhone(key, uid));
   if (file === 'index.html') {
-    const templates = [['kicord','kicord'],['papige','portfolio'],['kernelos','kernelos']].map(([id,key]) => `<template id="project-phone-template-${id}">${renderProjectPhone(key,'modal-'+key)}</template>`).join('');
-    html = html.replace('<!-- PROJECT_PHONE_TEMPLATES -->', templates + renderCaseTemplates());
+    html = html.replace('<!-- PROJECT_PHONE_TEMPLATES -->', renderCaseTemplates());
   }
   // Each device now includes its own external controls; remove old presentation captions.
   html = html.replace(/<p class="phone-caption">[^<]*<\/p>/g, '');

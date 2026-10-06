@@ -52,3 +52,7 @@ Los tres dispositivos muestran webs reales: KiCord, PabloSchefer.com y KernelOS.
 La CSP permite exclusivamente el propio origen y los dominios de KiCord y KernelOS. Los sitios externos conservan su sandbox sin navegación del documento superior. No se copian páginas ni se eliminan protecciones de terceros. El enlace externo siempre permanece disponible: un evento load no equivale a confirmar la carga correcta. Los modales eliminan sus marcos al cerrarse sin navegar a about:blank.
 
 Las pruebas sustituyen solo los sitios externos por documentos explícitos de prueba. El iframe del portfolio carga la página real construida. La comprobación de los dos sitios externos en un navegador real se realiza aparte. Para aislar la vista previa puede usarse PORT; para probar contra ella, TEST_BASE_URL.
+
+## Contenido de proyectos
+
+`content/projects.mjs` reúne las fichas verificadas. `scripts/project-catalog.mjs` genera el contenido compartido de páginas indexables y plantillas inertes de los casos; `projects/template.html` conserva el marco, SEO y preferencias. El build publica las rutas `/projects/<slug>` como HTML completo. No se mantienen copias independientes de la misma ficha en JavaScript y HTML.
