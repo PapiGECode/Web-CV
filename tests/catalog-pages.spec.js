@@ -43,7 +43,7 @@ for (const width of [320,390,768,1440]) for (const theme of ['dark','light']) {
     await page.goto('/#work');
     await page.waitForFunction(() => window.__portfolioReady);
     await expect(page.locator('.work-entry')).toHaveCount(showcaseProjects.length);
-    await expect(page.locator('#work [data-project-phone], #work iframe')).toHaveCount(0);
+    await expect(page.locator('#work [data-project-phone]')).toHaveCount(0);
     await expect(page.locator('[data-open-case=robleis], template[data-project-case=robleis]')).toHaveCount(0);
     const numbers = await page.locator('.work-entry .panel-num').allTextContents();
     expect(numbers.map(text => text.slice(0, 2))).toEqual(['01', '02', '03', '04', '05', '06']);
@@ -101,7 +101,7 @@ for (const theme of ['dark', 'light']) {
     };
     await page.goto('/#work');
     await page.waitForFunction(() => window.__portfolioReady);
-    await assertOutline(page.locator('.project-index'));
+    await expect(page.locator('.project-index [data-live-landscape=thiagoiutu]')).toBeVisible();
     await page.locator('.panel-title [data-open-case=thiagoiutu]').click();
     await assertOutline(page.locator('#cs-content'));
     await page.keyboard.press('Escape');

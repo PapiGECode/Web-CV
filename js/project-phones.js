@@ -1,20 +1,21 @@
-/* Real mobile websites. No proxy, copied pages, or cross-origin load-success claims. */
+/* Real embedded websites. No proxy, copied pages, or cross-origin load-success claims. */
 (() => {
   'use strict';
-  const sites = Object.freeze({kicord:'https://www.kicord.es/es', portfolio:'/?phone-preview=1', kernelos:'https://kernelos.org/'});
+  const sites = Object.freeze({kicord:'https://www.kicord.es/es', portfolio:'/?phone-preview=1', kernelos:'https://kernelos.org/', thiagoiutu:'https://thiagoiutu.com/', 'papigegamer-web':'https://papigegamer.com/'});
   const controllers = new Map();
   const isPreview = () => window.self !== window.top || new URL(location.href).searchParams.get('phone-preview') === '1';
-  const roots = scope => [...(scope.matches?.('[data-live-phone]') ? [scope] : []), ...scope.querySelectorAll('[data-live-phone]')];
+  const roots = scope => [...(scope.matches?.('[data-live-phone], [data-live-landscape]') ? [scope] : []), ...scope.querySelectorAll('[data-live-phone], [data-live-landscape]')];
   function init(root) {
     if (controllers.has(root) || isPreview()) return;
-    const key = root.dataset.livePhone;
+    const landscape = Boolean(root.dataset.liveLandscape);
+    const key = root.dataset.livePhone || root.dataset.liveLandscape;
     // KernelOS uses a wider mobile layout; keep its hero controls inside the viewport.
-    const canvasWidth = key === 'kernelos' ? 430 : 390;
+    const canvasWidth = landscape ? 1100 : key === 'kernelos' ? 430 : 390;
     const template = root.querySelector('[data-live-template]');
-    const viewport = root.querySelector('.pf-viewport');
-    const cover = root.querySelector('.phone-preview-cover');
+    const viewport = root.querySelector('.pf-viewport, .landscape-viewport');
+    const cover = root.querySelector('.phone-preview-cover, .landscape-cover');
     const reload = root.closest('.live-phone-presentation')?.querySelector('[data-phone-reload]');
-    if (!Object.hasOwn(sites,key) || !template || !viewport || !cover || !reload) return;
+    if (!Object.hasOwn(sites,key) || !template || !viewport || !cover || (!landscape && !reload)) return;
     const abort = new AbortController();
     let frame = viewport.querySelector('iframe.pf-live-frame');
     const on = (el,type,handler,options={}) => el.addEventListener(type,handler,{...options,signal:abort.signal});
@@ -40,7 +41,7 @@
       frame.removeAttribute('data-frame-src');
       viewport.append(frame); cover.hidden = true; fit();
     }
-    on(reload,'click',() => { if (!frame) attach(); else frame.src = sites[key]; });
+    if (reload) on(reload,'click',() => { if (!frame) attach(); else frame.src = sites[key]; });
     const resize = typeof ResizeObserver === 'function' ? new ResizeObserver(fit) : null;
     resize?.observe(viewport);
     if (!resize) on(window,'resize',fit,{passive:true});
@@ -56,13 +57,13 @@
     on(document,'visibilitychange',reconsider);
     on(document,'project-phone:visibility',reconsider);
     on(window,'pageshow',() => {fit();reconsider();});
-    reload.hidden=false; root.dataset.phoneEnhanced='true'; fit(); reconsider();
+    if (reload) reload.hidden=false; root.dataset.phoneEnhanced='true'; fit(); reconsider();
     controllers.set(root,() => {
       abort.abort(); resize?.disconnect(); observer?.disconnect();
       // Detach closing modal contexts; navigating to about:blank erases forward history.
       // Keep main-page contexts intact for browser back/forward-cache restoration.
       if (root.closest('#case-study-modal')) {frame?.remove();cover.hidden=false;}
-      reload.hidden=true; delete root.dataset.phoneEnhanced; controllers.delete(root);
+      if (reload) reload.hidden=true; delete root.dataset.phoneEnhanced; controllers.delete(root);
     });
   }
   function mount(scope=document) {

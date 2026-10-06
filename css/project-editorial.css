@@ -98,3 +98,15 @@
   .work-notes .bento-head-meta { display: none; }
   .project-index .project-art { aspect-ratio: 4 / 3; }
 }
+
+/* Interactive landscape views retain the artwork footprint, without device chrome. */
+.live-landscape-presentation { min-width: 0; width: 100%; }
+.project-art-landscape { padding: 0; --pf-accent: var(--bone); }
+.landscape-viewport { position: absolute; inset: 0; overflow: hidden; }
+.landscape-cover { height: 100%; display: flex; flex-direction: column; justify-content: center; gap: 1rem; padding: 2rem; }
+.landscape-cover[hidden] { display: none; }
+.landscape-cover span { font: .7rem/1.5 var(--font-mono); color: #b8b2c2; }
+.landscape-external { min-height: 44px; display: flex; align-items: center; justify-content: space-between; gap: 1rem; color: var(--ash); font: .65rem/1.5 var(--font-mono); overflow-wrap: anywhere; }
+.landscape-external:hover { color: var(--bone); }
+.work-entry:nth-child(even) .live-landscape-presentation { order: -1; }
+@media (max-width: 900px) { .work-entry:nth-child(even) .live-landscape-presentation { order: 0; } }

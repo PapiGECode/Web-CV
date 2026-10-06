@@ -1,5 +1,5 @@
 import { projects, showcaseProjects } from '../content/projects.mjs';
-import { renderProjectPhone } from './project-phones.mjs';
+import { renderProjectPhone, renderProjectLandscape } from './project-phones.mjs';
 export { projects };
 export const escapeHTML = value => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
 
@@ -63,7 +63,7 @@ export function renderProjectIndex() {
           <div class="panel-tags">${project.tags.map(tag => `<span class="panel-tag">${e(tag)}</span>`).join('')}</div>
           <div class="panel-links"><a class="btn btn-solid" href="/projects/${project.slug}" data-open-case="${project.id}"><span class="btn-t">Explorar proyecto ↗</span></a></div>
         </div>
-        ${renderProjectIdentity(project)}
+        ${renderProjectLandscape(project.slug) || renderProjectIdentity(project)}
       </div>
     </article>`).join('')}</div>`;
 }
