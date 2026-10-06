@@ -31,6 +31,8 @@
     }
     function attach() {
       if (frame || !root.isConnected || root.closest('[inert]') || document.hidden) return;
+      const bounds = root.getBoundingClientRect();
+      if (!bounds.width || !bounds.height) return; // Closed disclosures are deliberately inert.
       frame = template.content.querySelector('iframe').cloneNode(true);
       // Relative self URL also works on a same-origin Vercel preview. Its own
       // controller refuses further frames, including after internal navigation.

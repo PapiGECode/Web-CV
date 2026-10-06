@@ -3,6 +3,19 @@ import { renderProjectPhone } from './project-phones.mjs';
 export { projects };
 export const escapeHTML = value => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
 
+export function renderProjectIdentity(project) {
+  const art = {
+    kicord: '<img src="/assets/kicord-mark.webp" width="512" height="512" alt="" loading="lazy"><strong>KiCord<span>YOUR DISCORD. REFINED.</span></strong>',
+    portfolio: '<strong>PABLO<br>SCHEFER<span>DESIGN / CODE / CARE</span></strong>',
+    kernelos: '<img src="/assets/kernelos-logo.webp" width="160" height="160" alt="" loading="lazy"><strong>KernelOS<span>WINDOWS / GAMING / COMMUNITY</span></strong>',
+    thiagoiutu: '<strong>THIAGO<br><em>IUTU.</em><span>ARCHIVO · PRESENTE · COMUNIDAD</span></strong>',
+    robleis: '<img src="/assets/robleis-wordmark.svg" width="1511" height="143" alt="" loading="lazy"><span class="project-art-note">UN UNIVERSO / UN PROYECTO WEB</span>',
+    'thiago-community': '<img class="project-art-cover" src="/assets/thiago-community-banner.webp" width="1670" height="942" alt="" loading="lazy"><span class="project-art-note">THIAGO COMMUNITY / BOT</span>',
+    'papigegamer-web': '<img src="/assets/papige-logo.webp" width="360" height="360" alt="" loading="lazy"><strong>PapiGECode<span>SOFTWARE & EXPERIMENTS</span></strong>',
+  };
+  return `<div class="project-art project-art-${project.slug}" aria-hidden="true">${art[project.slug] || escapeHTML(project.title)}</div>`;
+}
+
 export function renderProjectBody(project, modal = false) {
   const e = escapeHTML;
   const links = project.links.map(link => `<a class="btn btn-solid" href="${e(link.url)}" target="_blank" rel="noopener noreferrer"><span class="btn-t">${e(link.label)} ↗</span></a>`).join('');
@@ -17,12 +30,13 @@ export function renderProjectBody(project, modal = false) {
       <div class="pp-status">${e(project.status)}</div>
       <div class="pp-actions">${links}<a class="btn btn-ghost" href="${modal ? '/projects/' + project.slug : '/#work'}"><span class="btn-t">${modal ? 'URL permanente' : 'Volver a proyectos'}</span></a></div>
     </div>
-    ${phone ? `<div class="pp-visual cs-hero-card">${phone}</div>` : ''}
+    ${renderProjectIdentity(project)}
   </header>
   <nav class="pp-toc" aria-label="En este proyecto"><a href="#${prefix}overview">Visión general</a><a href="#${prefix}approach">Mi participación</a><a href="#${prefix}implementation">Detalles</a></nav>
   <section id="${prefix}overview" class="pp-section"><p class="pp-label">Visión general</p><h2>El proyecto.</h2><p class="pp-copy">${e(project.overview)}</p></section>
   <section id="${prefix}approach" class="pp-section"><p class="pp-label">Mi participación</p><h2>${e(project.role)}</h2><p class="pp-copy">${e(project.approach)}</p></section>
   <section id="${prefix}implementation" class="pp-section"><p class="pp-label">Detalles</p><h2>Trabajo y enfoque.</h2><div class="pp-grid">${details}</div><div class="pp-stack">${project.tags.map(tag => `<span>${e(tag)}</span>`).join('')}</div></section>
+  ${phone ? `<details class="project-demo"><summary>Explorar la web real <span>Vista móvil ↗</span></summary><div class="pp-visual">${phone}</div></details>` : ''}
   <a class="pp-next" href="/projects/${e(project.next)}"><span>Continuar explorando</span><strong>Siguiente proyecto ↗</strong></a>`;
 }
 

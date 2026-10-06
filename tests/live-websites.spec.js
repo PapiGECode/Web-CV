@@ -9,7 +9,10 @@ async function ready(page,width=1440,path='/',theme='dark') {
   await page.evaluate(()=>document.fonts.ready);await fs.mkdir('review-reports',{recursive:true});
 }
 async function view(page,key,scope='.stack') {
-  const phone=page.locator(`${scope} [data-live-phone="${key}"]`);await phone.scrollIntoViewIfNeeded();
+  const phone=page.locator(`${scope} [data-live-phone="${key}"]`);
+  const disclosure=phone.locator('xpath=ancestor::details');
+  if(await disclosure.count() && await disclosure.evaluate(el=>!el.open)) await disclosure.locator('summary').click();
+  await phone.scrollIntoViewIfNeeded();
   await expect(phone.locator('iframe')).toHaveCount(1);
   const frame=await(await phone.locator('iframe').elementHandle()).contentFrame();
   if(key==='portfolio') await expect(frame.locator('h1.hero-name')).toHaveAttribute('aria-label','Pablo Schefer');
@@ -122,7 +125,7 @@ test('CSP permits only intended origins and external sandboxes cannot navigate t
 });
 test('blocked external pages leave visible external controls without false success',async({page})=>{
   await page.route('https://kernelos.org/**',r=>r.fulfill({status:403,headers:{'x-frame-options':'DENY'},body:'Blocked remote fixture'}));
-  await ready(page,390,'/projects/kernelos');const wrapper=page.locator('[data-phone-presentation=kernelos]');
+  await ready(page,390,'/projects/kernelos');await page.locator('.project-demo summary').click();const wrapper=page.locator('[data-phone-presentation=kernelos]');
   await expect(wrapper.locator('.live-phone-tools a')).toBeVisible();await expect(wrapper.locator('.live-phone-tools button')).toBeVisible();await expect(wrapper.locator('.live-phone-tools a')).toHaveAttribute('target','_blank');await expect(wrapper).not.toContainText('Cargado correctamente');
 });
 test('no JavaScript provides real links without starting a recursion chain',async({browser})=>{

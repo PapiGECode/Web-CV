@@ -5,6 +5,8 @@ for (const project of projects) test(`${project.slug}: canonical and modal conte
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/projects/' + project.slug);
   await expect(page.locator('h1')).toHaveText(project.title);
+  await expect(page.locator('iframe')).toHaveCount(0);
+  if (project.phone) await expect(page.locator('.project-demo')).not.toHaveAttribute('open', '');
   await expect(page.locator('main')).toContainText(project.role);
   await expect(page.locator('link[rel=canonical]')).toHaveAttribute('href', `https://www.pabloschefer.com/projects/${project.slug}`);
   const response = await request.get('/projects/' + project.slug);
