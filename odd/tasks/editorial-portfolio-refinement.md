@@ -69,3 +69,8 @@ T1 implemented and self-verified; T2–T7 remain. Feature-branch-chain selected 
 - Rollback: revert this motion work unit across js/app.js, css/styles.css, tests/motion.spec.js and adjusted tests/polish.spec.js. No content, backend or deployment changes. Engram mirror still pending; RDD off/unmanaged.
 
 - T1 work-unit commit: `fd8f9fee718acc47efd008d997e1bbb0ddb5f315` (273 additions + 56 deletions = 329 authored lines, including initial feature document). Parent independent readback/spot check and T7 remain pending.
+
+### T2–T4 implementation slices
+- T1 parent verification: independent verifier 17/17; parent `npm run check` passed. Native assessment unavailable (untracked inventory); RDD remains off and independent fallback completed.
+- Plan: migrate existing cases into a shared build-time catalog one at a time; remove the obsolete runtime renderer after migration; add new verified entries in small content slices; replace the homepage gallery with an editorial index and port phone test contexts. Keep runnable states and tests in every slice. No remote PRs.
+- T2a: KiCord canonical page and inert modal now share escaped build-time catalog content and preserved page shell. Runtime fallback remains only for unmigrated cases. Checks: check/build passed, node13/13, focused fact consistency + KiCord canonical/pointer/history3/3. Rollback this catalog integration as one unit.
