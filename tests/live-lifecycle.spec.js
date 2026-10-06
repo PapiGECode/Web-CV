@@ -7,6 +7,7 @@ for(const [index,key] of [[0,'kicord'],[1,'portfolio'],[2,'kernelos']]) {
     await page.locator('.panel-title a').nth(index).click();
     const modal=page.locator('#case-study-modal');
     await expect(modal).toHaveAttribute('aria-hidden','false');
+    await modal.locator('.project-demo summary').click();
     const device=modal.locator(`[data-live-phone=${key}]`);await device.scrollIntoViewIfNeeded();
     await expect(device.locator('iframe')).toHaveCount(1);
     const frame=await(await device.locator('iframe').elementHandle()).contentFrame();
@@ -33,6 +34,7 @@ test('older browsers without Navigation API close a navigated frame without leav
   await page.goto('/');await page.waitForFunction(()=>window.__portfolioReady);
   const original=new URL(page.url());
   await page.locator('.panel-title a').last().click();
+  await page.locator('#case-study-modal .project-demo summary').click();
   const device=page.locator('#case-study-modal [data-live-phone=kernelos]');await device.scrollIntoViewIfNeeded();
   await expect(device.locator('iframe')).toHaveCount(1);
   const frame=await(await device.locator('iframe').elementHandle()).contentFrame();

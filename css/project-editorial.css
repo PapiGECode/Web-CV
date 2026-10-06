@@ -1,0 +1,54 @@
+/* Branded editorial compositions. These are identities, not invented screenshots. */
+.project-art {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  padding: clamp(1.5rem, 4vw, 4rem);
+  background: #151416;
+  color: #eee9df;
+  isolation: isolate;
+}
+.project-art > img { width: 22%; height: auto; object-fit: contain; padding: 0; }
+.project-art strong { font: 750 clamp(2rem, 4vw, 4.5rem)/.9 var(--font-display); letter-spacing: -.055em; }
+.project-art strong span { display: block; margin-top: 1.8rem; font: 400 .6rem/1.7 var(--font-mono); letter-spacing: .08em; }
+.project-art-note { position: absolute; bottom: 1.7rem; left: 2rem; right: 2rem; font: 500 .65rem/1.6 var(--font-mono); letter-spacing: .08em; }
+.project-art-kicord { background: radial-gradient(ellipse at 50% 80%, #382255, #100d19 75%); }
+.project-art-kicord::before { content: ''; position: absolute; width: 70%; aspect-ratio: 1; border: 1px solid #a782fa22; border-radius: 50%; z-index: -1; }
+.project-art-portfolio { justify-content: flex-start; background: #e9e4da; color: #171614; }
+.project-art-portfolio strong { font-size: clamp(3rem, 5.5vw, 7rem); }
+.project-art-kernelos { background: radial-gradient(ellipse at bottom, #5a271c, #150f0d 80%); }
+.project-art-thiagoiutu { justify-content: flex-start; background: #d9f168; color: #151916; }
+.project-art-thiagoiutu strong { font-size: clamp(3.5rem, 6vw, 8rem); }
+.project-art-thiagoiutu em { font-style: normal; -webkit-text-stroke: 1px currentColor; color: transparent; }
+.project-art-robleis { background: linear-gradient(130deg, #462523, #b85040 55%, #a69179); }
+.project-art-robleis > img { width: 90%; }
+.project-art-thiago-community { background: #081a2c; }
+.project-art > .project-art-cover { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.project-art-thiago-community .project-art-note { background: #081a2c; width: fit-content; max-width: calc(100% - 4rem); padding: .5rem .8rem; }
+.project-art-papigegamer-web { background: #1e2534; }
+.project-art-papigegamer-web > img { border-radius: 50%; width: 27%; }
+.pp-hero { display: block; padding-bottom: 0; border: 0; }
+.pp-hero > div:first-child { max-width: 850px; }
+.pp-hero .pp-title { font-size: clamp(2.6rem, 8vw, 7rem); }
+.pp-hero .project-art { margin-top: 3rem; aspect-ratio: 2.6; }
+.pp-hero .project-art strong { font-size: clamp(2.6rem, 6vw, 6rem); }
+.pp-hero .project-art > img:not(.project-art-cover) { max-height: 180px; }
+.project-demo { margin-top: 3rem; border-block: 1px solid var(--line-2); }
+.project-demo summary { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 72px; padding: 1.2rem 0; cursor: pointer; font: 650 clamp(1rem, 2vw, 1.35rem)/1.4 var(--font-display); }
+.project-demo summary span { font: 400 .7rem/1.5 var(--font-mono); color: var(--ash); }
+.project-demo summary:focus-visible { outline-offset: 4px; }
+.project-demo .pp-visual { padding-block: 2rem; border: 0; border-radius: 0; background: transparent; }
+#cs-content .pp-section { padding-block: 3rem; }
+#cs-content .pp-toc { display: none; }
+@media (max-width: 680px) {
+  .project-art { aspect-ratio: 4 / 3; gap: 1rem; }
+  .project-art strong { font-size: 2.1rem; }
+  .project-art strong span { font-size: .5rem; margin-top: 1rem; }
+  .project-art-thiagoiutu strong, .project-art-portfolio strong { font-size: 3.5rem; }
+  .pp-hero .project-art { aspect-ratio: 4 / 3; margin-top: 2rem; }
+  .project-art-note { left: 1.2rem; right: 1.2rem; bottom: 1.2rem; font-size: .5rem; }
+}

@@ -64,6 +64,11 @@ for (const [base, source, width] of [['pablo-casual', 'pablo-casual.png', 1024],
 }
 await fs.copyFile(input('assets/iphone18-pro-max-bezel.png'), output('assets/iphone18-pro-max-bezel.png'));
 for (const name of ['kicord-logo', 'kernelos-logo']) await webp(name + '.png', name + '.webp', 160, 90);
+for (const [source, width] of [['kicord-mark', 512], ['papige-logo', 360], ['thiago-community-banner', 1280]]) {
+  const bytes = await sharp(input('assets', source + '.png')).resize({ width, withoutEnlargement: true }).webp({ quality: 86 }).toBuffer();
+  await hashedFile('assets/' + source + '.webp', bytes);
+}
+await hashedFile('assets/robleis-wordmark.svg', await fs.readFile(input('assets/robleis-wordmark.svg')));
 for (const theme of ['dark', 'light']) await sharp(input('assets', `favicon-${theme}.png`)).resize(32, 32).png({ palette: true, compressionLevel: 9 }).toFile(output('assets', `favicon-${theme}-32.png`));
 for (const [file, size] of [['apple-touch-icon-180.png', 180], ['icon-192.png', 192], ['icon-512.png', 512]]) {
   await sharp(input('assets/apple-touch-icon.png')).resize(size, size).png({ compressionLevel: 9 }).toFile(output('assets', file));
