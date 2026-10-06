@@ -57,7 +57,7 @@ Capabilities become readable numbered editorial rows with concrete evidence rath
 - Real browser screenshots inspected; mocked external tests reported separately from real public-site checks.
 
 ## Progress / next step
-T1–T7 completed and independently verified. All requested local changes are committed on the integration branch; next step is user review of the local preview, not automatic publication. Unknown project details remain conservatively described.
+T1–T7 completed and independently verified. New browser refinements T8–T11 are authorized and pending; publication remains unauthorized. Preserve all valid completed work.
 
 ### T1 evidence and review slice
 - Complete `.btn`/`.f-submit` surfaces and labels move together, bounded to 5px horizontally and 3px vertically with a transform-corrected baseline. Native press kills the tween without resetting position; release/cancel resets only after native activation has completed. No pointer capture or synthetic click. Keyboard, touch and live reduced-motion changes remain stable.
@@ -124,3 +124,20 @@ T1–T7 completed and independently verified. All requested local changes are co
 - Parent structural readback and screenshots verified project-first index, evidence rows, portrait overlay, form and footer; parent check/diff-check passed. Hero/navigation/largePABLO preserved. Local preview http://localhost:3102/#work serves current build; old3101 should not be used for SVG artwork because its long-lived server predates the MIME correction.
 - Source baseline for final close2ae85ff. All seven tasks completed locally; user review is next. No push, PR, merge, deployment or production-ready claim. No real email delivered; remote iframe automation uses mocks with separate earlier real-site spot checks. .atl/ remains unrelated and untracked.
 - Content limits preserved: new inaccessible repositories are not linked as public code or described using unverified technologies/features; GitHub organizations are public memberships, not employers.
+
+## Browser refinement follow-up — 2026-10-06
+The user requested four local refinements through five browser annotations: remove the Robleis showcase section; round all project artwork corners; display each public GitHub organization's official logo; gently fade the mouse glow when leaving either technical contribution card. Preserve the rest of the approved design.
+
+- [x] T8 — Remove Robleis from the visible showcase and consistently round shared project artwork (homepage, modal and canonical cases). Keep existing canonical content unless removal of the section requires more; do not delete unrelated assets or rewrite project facts. Route: delegated direct (catalog/rendering/CSS and regression tests). Forecast 70–110 authored lines.
+- [ ] T9 — Add six official organization avatars beside the existing community names, verified from public GitHub organization metadata. Serve optimized local assets with intrinsic dimensions; no external image tracking or CSP expansion. Keep membership disclaimer, labels, keyboard targets and accessibility. Route: delegated direct (markup/CSS/assets/tests). Forecast 80–140 authored lines plus six images.
+- [ ] T10 — Fade decorative mouse glow smoothly after pointer leave on both technical contribution cards, without moving card/button geometry. Cancel/overwrite on re-entry; keyboard, touch and reduced-motion safe. Route: delegated direct (JS/CSS/regression tests). Forecast 50–90 authored lines.
+- [ ] T11 — Verify final build and all intended responsive/themed surfaces, regression suites and independent readback; preserve local preview. Route: delegated verification plus parent spot check. Forecast 10–30 documentation lines.
+
+Baseline: 2966b6c6b534e232d240797fe6f5dff628845ba9 on codex/portfolio-editorial-refinement. Public master fetched again: f8b06ae, unchanged. RDD off/default; TDD unspecified, ordinary regression checks required. Existing feature-branch-chain organization retained; no push, PR, merge or deployment authorized. Total forecast 210–370 authored changed lines, naturally coherent work units; no code compression for budget. Untracked .atl stays untouched.
+
+Checks: npm run check; npm test; npm run build; focused Playwright for catalog/community/motion; full npm run test:e2e. Verify 320/390/768/1440 in both themes, no-JS/reduced-motion, logo image decoding and fixed layout, no Robleis showcase entry, consistent corner radius and clipped artwork, gradual glow opacity with stable native click geometry. Use public unauthenticated GitHub metadata only, no ambient credentials. Do not edit dist as source. Record exact commands/outcomes and commit identities after each completed task; mirror full document in Engram.
+### T8 — Showcase selection and rounded artwork
+- Added a catalog showcase flag: Robleis keeps its existing canonical page, SEO, sitemap entry and artwork asset, but is omitted from homepage entries and inert modal templates. The visible selection is numbered 01–06; onward navigation skips the archived entry. This avoids deleting history for a section-only request.
+- Shared artwork now uses clipped responsive 16–28px corners on home, modal and canonical surfaces. Phone geometry and physical island are unchanged.
+- Checks passed: npm run check; npm test (13/13); npm run build (10 pages, 27 versioned assets); npx playwright test tests/catalog-pages.spec.js tests/live-lifecycle.spec.js (25/25). Coverage retains all seven canonical pages, six modal cases, focus/history/disclosure checks, no-JS and 320/390/768/1440 in both themes. Inspected editorial-index-320-light.png and editorial-index-1440-dark.png; eight viewport/theme captures regenerated.
+- Rollback boundary: showcase flag/filtered selection, shared radius and their catalog regressions. No assets deleted, no remote delivery, .atl untouched. T9–T11 remain pending.

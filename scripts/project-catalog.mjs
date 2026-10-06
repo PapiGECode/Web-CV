@@ -1,4 +1,4 @@
-import { projects } from '../content/projects.mjs';
+import { projects, showcaseProjects } from '../content/projects.mjs';
 import { renderProjectPhone } from './project-phones.mjs';
 export { projects };
 export const escapeHTML = value => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
@@ -46,12 +46,12 @@ export function renderProjectPage(template, project) {
   return template.replace(/{{(\w+)}}/g, (_, key) => values[key]);
 }
 export function renderCaseTemplates() {
-  return projects.map(project => `<template data-project-case="${project.id}" data-title="${escapeHTML(project.title)}" data-number="${project.number}">${renderProjectBody(project, true)}</template>`).join('');
+  return showcaseProjects.map(project => `<template data-project-case="${project.id}" data-title="${escapeHTML(project.title)}" data-number="${project.number}">${renderProjectBody(project, true)}</template>`).join('');
 }
 
 export function renderProjectIndex() {
   const e = escapeHTML;
-  return `<div class="stack project-index">${projects.map(project => `
+  return `<div class="stack project-index">${showcaseProjects.map(project => `
     <article class="panel work-entry" aria-labelledby="work-${project.slug}">
       <div class="shell work-layout">
         <div class="panel-info">

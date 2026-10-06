@@ -10,7 +10,7 @@ test('catalog produces escaped indexable pages and consistent inert cases', asyn
     const page = renderProjectPage(template, project);
     assert.ok(page.includes(`<h1 class="pp-title cs-title long">${project.title}</h1>`));
     assert.ok(page.includes(`https://www.pabloschefer.com/projects/${project.slug}`));
-    assert.ok(cases.includes(project.overview));
+    assert.equal(cases.includes(project.overview), project.showcase !== false);
     assert.ok(!page.includes('{{'));
   }
   const escaped = renderProjectPage(template, { ...projects[0], title: '<script>bad</script>' });
