@@ -774,92 +774,6 @@
 
         /* ============ CASE STUDY EXPERIENCES ENGINE ============ */
         var CASE_STUDIES = {
-  "kicord": {
-    "id": "kicord",
-    "slug": "kicord",
-    "title": "KiCord",
-    "number": "01",
-    "badge": "Cliente de Discord",
-    "statusDot": "live",
-    "statusText": "Código cerrado",
-    "tagline": "Cliente modificado de Discord de código cerrado, con plugins y opciones de personalización.",
-    "tint": "rgba(150, 170, 255, 0.06)",
-    "meta": [
-      {
-        "label": "Tipo de proyecto",
-        "value": "Cliente modificado"
-      },
-      {
-        "label": "Mi participación",
-        "value": "Desarrollo del cliente"
-      }
-    ],
-    "links": [
-      {
-        "label": "Visitar KiCord",
-        "url": "https://kicord.es",
-        "isPrimary": true
-      }
-    ],
-    "overview": "KiCord es un cliente modificado de Discord de código cerrado. Mi trabajo se centra en su desarrollo, la personalización de la experiencia y la integración de plugins. Los repositorios públicos de plugins relacionados son proyectos separados: no convierten el cliente KiCord en open source.",
-    "problem": {
-      "subtitle": "El contexto",
-      "description": "Ampliar las opciones de personalización y las funciones del cliente de Discord, manteniendo una experiencia de uso coherente."
-    },
-    "solution": {
-      "subtitle": "Mi enfoque",
-      "description": "Desarrollar y mantener el cliente con opciones de personalización, integración de plugins y mejoras de interfaz. KiCord no es un producto oficial de Discord."
-    },
-    "technicalHighlights": [
-      {
-        "tag": "01",
-        "title": "Cliente modificado",
-        "text": "Cambios de interfaz y funcionalidades sobre la experiencia de Discord."
-      },
-      {
-        "tag": "02",
-        "title": "Personalización",
-        "text": "Opciones para adaptar la apariencia y el comportamiento del cliente."
-      },
-      {
-        "tag": "03",
-        "title": "Plugins",
-        "text": "Integración de funcionalidades adicionales mediante plugins."
-      },
-      {
-        "tag": "04",
-        "title": "Código cerrado",
-        "text": "El código del cliente KiCord no se distribuye públicamente como código abierto."
-      }
-    ],
-    "stack": [
-      {
-        "category": "Tecnologías y enfoque",
-        "items": [
-          "Discord",
-          "Personalización",
-          "Plugins",
-          "UX"
-        ]
-      }
-    ],
-    "metrics": [
-      {
-        "val": "Código cerrado",
-        "lbl": "Modelo del cliente"
-      },
-      {
-        "val": "Discord",
-        "lbl": "Plataforma"
-      },
-      {
-        "val": "Plugins",
-        "lbl": "Extensibilidad"
-      }
-    ],
-    "nextId": "papige",
-    "nextTitle": "PabloSchefer.com"
-  },
   "papige": {
     "id": "papige",
     "slug": "portfolio",
@@ -1035,6 +949,10 @@
   }
 };
 
+        document.querySelectorAll('template[data-project-case]').forEach(function (template) {
+          CASE_STUDIES[template.dataset.projectCase] = { title: template.dataset.title, number: template.dataset.number, template: template };
+        });
+
         var csModal = document.getElementById("case-study-modal");
         var csScroller = document.getElementById("cs-scroller");
         var csContent = document.getElementById("cs-content");
@@ -1044,6 +962,7 @@
         var csBtnClose = document.getElementById("cs-btn-close");
 
         function renderCaseStudy(data) {
+          if (data.template) return data.template.innerHTML;
           var metaHtml = data.meta
             .map(function (m) {
               return (
