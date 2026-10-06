@@ -1,4 +1,5 @@
 import {test,expect} from './fixtures.js';
+import sharp from 'sharp';
 import AxeBuilder from '@axe-core/playwright';
 
 const communities=['EpicGames','Design-and-Code','Thread-Development','See-Bot','Open-Hub-Community','K1R4L-BS'];
@@ -17,10 +18,11 @@ for(const width of [320,390,768,1440]) for(const theme of ['dark','light']) {
       await expect(link).toBeVisible();
       const logo = link.locator('img');
       await logo.scrollIntoViewIfNeeded();
+      await expect(logo).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
       await expect(logo).toHaveAttribute('alt', '');
       await expect(logo).toHaveAttribute('loading', 'lazy');
       await expect(logo).toHaveAttribute('decoding', 'async');
-      await expect(logo).toHaveAttribute('src', new RegExp(`/assets/community-${name.toLowerCase()}\\.[a-f0-9]{12}\\.webp$`));
+      await expect(logo).toHaveAttribute('src', new RegExp(`/assets/community-${name.toLowerCase()}\\.[a-f0-9]{12}\\.png$`));
       await expect.poll(() => logo.evaluate(el => el.complete && el.naturalWidth === 96)).toBe(true);
       const logoBox = await logo.boundingBox();
       expect(logoBox.width).toBe(40);
@@ -54,4 +56,26 @@ test('editorial evidence and membership links remain readable without JavaScript
   await page.locator('#skills a[href="/projects/thiagoiutu"]').click();
   await expect(page.locator('h1')).toHaveText('ThiagoIUTU');
   await context.close();
+});
+
+test('community PNG responses retain the original artwork alpha', async ({ page, request }) => {
+  await page.goto('/');
+  for (const name of communities) {
+    const logo = page.locator(`.community-links a[href="https://github.com/${name}"] img`);
+    const response = await request.get(await logo.getAttribute('src'));
+    expect(response.ok()).toBe(true);
+    expect(response.headers()['content-type']).toBe('image/png');
+    const bytes = await response.body();
+    const metadata = await sharp(bytes).metadata();
+    expect(metadata.format).toBe('png');
+    expect(metadata.width).toBe(96);
+    expect(metadata.height).toBe(96);
+    const stats = await sharp(bytes).stats();
+    // Only EpicGames supplies transparency; the other official avatars are opaque.
+    expect(stats.isOpaque).toBe(name !== 'EpicGames');
+    if (name === 'EpicGames') {
+      expect(metadata.hasAlpha).toBe(true);
+      expect(stats.channels.at(-1).min).toBe(0);
+    }
+  }
 });

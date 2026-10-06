@@ -71,8 +71,8 @@ for (const [source, width] of [['kicord-mark', 512], ['papige-logo', 360], ['thi
 // Official public organization avatars, served locally rather than through GitHub.
 const communityLogos = JSON.parse(await fs.readFile(input('content/community-logos.json'), 'utf8'));
 for (const logo of communityLogos) {
-  const bytes = await sharp(input('assets', logo.source_file)).resize(96, 96).webp({ quality: 90 }).toBuffer();
-  await hashedFile(`assets/community-${logo.login.toLowerCase()}.webp`, bytes);
+  const bytes = await sharp(input('assets', logo.source_file)).resize({ width: 96, height: 96, fit: 'inside' }).png({ compressionLevel: 9 }).toBuffer();
+  await hashedFile(`assets/community-${logo.login.toLowerCase()}.png`, bytes);
 }
 await hashedFile('assets/robleis-wordmark.svg', await fs.readFile(input('assets/robleis-wordmark.svg')));
 for (const theme of ['dark', 'light']) await sharp(input('assets', `favicon-${theme}.png`)).resize(32, 32).png({ palette: true, compressionLevel: 9 }).toFile(output('assets', `favicon-${theme}-32.png`));
