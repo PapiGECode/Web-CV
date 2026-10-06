@@ -1015,16 +1015,7 @@
         display: flex;
         gap: 0;
         width: max-content;
-        animation: scroll 38s linear infinite;
         will-change: transform;
-      }
-      .marquee:hover .marquee-track {
-        animation-play-state: paused;
-      }
-      @keyframes scroll {
-        to {
-          transform: translateX(-50%);
-        }
       }
       .marquee-item {
         font-family: var(--font-display);
@@ -1043,7 +1034,9 @@
         content: "✦";
         color: var(--faint);
         font-size: 0.7em;
+        animation: marquee-star 24s linear infinite paused;
       }
+      @keyframes marquee-star { to { transform: rotate(360deg); } }
 
       /* ─── NOW / LIVE STATUS PANEL ───────────────────────────── */
       .now-section {
@@ -2445,7 +2438,6 @@
         z-index: 1;
       }
       .bento-card:hover {
-        transform: translateY(-4px);
         border-color: rgba(56, 189, 248, 0.35);
         box-shadow:
           0 16px 36px -10px rgba(0, 0, 0, 0.55),
@@ -2704,7 +2696,6 @@
         background: rgba(56, 189, 248, 0.12);
         border-color: rgba(56, 189, 248, 0.4);
         color: #38bdf8;
-        transform: translateY(-1px);
       }
       .bento-btn-link:focus-visible {
         outline: 2px solid #38bdf8;
