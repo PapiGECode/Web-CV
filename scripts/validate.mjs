@@ -1,7 +1,10 @@
 import fs from 'node:fs/promises';
-const pages = ['index.html', 'projects/kicord.html', 'projects/portfolio.html', 'projects/kernelos.html', 'privacidad.html'];
-for (const page of pages) {
-  const source = await fs.readFile(page, 'utf8');
+import { projects, renderProjectPage } from './project-catalog.mjs';
+const pages = ['index.html', 'privacidad.html'];
+const template = await fs.readFile('projects/template.html', 'utf8');
+const sources = await Promise.all(pages.map(async page => [page, await fs.readFile(page, 'utf8')]));
+sources.push(...projects.map(project => [`projects/${project.slug}`, renderProjectPage(template, project)]));
+for (const [page, source] of sources) {
   for (const required of ['rel="canonical"', 'lang="es"', 'name="viewport"', '<h1']) if (!source.includes(required)) throw Error(`${page}: ${required}`);
   if (/\sonclick\s*=/.test(source)) throw Error(`${page}: inline event handler`);
   if (/https:\/\/fonts\.(googleapis|gstatic)/.test(source)) throw Error(`${page}: external font dependency`);

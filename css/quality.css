@@ -117,7 +117,7 @@ html.light #form-ok[data-error] .ok-t { color:#982820; }
  .cs-hero-actions .btn { padding:.8rem 1rem; font-size:.68rem; }
  .cs-meta-grid, .cs-compare-grid { grid-template-columns:1fr; }
  .f-row { grid-template-columns:1fr; }
- .foot-word { font-size:24vw; }
+ .foot-word { font-size:18vw; }
 }
 @media (prefers-reduced-motion:reduce) {
  *, *::before, *::after { scroll-behavior:auto !important; animation:none !important; transition:none !important; }
@@ -226,24 +226,9 @@ html.light .status-archive { color:#475569; }
 }
 
 /* Evidence cards are readable by default: content must never depend on opacity tweens. */
-#skills .cap-card { --cap-muted:#bdb8af; --cap-accent:#8fbea5; background:#19191c; border-color:var(--line-2); border-top:2px solid var(--cap-accent); opacity:1; box-shadow:0 8px 24px #0002; transition:border-color .2s,box-shadow .2s; }
-#skills .cap-card:nth-child(2) { --cap-accent:#8fb9d2; }
-#skills .cap-card:nth-child(3) { --cap-accent:#b5a3d2; }
-#skills .cap-card:nth-child(4) { --cap-accent:#d2b28b; }
-#skills .cap-card:hover, #skills .cap-card:focus-within { background:#1d1d21; border-color:var(--cap-accent); transform:none; }
-#skills .cap-lead, #skills .cap-num, #skills .cap-sec-label, #skills .cap-badge, #skills .cap-tag, #skills .cap-stat-desc { color:var(--cap-muted); }
-#skills .cap-title, #skills .cap-evidence-item, #skills .cap-stat-val { color:var(--bone); }
-#skills .cap-stat-box { background:#222226; border-color:var(--line-2); flex-wrap:wrap; }
-#skills .cap-badge-dot { background:var(--cap-accent); box-shadow:none; }
-#skills .cap-tag { background:#ffffff06; border-color:var(--line-2); }
-#skills .cap-evidence-link { text-decoration:underline; text-underline-offset:.2em; border-bottom:0; }
-html.light #skills .cap-card { --cap-muted:#514b43; --cap-accent:#376e53; background:#faf7f1; }
-html.light #skills .cap-card:nth-child(2) { --cap-accent:#316886; }
-html.light #skills .cap-card:nth-child(3) { --cap-accent:#70568f; }
-html.light #skills .cap-card:nth-child(4) { --cap-accent:#896433; }
-html.light #skills .cap-card:hover, html.light #skills .cap-card:focus-within { background:#fffdf9; }
-html.light #skills .cap-stat-box { background:#eee8de; }
-html.light #skills .cap-tag { background:#17140f04; }
+#skills .cap-lead, #skills .cap-num { color: var(--ash); }
+#skills .cap-title, #skills .cap-evidence-item { color: var(--bone); }
+#skills .cap-evidence-link { text-underline-offset: .2em; }
 .contact-address { display:flex; flex-wrap:wrap; align-items:center; gap:.5rem .85rem; margin-bottom:.65rem; }
 .contact-address > a { overflow-wrap:anywhere; font-size:clamp(.9rem,1.4vw,1.15rem); color:var(--bone); }
 .copy-email-inline { display:inline-flex; align-items:center; min-height:44px; padding:.35rem .65rem; color:var(--ash); background:transparent; border:1px solid var(--line-2); border-radius:8px; font:500 .72rem/1.4 var(--font-mono); }
@@ -307,3 +292,125 @@ html.light #skills .cap-tag { background:#17140f04; }
 @media(prefers-reduced-motion:reduce) {
   .panel-metrics .metric-pill { transition:none; }
 }
+
+/* Numbered evidence rows replace nested dashboard treatments. */
+#skills .editorial-evidence { display: block; }
+#skills .editorial-evidence .cap-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, .9fr) minmax(0, 1.25fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  align-items: start;
+  padding: 3rem 0;
+  border: 0;
+  border-top: 1px solid var(--line-2);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  transform: none;
+  opacity: 1;
+}
+#skills .editorial-evidence .cap-head { display: block; margin: 0; }
+#skills .editorial-evidence .cap-num { display: block; margin-bottom: 1.5rem; font-size: .65rem; }
+#skills .editorial-evidence .cap-title { text-transform: none; font-size: clamp(1.6rem, 2.6vw, 2.1rem); line-height: 1.08; letter-spacing: -.045em; }
+#skills .editorial-evidence .cap-lead { margin: 0; line-height: 1.8; }
+#skills .editorial-evidence .cap-evidence-list { margin: 0; gap: 1.25rem; }
+.editorial-evidence .cap-evidence-list li { min-width: 0; font-size: .85rem; }
+.editorial-evidence .cap-evidence-list p { color: var(--ash); line-height: 1.65; }
+#skills .editorial-evidence .cap-evidence-link { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 44px; border: 0; font-weight: 600; }
+.editorial-evidence .cap-evidence-link span { font-weight: 400; }
+.editorial-evidence .cap-evidence-link:hover { text-decoration: underline; text-underline-offset: .3em; }
+.community-index { display: grid; grid-template-columns: 1fr 1.65fr; gap: 4rem; margin-top: 3rem; padding-block: 3rem; border-top: 1px solid var(--line-2); }
+.community-heading h3 { font: 600 clamp(1.6rem, 3vw, 2.2rem)/1.1 var(--font-display); letter-spacing: -.04em; margin-block: 1.3rem; }
+.community-heading > p:last-child { font-size: .85rem; line-height: 1.8; color: var(--ash); max-width: 35ch; }
+.community-links { list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 2rem; align-content: start; padding: 0; margin: 0; }
+.community-links a { display: flex; justify-content: space-between; align-items: center; gap: 1rem; min-height: 64px; padding-block: .8rem; border-bottom: 1px solid var(--line); color: var(--bone); font-size: .9rem; overflow-wrap: anywhere; }
+.community-links a:hover { border-color: var(--bone); }
+.community-links a span { flex-shrink: 0; }
+.community-links img { width: 40px; height: 40px; flex: 0 0 40px; object-fit: contain; border-radius: 10px; background: transparent; }
+.community-links .community-name { min-width: 0; flex: 1; }
+@media (max-width: 900px) {
+  #skills .editorial-evidence .cap-card { grid-template-columns: 1fr 1.2fr; }
+  #skills .editorial-evidence .cap-lead { grid-column: 1; }
+  #skills .editorial-evidence .cap-evidence-list { grid-column: 2; grid-row: 1 / 3; }
+  .community-index { grid-template-columns: 1fr; gap: 2rem; }
+}
+@media (max-width: 600px) {
+  #skills .editorial-evidence .cap-card { display: block; padding-block: 2.25rem; }
+  #skills .editorial-evidence .cap-head { margin-bottom: 1.25rem; }
+  #skills .editorial-evidence .cap-num { margin-bottom: 1rem; }
+  #skills .editorial-evidence .cap-lead { margin-bottom: 1rem; }
+  .community-links { grid-template-columns: 1fr; }
+}
+
+/* Fixed, readable overlays above subtle image-only depth. */
+#portrait .portrait-stat { color: #EEE9DF; }
+#portrait .corner .mono { color: #EEE9DF; }
+#portrait::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(ellipse at var(--portrait-light-x, 50%) 20%, #fff1, transparent 70%);
+  opacity: var(--portrait-light-opacity, 0);
+}
+@media (prefers-reduced-motion: reduce) {
+  #portrait .portrait-img { transform: none !important; }
+  #portrait::before { opacity: 0; }
+}
+
+/* Ink-like focus and typing feedback without moving fields or the caret. */
+.f-field .f-label { display: flex; align-items: center; gap: .65rem; }
+.f-field .f-label::after {
+  content: '';
+  width: .3rem;
+  height: .3rem;
+  border-radius: 50%;
+  background: currentColor;
+  transform: scale(0);
+  opacity: 0;
+  transition: transform .3s var(--ease), opacity .3s;
+}
+.f-field:focus-within .f-label::after,
+.f-field:has(.f-input:not(:placeholder-shown), .f-textarea:not(:placeholder-shown)) .f-label::after { transform: scale(1); opacity: .6; }
+.f-field .f-input, .f-field .f-textarea {
+  background-image: linear-gradient(var(--bone), var(--bone));
+  background-repeat: no-repeat;
+  background-position: left bottom;
+  background-size: 0 1px;
+  transition: background-size .45s var(--ease), border-color .3s;
+}
+.f-field:focus-within .f-input, .f-field:focus-within .f-textarea { background-size: 100% 1px; }
+.f-field.is-typing .f-label::after { animation: typing-ink .65s ease-in-out infinite alternate; }
+@keyframes typing-ink { from { opacity: .35; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .f-field .f-input, .f-field .f-textarea, .f-field .f-label::after { transition: none; }
+  .f-field.is-typing .f-label::after { animation: none; opacity: 1; }
+}
+
+/* Shared utility rhythm; the large PABLO signature remains untouched. */
+.site-tools { align-items: center; gap: .75rem 2rem; padding-block: 1.5rem; border-color: var(--line-2); }
+.site-tools a, .site-tools button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  max-width: 100%;
+  color: var(--ash);
+  line-height: 1.5;
+  text-align: left;
+  overflow-wrap: anywhere;
+  transition: color .2s, border-color .2s, background-color .2s;
+}
+.site-tools [data-open-preferences] { padding: .7rem 1rem; border: 1px solid var(--line-2); border-radius: 999px; cursor: pointer; }
+.site-tools [data-open-preferences]:hover { color: var(--bone); border-color: var(--bone); text-decoration: none; }
+.site-tools a:focus-visible, .site-tools button:focus-visible { outline-offset: 4px; }
+@media (max-width: 600px) {
+  .site-tools { gap: .5rem 1.25rem; padding-block: 1.25rem; }
+  .site-tools [href='#hero'] { margin-left: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-tools a, .site-tools button { transition: none; }
+}
+.site-tools [data-open-preferences]:focus-visible { border-radius: 999px; }
+.project-page > .site-tools { margin-top: 2rem; }

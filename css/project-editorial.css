@@ -1,0 +1,112 @@
+/* Branded editorial compositions. These are identities, not invented screenshots. */
+.project-art {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: clamp(16px, 2vw, 28px);
+  padding: clamp(1.5rem, 4vw, 4rem);
+  background: #151416;
+  color: #eee9df;
+  isolation: isolate;
+}
+.project-art > img { width: 22%; height: auto; object-fit: contain; padding: 0; }
+.project-art strong { font: 750 clamp(2rem, 4vw, 4.5rem)/.9 var(--font-display); letter-spacing: -.055em; }
+.project-art strong span { display: block; margin-top: 1.8rem; font: 400 .6rem/1.7 var(--font-mono); letter-spacing: .08em; }
+.project-art-note { position: absolute; bottom: 1.7rem; left: 2rem; right: 2rem; font: 500 .65rem/1.6 var(--font-mono); letter-spacing: .08em; }
+.project-art-kicord { background: radial-gradient(ellipse at 50% 80%, #382255, #100d19 75%); }
+.project-art-kicord::before { content: ''; position: absolute; width: 70%; aspect-ratio: 1; border: 1px solid #a782fa22; border-radius: 50%; z-index: -1; }
+.project-art-portfolio { justify-content: flex-start; background: #e9e4da; color: #171614; }
+.project-art-portfolio strong { font-size: clamp(3rem, 5.5vw, 7rem); }
+.project-art-kernelos { background: radial-gradient(ellipse at bottom, #5a271c, #150f0d 80%); }
+.project-art-thiagoiutu { justify-content: flex-start; background: #d9f168; color: #151916; }
+.project-art-thiagoiutu strong { font-size: clamp(3.5rem, 6vw, 8rem); }
+.project-art-thiagoiutu em { font-style: normal; -webkit-text-stroke: 1px #151916; color: transparent; }
+.project-art-robleis { background: linear-gradient(130deg, #462523, #b85040 55%, #a69179); }
+.project-art-robleis > img { width: 90%; }
+.project-art-thiago-community { background: #081a2c; }
+.project-art > .project-art-cover { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.project-art-thiago-community .project-art-note { background: #081a2c; width: fit-content; max-width: calc(100% - 4rem); padding: .5rem .8rem; }
+.project-art-papigegamer-web { background: #1e2534; }
+.project-art-papigegamer-web > img { border-radius: 50%; width: 27%; }
+.pp-hero { display: block; padding-bottom: 0; border: 0; }
+.pp-hero > div:first-child { max-width: 850px; }
+.pp-hero .pp-title { font-size: clamp(2.6rem, 8vw, 7rem); }
+.pp-hero .project-art { margin-top: 3rem; aspect-ratio: 2.6; }
+.pp-hero .project-art strong { font-size: clamp(2.6rem, 6vw, 6rem); }
+.pp-hero .project-art > img:not(.project-art-cover) { max-height: 180px; }
+.project-demo { margin-top: 3rem; border-block: 1px solid var(--line-2); }
+.project-demo summary { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 72px; padding: 1.2rem 0; cursor: pointer; font: 650 clamp(1rem, 2vw, 1.35rem)/1.4 var(--font-display); }
+.project-demo summary span { font: 400 .7rem/1.5 var(--font-mono); color: var(--ash); }
+.project-demo summary:focus-visible { outline-offset: 4px; }
+.project-demo .pp-visual { padding-block: 2rem; border: 0; border-radius: 0; background: transparent; }
+#cs-content .pp-section { padding-block: 3rem; }
+#cs-content .pp-toc { display: none; }
+@media (max-width: 680px) {
+  .project-art { aspect-ratio: 4 / 3; gap: 1rem; }
+  .project-art strong { font-size: 2.1rem; }
+  .project-art strong span { font-size: .5rem; margin-top: 1rem; }
+  .project-art-thiagoiutu strong, .project-art-portfolio strong { font-size: 3.5rem; }
+  .pp-hero .project-art { aspect-ratio: 4 / 3; margin-top: 2rem; }
+  .project-art-note { left: 1.2rem; right: 1.2rem; bottom: 1.2rem; font-size: .5rem; }
+}
+/* A project-led index: open composition, clear roles, no moving card containers. */
+.project-index .work-entry {
+  position: relative;
+  top: auto;
+  min-height: 0;
+  padding: clamp(3rem, 6vw, 6rem) 0;
+  border-top: 1px solid var(--line-2);
+  background: transparent;
+  backdrop-filter: none;
+}
+.project-index .work-entry::before { display: none; }
+.work-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: clamp(2rem, 6vw, 6rem); align-items: center; }
+.work-layout > * { min-width: 0; }
+.work-entry:nth-child(even) .project-art { order: -1; }
+.work-entry:nth-child(even) .work-layout { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); }
+.project-index .panel-title { font-size: clamp(2.5rem, 4vw, 4.2rem); line-height: 1; margin-bottom: 1.5rem; letter-spacing: -.065em; }
+.project-index .panel-title a { text-decoration: none; }
+.project-index .panel-title a:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .15em; }
+.work-role { color: var(--cream); font-size: .85rem; font-weight: 600; margin-bottom: .9rem; }
+.work-status { color: var(--ash); font: .65rem/1.6 var(--font-mono); margin-block: 1rem; }
+.project-index .panel-tags { gap: .5rem 1rem; }
+.project-index .panel-tag { border: 0; padding: 0; border-radius: 0; background: transparent; font-size: .65rem; }
+.project-index .project-art { aspect-ratio: 1.35; }
+.project-index .project-art strong { font-size: clamp(2rem, 3.3vw, 3.8rem); }
+.project-index .project-art-portfolio strong, .project-index .project-art-thiagoiutu strong { font-size: clamp(3rem, 5vw, 5.5rem); }
+.work-notes { margin-top: 3rem; }
+.work-notes .bento-title { font-size: clamp(1.5rem, 3vw, 2.2rem); }
+.work-notes #bento-projects-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3rem; }
+.work-notes #bento-projects-grid .bento-card { border: 0; border-top: 1px solid var(--line-2); border-radius: 0; background: transparent; box-shadow: none; padding: 2rem 0; }
+.work-notes .bento-card::before, .work-notes .bento-status-badge, .work-notes .bento-num, .work-notes .bento-specs-row { display: none; }
+.work-notes .bento-card-inner { padding: 0; }
+.work-notes .bento-card-title { font-size: 1.3rem; }
+@media (max-width: 900px) {
+  .work-layout, .work-entry:nth-child(even) .work-layout { grid-template-columns: 1fr; gap: 2rem; }
+  .work-entry:nth-child(even) .project-art { order: 0; }
+  .project-index .panel-title { font-size: clamp(2.2rem, 8vw, 4rem); }
+  .project-index .project-art { aspect-ratio: 1.65; }
+  .project-index .project-art strong { font-size: clamp(2rem, 6vw, 4rem); }
+  .project-index .project-art-portfolio strong, .project-index .project-art-thiagoiutu strong { font-size: clamp(3rem, 10vw, 6rem); }
+}
+@media (max-width: 680px) {
+  .work-notes #bento-projects-grid { grid-template-columns: 1fr; gap: 0; }
+  .work-notes .bento-head-meta { display: none; }
+  .project-index .project-art { aspect-ratio: 4 / 3; }
+}
+
+/* Interactive landscape views retain the artwork footprint, without device chrome. */
+.live-landscape-presentation { min-width: 0; width: 100%; }
+.project-art-landscape { padding: 0; --pf-accent: var(--bone); }
+.landscape-viewport { position: absolute; inset: 0; overflow: hidden; }
+.landscape-cover { height: 100%; display: flex; flex-direction: column; justify-content: center; gap: 1rem; padding: 2rem; }
+.landscape-cover[hidden] { display: none; }
+.landscape-cover span { font: .7rem/1.5 var(--font-mono); color: #b8b2c2; }
+.landscape-external { min-height: 44px; display: flex; align-items: center; justify-content: space-between; gap: 1rem; color: var(--ash); font: .65rem/1.5 var(--font-mono); overflow-wrap: anywhere; }
+.landscape-external:hover { color: var(--bone); }
+.work-entry:nth-child(even) .live-landscape-presentation { order: -1; }
+@media (max-width: 900px) { .work-entry:nth-child(even) .live-landscape-presentation { order: 0; } }

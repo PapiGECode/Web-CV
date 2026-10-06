@@ -1,10 +1,12 @@
-/* Original bezel and display geometry; the real web occupies the complete screen. */
+/* Original bezel; keep website controls below its physical dynamic island. */
 .live-phone-presentation { width:100%; min-width:0; display:flex; flex-direction:column; align-items:center; gap:12px; }
 .project-phone { --pf-accent:#b3a5ff; position:relative; flex:0 0 auto; width:330px; max-width:100%; aspect-ratio:1470 / 3000; isolation:isolate; text-align:left; filter:drop-shadow(0 18px 22px #0005); }
 .project-phone[data-project-phone="portfolio"] { --pf-accent:#e7e2d8; }
 .project-phone[data-project-phone="kernelos"] { --pf-accent:#abd9ee; }
 .project-phone > .phone-bezel { position:absolute; inset:0; width:100%; height:100%; max-width:none; max-height:none; padding:0; object-fit:contain; z-index:5; pointer-events:none; user-select:none; mix-blend-mode:normal; }
-.project-phone > .pf-screen { position:absolute; inset:1.6% 3.9% 1.8%; overflow:hidden; border-radius:13% / 6%; background:#0c0c0d; }
+.project-phone > .pf-screen { position:absolute; inset:1.6% 3.9% 1.8%; overflow:hidden; border-radius:13% / 6%; background:radial-gradient(ellipse at 50% 0%,#242328,#0c0c0d 28%); }
+/* A proportional matte, not a simulated status bar. All sites share one safe area. */
+.pf-viewport { position:absolute; inset:7% 0 0; overflow:hidden; }
 .pf-live-frame { position:absolute; top:0; left:0; display:block; width:390px; height:825px; border:0; margin:0; padding:0; max-width:none; transform-origin:top left; background:#0c0c0d; color-scheme:normal; }
 .pf-live-frame:focus-visible { outline:2px solid var(--pf-accent); outline-offset:-3px; }
 .phone-preview-cover { min-height:100%; display:flex; flex-direction:column; justify-content:center; gap:10px; padding:32px 22px; background:radial-gradient(ellipse at top,#24212f,#0c0c0d 75%); color:#eeeae4; }
@@ -30,10 +32,8 @@
 html.phone-preview { overscroll-behavior:contain; }
 .phone-preview .project-phone { width:100%; max-width:100%; aspect-ratio:auto; filter:none; }
 .phone-preview .project-phone > .pf-screen { position:relative; inset:auto; border:1px solid var(--line-2); border-radius:24px; }
+.phone-preview .pf-viewport { position:relative; inset:auto; }
 .phone-preview .phone-bezel,.phone-preview .live-phone-tools { display:none; }
 .phone-preview .phone-preview-cover { min-height:170px; padding:24px; }
 .phone-preview .panel-visual:has(.project-phone) { padding:0; }
 @media(prefers-reduced-motion:reduce) { .live-phone-presentation * { transition:none!important; animation:none!important; } }
-
-/* Only the embedded portfolio offsets its navigation below the physical camera. */
-.phone-preview #nav { top:28px; }

@@ -10,7 +10,7 @@ if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error('Invali
 const env = { ...process.env, NODE_ENV: 'development' };
 const contact = createContactHandler({ env });
 const metrics = createMetricsHandler({ env });
-const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.woff2': 'font/woff2', '.png': 'image/png', '.webp': 'image/webp', '.jpg': 'image/jpeg', '.pdf': 'application/pdf', '.xml': 'application/xml', '.json': 'application/json', '.webmanifest': 'application/manifest+json', '.ico': 'image/x-icon' };
+const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.woff2': 'font/woff2', '.png': 'image/png', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.jpg': 'image/jpeg', '.pdf': 'application/pdf', '.xml': 'application/xml', '.json': 'application/json', '.webmanifest': 'application/manifest+json', '.ico': 'image/x-icon' };
 const config = JSON.parse(await fs.readFile('vercel.json', 'utf8'));
 http.createServer(async (req, res) => {
   try {

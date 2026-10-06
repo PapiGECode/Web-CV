@@ -58,30 +58,44 @@
         };
 
         // Keep the native cursor; motion is enhancement, not navigation.
-        /* Magnetic feedback stays inside the button: the hit area never moves. */
-        if (FINE && !REDUCE && hasGSAP) {
-          document.querySelectorAll('.btn, .f-submit, .social').forEach(function (el) {
-            var target = el.querySelector('.btn-t, .fs-t, .arr');
-            if (!target) return;
-            function reset() {
-              gsap.to(target, { x: 0, y: 0, duration: .3, ease: 'power3.out', overwrite: 'auto' });
+        var motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
+
+        /* One continuous timeline: ease speed, never restart the marquee phase. */
+        var marquee = document.querySelector('.marquee');
+        if (marquee && hasGSAP && typeof Element.prototype.animate === 'function') {
+          var track = marquee.querySelector('.marquee-track');
+          var travel = track.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-50%)' }],
+            { duration: 38000, iterations: Infinity });
+          var speed = { value: 0 }, visible = false, hovering = false, focused = false;
+          var animations = [];
+          function rate() { animations.forEach(function (animation) { animation.playbackRate = speed.value; }); }
+          function updateMarquee() {
+            gsap.killTweensOf(speed);
+            animations = marquee.getAnimations({ subtree: true });
+            if (!visible || document.hidden || motionPreference.matches) {
+              speed.value = 0; rate();
+              animations.forEach(function (animation) { animation.pause(); });
+              return;
             }
-            el.addEventListener('pointermove', function (e) {
-              if (e.pointerType === 'touch' || e.buttons || el.disabled ||
-                  document.activeElement === el || matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                reset(); return;
-              }
-              var r = el.getBoundingClientRect();
-              gsap.to(target, {
-                x: Math.max(-5, Math.min(5, (e.clientX - r.left - r.width / 2) * .12)),
-                y: Math.max(-3, Math.min(3, (e.clientY - r.top - r.height / 2) * .12)),
-                duration: .25, ease: 'power3.out', overwrite: 'auto',
-              });
-            }, { passive: true });
-            ['pointerleave', 'pointerdown', 'pointercancel', 'focus'].forEach(function (event) {
-              el.addEventListener(event, reset);
+            rate();
+            animations.forEach(function (animation) { animation.play(); });
+            gsap.to(speed, {
+              value: hovering || focused ? 0 : 1, duration: .8, ease: 'power2.out', onUpdate: rate,
+              onComplete: function () { if (speed.value === 0) animations.forEach(function (animation) { animation.pause(); }); },
             });
-          });
+          }
+          travel.pause();
+          if ('IntersectionObserver' in window) {
+            new IntersectionObserver(function (entries) {
+              visible = entries[0].isIntersecting; updateMarquee();
+            }).observe(marquee);
+          } else { visible = true; updateMarquee(); }
+          marquee.addEventListener('pointerenter', function (e) { hovering = e.pointerType === 'mouse'; updateMarquee(); });
+          marquee.addEventListener('pointerleave', function () { hovering = false; updateMarquee(); });
+          marquee.addEventListener('focusin', function () { focused = true; updateMarquee(); });
+          marquee.addEventListener('focusout', function (e) { focused = marquee.contains(e.relatedTarget); updateMarquee(); });
+          motionPreference.addEventListener('change', updateMarquee);
+          document.addEventListener('visibilitychange', updateMarquee);
         }
 
         /* ============ SPOTLIGHT ============ */
@@ -403,17 +417,9 @@
                 scrollTrigger: { trigger: ".certs", start: "top 90%" },
               });
               gsap.set(".certs .cert", { y: 14 });
-              /* portrait reveal */
-              gsap.from("#portrait", {
-                clipPath: "inset(100% 0 0 0)",
-                duration: 1.1,
-                ease: "power3.out",
-                scrollTrigger: { trigger: "#portrait", start: "top 85%" },
-              });
-
               /* Evidence remains opaque, even with restored scroll, reduced motion or failed JS. */
               gsap.utils.toArray('.cap-card').forEach(function (card) {
-                gsap.fromTo(card, { y: 16 }, {
+                gsap.fromTo(card.querySelectorAll('.cap-num,.cap-desc'), { y: 16 }, {
                   y: 0, opacity: 1, duration: .55, ease: 'power3.out',
                   clearProps: 'opacity,transform',
                   scrollTrigger: { trigger: card, start: 'top 90%', once: true },
@@ -441,13 +447,11 @@
               /* Bento projects anim — cards rendered dynamically, triggered by bento-projects-grid */
               gsap.to(".bento-card", {
                 opacity: 1,
-                y: 0,
                 duration: 0.7,
                 stagger: 0.08,
                 ease: "power3.out",
                 scrollTrigger: { trigger: "#bento-projects-grid", start: "top 85%" },
               });
-              gsap.set(".bento-card", { y: 30 });
               gsap.to(".bento-projects-head", {
                 opacity: 1,
                 duration: 0.6,
@@ -471,7 +475,7 @@
                 });
               }
               gsap.to(
-                ".contact-sub,.socials .social,.form .f-field,.form .f-submit",
+                ".contact-sub",
                 {
                   opacity: 1,
                   y: 0,
@@ -482,7 +486,7 @@
                 },
               );
               gsap.set(
-                ".contact-sub,.socials .social,.form .f-field,.form .f-submit",
+                ".contact-sub",
                 { y: 20 },
               );
               gsap.fromTo(
@@ -517,11 +521,12 @@
                   },
                   {
                     x: function (i) {
-                      return (i - (fs.chars.length - 1) / 2) * 16;
+                      return (i - (fs.chars.length - 1) / 2) * Math.min(16, fw.clientWidth * 0.018);
                     },
                     ease: "none",
                     scrollTrigger: {
                       trigger: "footer",
+                      invalidateOnRefresh: true,
                       start: "top bottom",
                       end: "bottom bottom",
                       scrub: 0.8,
@@ -638,36 +643,27 @@
               }
             });
           });
-          document.querySelectorAll(".bento-card").forEach(function (card) {
-            var rY = gsap.quickTo(card, "rotationY", {
-              duration: 0.5,
-              ease: "power2.out",
-            });
-            var rX = gsap.quickTo(card, "rotationX", {
-              duration: 0.5,
-              ease: "power2.out",
-            });
-            var yy = gsap.quickTo(card, "y", {
-              duration: 0.5,
-              ease: "power2.out",
-            });
-            card.addEventListener("mousemove", function (e) {
-              var r = card.getBoundingClientRect();
-              var nx = (e.clientX - r.left) / r.width - 0.5,
-                ny = (e.clientY - r.top) / r.height - 0.5;
-              card.style.setProperty("--mouse-x", (e.clientX - r.left) + "px");
-              card.style.setProperty("--mouse-y", (e.clientY - r.top) + "px");
-              rY(nx * 6);
-              rX(-ny * 5);
-              yy(-5);
-            });
-            card.addEventListener("mouseleave", function () {
-              rY(0);
-              rX(0);
-              yy(0);
-            });
-          });
         }
+
+        // Fade only the decoration; retain the last pointer position during exit.
+        (function () {
+          var glowMotion = matchMedia("(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)");
+          document.querySelectorAll(".bento-card").forEach(function (card) {
+            function clearGlow() { card.classList.remove("is-glow-active"); }
+            function trackGlow(event) {
+              if (!glowMotion.matches || event.pointerType !== "mouse") return;
+              var rect = card.getBoundingClientRect();
+              card.style.setProperty("--mouse-x", (event.clientX - rect.left) + "px");
+              card.style.setProperty("--mouse-y", (event.clientY - rect.top) + "px");
+              card.classList.add("is-glow-active");
+            }
+            card.addEventListener("pointerenter", trackGlow);
+            card.addEventListener("pointermove", trackGlow);
+            card.addEventListener("pointerleave", clearGlow);
+            card.addEventListener("pointercancel", clearGlow);
+            glowMotion.addEventListener("change", clearGlow);
+          });
+        })();
 
         /* ============ EASTER EGGS ============ */
         // design grid -> press "g"
@@ -739,267 +735,10 @@
         });
 
         /* ============ CASE STUDY EXPERIENCES ENGINE ============ */
-        var CASE_STUDIES = {
-  "kicord": {
-    "id": "kicord",
-    "slug": "kicord",
-    "title": "KiCord",
-    "number": "01",
-    "badge": "Cliente de Discord",
-    "statusDot": "live",
-    "statusText": "Código cerrado",
-    "tagline": "Cliente modificado de Discord de código cerrado, con plugins y opciones de personalización.",
-    "tint": "rgba(150, 170, 255, 0.06)",
-    "meta": [
-      {
-        "label": "Tipo de proyecto",
-        "value": "Cliente modificado"
-      },
-      {
-        "label": "Mi participación",
-        "value": "Desarrollo del cliente"
-      }
-    ],
-    "links": [
-      {
-        "label": "Visitar KiCord",
-        "url": "https://kicord.es",
-        "isPrimary": true
-      }
-    ],
-    "overview": "KiCord es un cliente modificado de Discord de código cerrado. Mi trabajo se centra en su desarrollo, la personalización de la experiencia y la integración de plugins. Los repositorios públicos de plugins relacionados son proyectos separados: no convierten el cliente KiCord en open source.",
-    "problem": {
-      "subtitle": "El contexto",
-      "description": "Ampliar las opciones de personalización y las funciones del cliente de Discord, manteniendo una experiencia de uso coherente."
-    },
-    "solution": {
-      "subtitle": "Mi enfoque",
-      "description": "Desarrollar y mantener el cliente con opciones de personalización, integración de plugins y mejoras de interfaz. KiCord no es un producto oficial de Discord."
-    },
-    "technicalHighlights": [
-      {
-        "tag": "01",
-        "title": "Cliente modificado",
-        "text": "Cambios de interfaz y funcionalidades sobre la experiencia de Discord."
-      },
-      {
-        "tag": "02",
-        "title": "Personalización",
-        "text": "Opciones para adaptar la apariencia y el comportamiento del cliente."
-      },
-      {
-        "tag": "03",
-        "title": "Plugins",
-        "text": "Integración de funcionalidades adicionales mediante plugins."
-      },
-      {
-        "tag": "04",
-        "title": "Código cerrado",
-        "text": "El código del cliente KiCord no se distribuye públicamente como código abierto."
-      }
-    ],
-    "stack": [
-      {
-        "category": "Tecnologías y enfoque",
-        "items": [
-          "Discord",
-          "Personalización",
-          "Plugins",
-          "UX"
-        ]
-      }
-    ],
-    "metrics": [
-      {
-        "val": "Código cerrado",
-        "lbl": "Modelo del cliente"
-      },
-      {
-        "val": "Discord",
-        "lbl": "Plataforma"
-      },
-      {
-        "val": "Plugins",
-        "lbl": "Extensibilidad"
-      }
-    ],
-    "nextId": "papige",
-    "nextTitle": "PabloSchefer.com"
-  },
-  "papige": {
-    "id": "papige",
-    "slug": "portfolio",
-    "title": "PabloSchefer.com",
-    "number": "02",
-    "badge": "Portfolio personal",
-    "statusDot": "live",
-    "statusText": "Esta misma web",
-    "tagline": "El portfolio que estás visitando: HTML, CSS, JavaScript y animaciones GSAP.",
-    "tint": "rgba(150, 255, 190, 0.05)",
-    "meta": [
-      {
-        "label": "Tipo de proyecto",
-        "value": "Portfolio estático"
-      },
-      {
-        "label": "Mi participación",
-        "value": "Desarrollo y mantenimiento"
-      }
-    ],
-    "links": [
-      {
-        "label": "Ver código de la web",
-        "url": "https://github.com/PapiGECode/Web-CV",
-        "isPrimary": true
-      }
-    ],
-    "overview": "PabloSchefer.com es esta misma web, mantenida en el repositorio Web-CV. Presenta proyectos, experiencia y contacto mediante HTML estático, CSS y JavaScript. Las animaciones utilizan GSAP y las funciones de Vercel gestionan la actividad de GitHub y el contacto.",
-    "problem": {
-      "subtitle": "El contexto",
-      "description": "Presentar proyectos y trayectoria con una identidad visual propia, sin perder legibilidad, accesibilidad ni facilidad de navegación."
-    },
-    "solution": {
-      "subtitle": "Mi enfoque",
-      "description": "Una web estática con mejora progresiva: contenido accesible sin JavaScript, animaciones GSAP, imágenes adaptables y funciones pequeñas en Vercel. El contacto informa claramente de si prepara un borrador o dispone de envío directo."
-    },
-    "technicalHighlights": [
-      {
-        "tag": "01",
-        "title": "HTML, CSS y JavaScript",
-        "text": "Contenido estático y comportamiento progresivo, sin una aplicación React detrás de esta web."
-      },
-      {
-        "tag": "02",
-        "title": "GSAP y responsive",
-        "text": "Animaciones y composiciones adaptadas a escritorio, tablet y móvil."
-      },
-      {
-        "tag": "03",
-        "title": "Funciones de Vercel",
-        "text": "Actividad de GitHub con caché y formulario con estados de entrega explícitos."
-      },
-      {
-        "tag": "04",
-        "title": "Pruebas y publicación",
-        "text": "Validación de recursos, pruebas de interfaz y despliegue desde GitHub."
-      }
-    ],
-    "stack": [
-      {
-        "category": "Tecnologías y enfoque",
-        "items": [
-          "HTML",
-          "CSS",
-          "JavaScript",
-          "GSAP",
-          "Vercel"
-        ]
-      }
-    ],
-    "metrics": [
-      {
-        "val": "Esta web",
-        "lbl": "Proyecto mostrado"
-      },
-      {
-        "val": "HTML / CSS / JS",
-        "lbl": "Implementación"
-      },
-      {
-        "val": "Vercel",
-        "lbl": "Alojamiento"
-      }
-    ],
-    "nextId": "kernelos",
-    "nextTitle": "KernelOS"
-  },
-  "kernelos": {
-    "id": "kernelos",
-    "slug": "kernelos",
-    "title": "KernelOS",
-    "number": "03",
-    "badge": "ISO personalizada de Windows",
-    "statusDot": "live",
-    "statusText": "Colaboración en soporte",
-    "tagline": "ISO personalizada de Windows orientada a gaming. Mi contribución está en soporte y comunidad.",
-    "tint": "rgba(255, 180, 140, 0.05)",
-    "meta": [
-      {
-        "label": "Tipo de proyecto",
-        "value": "ISO custom de Windows"
-      },
-      {
-        "label": "Mi participación",
-        "value": "Soporte técnico y comunidad"
-      }
-    ],
-    "links": [
-      {
-        "label": "Visitar KernelOS",
-        "url": "https://kernelos.org/",
-        "isPrimary": true
-      }
-    ],
-    "overview": "KernelOS es una ISO personalizada de Windows orientada a gaming. En este portfolio aparece como una colaboración en soporte técnico y comunidad, no como un sistema operativo creado por mí. Mi participación consiste en ayudar con incidencias, orientar a usuarios y trasladar problemas recurrentes.",
-    "problem": {
-      "subtitle": "El contexto",
-      "description": "Una ISO personalizada puede comportarse de forma distinta según el hardware, los controladores y la configuración de cada equipo."
-    },
-    "solution": {
-      "subtitle": "Mi enfoque",
-      "description": "Acompañar a los usuarios en el diagnóstico, clasificar las incidencias y documentar los problemas reproducibles. Esta labor de soporte es distinta de la autoría y del desarrollo de la ISO."
-    },
-    "technicalHighlights": [
-      {
-        "tag": "01",
-        "title": "ISO personalizada",
-        "text": "Una imagen de Windows modificada, no un sistema operativo desarrollado desde cero."
-      },
-      {
-        "tag": "02",
-        "title": "Diagnóstico",
-        "text": "Orientación sobre incidencias de configuración, drivers y compatibilidad."
-      },
-      {
-        "tag": "03",
-        "title": "Soporte comunitario",
-        "text": "Ayuda a usuarios y organización de consultas técnicas."
-      },
-      {
-        "tag": "04",
-        "title": "Feedback técnico",
-        "text": "Comunicación de problemas reproducibles y necesidades recurrentes."
-      }
-    ],
-    "stack": [
-      {
-        "category": "Tecnologías y enfoque",
-        "items": [
-          "Windows",
-          "ISO custom",
-          "Soporte",
-          "Comunidad"
-        ]
-      }
-    ],
-    "metrics": [
-      {
-        "val": "Windows",
-        "lbl": "Sistema base"
-      },
-      {
-        "val": "ISO custom",
-        "lbl": "Tipo de proyecto"
-      },
-      {
-        "val": "Soporte",
-        "lbl": "Mi colaboración"
-      }
-    ],
-    "nextId": "kicord",
-    "nextTitle": "KiCord"
-  }
-};
+        var CASE_STUDIES = {};
+        document.querySelectorAll('template[data-project-case]').forEach(function (template) {
+          CASE_STUDIES[template.dataset.projectCase] = { title: template.dataset.title, number: template.dataset.number, template: template };
+        });
 
         var csModal = document.getElementById("case-study-modal");
         var csScroller = document.getElementById("cs-scroller");
@@ -1009,232 +748,15 @@
         var csBtnBack = document.getElementById("cs-btn-back");
         var csBtnClose = document.getElementById("cs-btn-close");
 
-        function renderCaseStudy(data) {
-          var metaHtml = data.meta
-            .map(function (m) {
-              return (
-                '<div class="cs-meta-card">' +
-                '<div class="cs-meta-lbl">' +
-                m.label +
-                "</div>" +
-                '<div class="cs-meta-val">' +
-                m.value +
-                "</div>" +
-                "</div>"
-              );
-            })
-            .join("");
-
-          var linksHtml = data.links
-            .map(function (l) {
-              var cls = l.isPrimary ? "btn btn-solid" : "btn btn-ghost";
-              return (
-                '<a href="' +
-                l.url +
-                '" target="_blank" rel="noopener noreferrer" class="' +
-                cls +
-                '" data-cursor="OPEN">' +
-                '<span class="btn-t">' +
-                l.label +
-                '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">' +
-                '<path d="M1 11L11 1M11 1H4M11 1V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>' +
-                "</svg>" +
-                "</span>" +
-                "</a>"
-              );
-            })
-            .join("");
-
-          var routeSlug = data.slug || data.id;
-          linksHtml +=
-            '<a href="/projects/' +
-            routeSlug +
-            '" class="btn btn-ghost" data-cursor="OPEN">' +
-            '<span class="btn-t">URL permanente' +
-            '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">' +
-            '<path d="M1 11L11 1M11 1H4M11 1V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>' +
-            "</svg></span></a>";
-
-          var highlightsHtml = data.technicalHighlights
-            .map(function (h) {
-              return (
-                '<div class="cs-tech-card">' +
-                '<span class="cs-tech-tag">' +
-                h.tag +
-                "</span>" +
-                '<h4 class="cs-tech-h">' +
-                h.title +
-                "</h4>" +
-                '<p class="cs-tech-p">' +
-                h.text +
-                "</p>" +
-                "</div>"
-              );
-            })
-            .join("");
-
-          var stackHtml = data.stack
-            .map(function (s) {
-              var pills = s.items
-                .map(function (it) {
-                  return '<span class="cs-stack-pill">' + it + "</span>";
-                })
-                .join("");
-              return (
-                '<div class="cs-stack-cat">' +
-                '<div class="cs-stack-cat-title">' +
-                s.category +
-                "</div>" +
-                '<div class="cs-stack-pills">' +
-                pills +
-                "</div>" +
-                "</div>"
-              );
-            })
-            .join("");
-
-          var metricsHtml = data.metrics
-            .map(function (m) {
-              var dotHtml = m.dot
-                ? '<span class="metric-dot ' +
-                  m.dot +
-                  '" aria-hidden="true"></span>'
-                : "";
-              return (
-                '<div class="cs-metric-card">' +
-                '<div class="cs-metric-head">' +
-                dotHtml +
-                '<span class="cs-metric-val">' +
-                m.val +
-                "</span>" +
-                "</div>" +
-                '<div class="cs-metric-lbl">' +
-                m.lbl +
-                "</div>" +
-                "</div>"
-              );
-            })
-            .join("");
-
-          var phoneTemplate = document.getElementById('project-phone-template-' + data.id);
-          var phoneHtml = phoneTemplate ? phoneTemplate.innerHTML : '';
-
-          return (
-            '<div class="cs-hero">' +
-            '<div class="cs-eyebrow-row">' +
-            '<span class="cs-badge">' +
-            data.number +
-            " — " +
-            data.badge +
-            "</span>" +
-            '<span class="cs-status-chip">' +
-            '<span class="metric-dot ' +
-            data.statusDot +
-            '" aria-hidden="true"></span>' +
-            "<span>" +
-            data.statusText +
-            "</span>" +
-            "</span>" +
-            "</div>" +
-            '<h1 class="cs-title">' +
-            data.title +
-            "</h1>" +
-            '<p class="cs-tagline">' +
-            data.tagline +
-            "</p>" +
-            '<div class="cs-hero-actions">' +
-            linksHtml +
-            "</div>" +
-            '<div class="cs-hero-card" style="--cs-tint: ' +
-            data.tint +
-            '">' +
-            '<div class="cs-hero-card-glow" aria-hidden="true"></div>' +
-            phoneHtml +
-            "</div>" +
-            "</div>" +
-            '<div class="cs-sec">' +
-            '<div class="cs-sec-label">Ficha Técnica</div>' +
-            '<div class="cs-meta-grid">' +
-            metaHtml +
-            "</div>" +
-            "</div>" +
-            '<div class="cs-sec">' +
-            '<div class="cs-sec-label">Visión General</div>' +
-            '<h2 class="cs-sec-title">Descripción del Proyecto</h2>' +
-            '<p class="cs-prose">' +
-            data.overview +
-            "</p>" +
-            "</div>" +
-            '<div class="cs-sec">' +
-            '<div class="cs-sec-label">Reto &amp; Solución</div>' +
-            '<h2 class="cs-sec-title">Contexto y participación</h2>' +
-            '<div class="cs-compare-grid">' +
-            '<div class="cs-compare-card problem">' +
-            '<div class="cs-compare-badge">' +
-            '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>' +
-            "<span>El Problema</span>" +
-            "</div>" +
-            '<div class="cs-compare-sub">' +
-            data.problem.subtitle +
-            "</div>" +
-            '<div class="cs-compare-desc">' +
-            data.problem.description +
-            "</div>" +
-            "</div>" +
-            '<div class="cs-compare-card solution">' +
-            '<div class="cs-compare-badge">' +
-            '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>' +
-            "<span>Mi enfoque</span>" +
-            "</div>" +
-            '<div class="cs-compare-sub">' +
-            data.solution.subtitle +
-            "</div>" +
-            '<div class="cs-compare-desc">' +
-            data.solution.description +
-            "</div>" +
-            "</div>" +
-            "</div>" +
-            "</div>" +
-            '<div class="cs-sec">' +
-            '<div class="cs-sec-label">Detalles del proyecto</div>' +
-            '<h2 class="cs-sec-title">Aspectos técnicos y participación</h2>' +
-            '<div class="cs-tech-grid">' +
-            highlightsHtml +
-            "</div>" +
-            "</div>" +
-            '<div class="cs-sec">' +
-            '<div class="cs-sec-label">Tecnologías</div>' +
-            '<h2 class="cs-sec-title">Stack Tecnológico</h2>' +
-            '<div class="cs-stack-cat-grid">' +
-            stackHtml +
-            "</div>" +
-            "</div>" +
-            '<div class="cs-sec">' +
-            '<div class="cs-sec-label">Impacto</div>' +
-            '<h2 class="cs-sec-title">Datos del proyecto</h2>' +
-            '<div class="cs-metrics-grid">' +
-            metricsHtml +
-            "</div>" +
-            "</div>" +
-            '<button type="button" class="cs-next-card" data-next-case="' +
-            data.nextId +
-            '" data-cursor="CASE STUDY">' +
-            "<div>" +
-            '<div class="cs-next-sub">Siguiente caso de estudio</div>' +
-            '<div class="cs-next-title">' +
-            data.nextTitle +
-            "</div>" +
-            "</div>" +
-            '<div class="cs-next-arr" aria-hidden="true">→</div>' +
-            "</button>"
-          );
-        }
-
         var lastCaseStudyTrigger = null;
         var caseReturnKey = null, caseReturnUrl = null;
         function caseStudyFocusable() {
-          return Array.from(csModal.querySelectorAll('a[href], button:not([disabled]), iframe[title], [tabindex]:not([tabindex="-1"])'))
-            .filter(function(el) { return el.getClientRects().length > 0; });
+          return Array.from(csModal.querySelectorAll('a[href], button:not([disabled]), summary, iframe[title], [tabindex]:not([tabindex="-1"])'))
+            .filter(function(el) {
+              var closedDetails = el.closest('details:not([open])');
+              return (!closedDetails || closedDetails.querySelector('summary') === el)
+                && el.getClientRects().length > 0 && getComputedStyle(el).visibility !== 'hidden';
+            });
         }
         function setCaseBackground(locked) {
           [document.getElementById('main'), nav, ov, document.querySelector('footer')].forEach(function(el) { if(el) el.inert = locked; });
@@ -1254,19 +776,21 @@
           csTopNum.textContent = data.number;
           csTopName.textContent = data.title;
           if (window.ProjectPhones) window.ProjectPhones.destroy(csContent);
-          csContent.innerHTML = renderCaseStudy(data);
+          if (window.ButtonMotion) window.ButtonMotion.destroy(csContent);
+          csContent.replaceChildren(data.template.content.cloneNode(true));
           csScroller.scrollTop = 0;
           csModal.inert = false;
           csModal.classList.add('cs-open');
           csModal.setAttribute('aria-hidden', 'false');
           if (window.ProjectPhones) window.ProjectPhones.mount(csContent);
+          if (window.ButtonMotion) window.ButtonMotion.mount(csContent);
           setCaseBackground(true);
           if (lenis) lenis.stop();
           csBtnClose.focus({ preventScroll: true });
           if (pushState !== false) {
             history[alreadyOpen ? 'replaceState' : 'pushState']({ portfolioModal: true, caseStudy: id }, '', '#case-study-' + id);
           }
-          if (hasGSAP && !REDUCE) gsap.fromTo(csContent, { opacity: .7, y: 8 }, { opacity: 1, y: 0, duration: .22 });
+          if (hasGSAP && !REDUCE) gsap.fromTo(csContent, { opacity: .7 }, { opacity: 1, duration: .22 });
         }
         function closeCaseStudy(navigate) {
           if (!csModal || !csModal.classList.contains('cs-open')) return;
@@ -1286,10 +810,16 @@
             return;
           }
           if (window.ProjectPhones) window.ProjectPhones.destroy(csContent);
+          if (window.ButtonMotion) window.ButtonMotion.destroy(csContent);
           csModal.classList.remove('cs-open');
           csModal.setAttribute('aria-hidden', 'true');
           setCaseBackground(false);
-          if (lastCaseStudyTrigger && lastCaseStudyTrigger.isConnected) lastCaseStudyTrigger.focus({ preventScroll: true });
+          // Restore after native fragment traversal has completed its own focus reset.
+          requestAnimationFrame(function () {
+            if (!csModal.classList.contains('cs-open') && lastCaseStudyTrigger && lastCaseStudyTrigger.isConnected) {
+              lastCaseStudyTrigger.focus({ preventScroll: true });
+            }
+          });
           csModal.inert = true;
           if (lenis) lenis.start();
           if (navigate !== false) history.replaceState(null, '', location.pathname + location.search + '#work');
@@ -1329,4 +859,3 @@
           });
         }
       })();
-    

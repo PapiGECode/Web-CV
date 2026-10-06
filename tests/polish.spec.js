@@ -16,7 +16,7 @@ for (const width of [390, 1440]) {
     await openPortfolio(page);
     await expect(page.locator('h1.hero-name')).toHaveAttribute('aria-label', 'Pablo Schefer');
     await expect(page.locator('h1 .hero-line')).toHaveCount(2);
-    await expect(page.locator('#foot-word')).toHaveText('Pablo');
+    await expect(page.locator('#foot-word')).toHaveText('Schefer');
     await expect(page.locator('.foot-grid .foot-col')).toHaveCount(2);
     await expect(page.locator('#orbit-canvas')).toHaveCount(0);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
@@ -63,19 +63,24 @@ test('contact draft controls have designed states in both themes at 320px', asyn
   }
 });
 
-test('magnetic feedback never translates the hero button hit area', async ({ page }) => {
+test('magnetic feedback moves the whole hero button and title together', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 960 });
   await openPortfolio(page, false);
   const button = page.locator('.hero-actions .btn').first();
   await button.scrollIntoViewIfNeeded();
   await page.waitForTimeout(1000);
   const before = await button.boundingBox();
+  const titleBefore = await button.locator('.btn-t').boundingBox();
   await page.mouse.move(before.x + before.width * .8, before.y + before.height * .7);
   await page.waitForTimeout(350);
   const after = await button.boundingBox();
-  expect(Math.abs(after.x - before.x)).toBeLessThan(.6);
-  expect(Math.abs(after.y - before.y)).toBeLessThan(.6);
-  expect(await button.evaluate(el => Math.abs(gsap.getProperty(el.querySelector('.btn-t'), 'x')))).toBeLessThanOrEqual(5.1);
+  const titleAfter = await button.locator('.btn-t').boundingBox();
+  expect(after.x - before.x).toBeGreaterThan(1);
+  expect(after.x - before.x).toBeLessThanOrEqual(5.1);
+  expect(Math.abs(after.y - before.y)).toBeLessThanOrEqual(3.1);
+  expect(Math.abs((titleAfter.x-titleBefore.x)-(after.x-before.x))).toBeLessThan(.2);
+  expect(Math.abs((titleAfter.y-titleBefore.y)-(after.y-before.y))).toBeLessThan(.2);
+  expect(await button.evaluate(el => gsap.getProperty(el.querySelector('.btn-t'), 'x'))).toBe(0);
 });
 
 test('modified anchor clicks remain native and do not swallow browser shortcuts', async ({ page }) => {

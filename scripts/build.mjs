@@ -4,6 +4,7 @@ import crypto from 'node:crypto';
 import sharp from 'sharp';
 import { build, transform } from 'esbuild';
 import { renderProjectPhone } from './project-phones.mjs';
+import { projects, renderProjectPage, renderCaseTemplates, renderProjectIndex } from './project-catalog.mjs';
 
 const root = process.cwd();
 const dist = path.join(root, 'dist');
@@ -63,6 +64,17 @@ for (const [base, source, width] of [['pablo-casual', 'pablo-casual.png', 1024],
 }
 await fs.copyFile(input('assets/iphone18-pro-max-bezel.png'), output('assets/iphone18-pro-max-bezel.png'));
 for (const name of ['kicord-logo', 'kernelos-logo']) await webp(name + '.png', name + '.webp', 160, 90);
+for (const [source, width] of [['kicord-mark', 512], ['papige-logo', 360], ['thiago-community-banner', 1280]]) {
+  const bytes = await sharp(input('assets', source + '.png')).resize({ width, withoutEnlargement: true }).webp({ quality: 86 }).toBuffer();
+  await hashedFile('assets/' + source + '.webp', bytes);
+}
+// Official public organization avatars, served locally rather than through GitHub.
+const communityLogos = JSON.parse(await fs.readFile(input('content/community-logos.json'), 'utf8'));
+for (const logo of communityLogos) {
+  const bytes = await sharp(input('assets', logo.source_file)).resize({ width: 96, height: 96, fit: 'inside' }).png({ compressionLevel: 9 }).toBuffer();
+  await hashedFile(`assets/community-${logo.login.toLowerCase()}.png`, bytes);
+}
+await hashedFile('assets/robleis-wordmark.svg', await fs.readFile(input('assets/robleis-wordmark.svg')));
 for (const theme of ['dark', 'light']) await sharp(input('assets', `favicon-${theme}.png`)).resize(32, 32).png({ palette: true, compressionLevel: 9 }).toFile(output('assets', `favicon-${theme}-32.png`));
 for (const [file, size] of [['apple-touch-icon-180.png', 180], ['icon-192.png', 192], ['icon-512.png', 512]]) {
   await sharp(input('assets/apple-touch-icon.png')).resize(size, size).png({ compressionLevel: 9 }).toFile(output('assets', file));
@@ -73,13 +85,15 @@ await fs.copyFile(input('favicon.ico'), output('favicon.ico'));
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630"><rect width="1200" height="630" fill="#0c0c0d"/><path d="M64 90H1136M64 520H1136" stroke="#45433f"/><text x="66" y="67" fill="#aaa59a" font-family="sans-serif" font-size="20" letter-spacing="4">DESARROLLO WEB / CÓDIGO ABIERTO</text><text x="60" y="275" fill="#ece8e1" font-family="sans-serif" font-size="146" font-weight="700" letter-spacing="-6">PABLO</text><text x="60" y="424" fill="#ece8e1" font-family="sans-serif" font-size="146" font-weight="700" letter-spacing="-6">SCHEFER</text><text x="66" y="570" fill="#aaa59a" font-family="sans-serif" font-size="24">pabloschefer.com</text><text x="1135" y="570" text-anchor="end" fill="#aaa59a" font-family="sans-serif" font-size="24">Portfolio / Proyectos</text></svg>`;
 await sharp(Buffer.from(svg)).jpeg({ quality: 88 }).toFile(output('assets/preview-og.jpg'));
 
-const pages = ['index.html', '404.html', 'privacidad.html', 'projects/kicord.html', 'projects/portfolio.html', 'projects/kernelos.html'];
+const generatedPages = new Map(projects.map(project => [`projects/${project.slug}.html`, project]));
+const projectTemplate = await fs.readFile(input('projects/template.html'), 'utf8');
+const pages = [...new Set(['index.html', '404.html', 'privacidad.html', ...generatedPages.keys()])];
 for (const file of pages) {
-  let html = await fs.readFile(input(file), 'utf8');
+  let html = generatedPages.has(file) ? renderProjectPage(projectTemplate, generatedPages.get(file)) : await fs.readFile(input(file), 'utf8');
   html = html.replace(/<div data-phone-placeholder="([a-z]+)" data-phone-instance="([a-z-]+)"><\/div>/g, (_, key, uid) => renderProjectPhone(key, uid));
   if (file === 'index.html') {
-    const templates = [['kicord','kicord'],['papige','portfolio'],['kernelos','kernelos']].map(([id,key]) => `<template id="project-phone-template-${id}">${renderProjectPhone(key,'modal-'+key)}</template>`).join('');
-    html = html.replace('<!-- PROJECT_PHONE_TEMPLATES -->', templates);
+    html = html.replace('<!-- PROJECT_PHONE_TEMPLATES -->', renderCaseTemplates());
+    html = html.replace('<!-- PROJECT_INDEX -->', renderProjectIndex());
   }
   // Each device now includes its own external controls; remove old presentation captions.
   html = html.replace(/<p class="phone-caption">[^<]*<\/p>/g, '');

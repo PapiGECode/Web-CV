@@ -20,8 +20,8 @@ for (const width of [390, 1440]) {
       for (let i = 0; i < 4; i++) {
         await cards.nth(i).scrollIntoViewIfNeeded();
         await page.waitForTimeout(750);
-        const style = await cards.nth(i).evaluate(el => ({ opacity: getComputedStyle(el).opacity, bg: getComputedStyle(el).backgroundColor }));
-        expect(style.opacity).toBe('1'); expect(style.bg).not.toBe('rgba(0, 0, 0, 0)');
+        const style = await cards.nth(i).evaluate(el => ({ opacity: getComputedStyle(el).opacity, color: getComputedStyle(el).color }));
+        expect(style.opacity).toBe('1'); expect(style.color).not.toBe('rgba(0, 0, 0, 0)');
       }
       // Going back and toggling themes must not leave an opacity value behind.
       await cards.first().scrollIntoViewIfNeeded();
@@ -70,10 +70,10 @@ test('featured project facts agree across cards, modals and canonical pages', as
   await expect(page.locator('link[rel=canonical]')).toHaveAttribute('href','https://www.pabloschefer.com/projects/portfolio');
 });
 
-test('curated public collaborations replace filler and preserve the bento layout', async ({ page }) => {
+test('technical notes preserve credited contributions without duplicating featured work', async ({ page }) => {
   await ready(page, 'reduce');
-  await expect(page.locator('.bento-card')).toHaveCount(3);
-  for (const repo of ['thiagoiutu-portfolio','KiCord-DOOM-Plugin','duolingo-streak-keeper']) {
+  await expect(page.locator('.bento-card')).toHaveCount(2);
+  for (const repo of ['KiCord-DOOM-Plugin','duolingo-streak-keeper']) {
     await expect(page.locator(`.bento-card a[href="https://github.com/PapiGECode/${repo}"]`)).toHaveCount(1);
   }
   await expect(page.locator('.bento-card')).not.toContainText(['github-achievements-lab','project-vi-technical-archive','History-commits']);
@@ -100,7 +100,7 @@ test('contact keeps one copy-email action in context and no copy-message control
   await expect(page.locator('#form-ok')).toContainText('Borrador listo');
   await page.screenshot({path:'review-reports/contact-clean-390.png'});
   await page.evaluate(()=>scrollTo(0,document.body.scrollHeight));
-  await expect(page.locator('#foot-word')).toHaveText('Pablo');
+  await expect(page.locator('#foot-word')).toHaveText('Schefer');
   await expect(page.locator('.foot-grid .foot-col')).toHaveCount(2);
   await page.screenshot({path:'review-reports/footer-clean-390.png'});
 });

@@ -1,7 +1,50 @@
 import {test,expect} from './fixtures.js';
 import AxeBuilder from '@axe-core/playwright';
-async function ready(page,width=390,theme='dark') {await page.setViewportSize({width,height:960});await page.emulateMedia({reducedMotion:'reduce',colorScheme:theme});await page.route('**/api/contact',r=>r.fulfill({json:{available:false}}));await page.goto('/');await page.waitForFunction(()=>window.__portfolioReady);}
-test('three real devices have no fake tabs or nested clickable cards',async({page})=>{const errors=[];page.on('pageerror',e=>errors.push(e.message));await ready(page,1440);await expect(page.locator('.stack [data-project-phone]')).toHaveCount(3);await expect(page.locator('.phone-mockup,.pf-tabs,.pf-status,.pf-toolbar,.pf-bottom')).toHaveCount(0);for(const key of ['kicord','portfolio','kernelos']){const p=page.locator(`.stack [data-live-phone=${key}]`);await p.scrollIntoViewIfNeeded();await expect(p.locator('iframe')).toHaveCount(1);expect(await p.evaluate(e=>e.closest('a,button')===null)).toBe(true);}expect(errors).toEqual([]);});
-for(const width of [320,390])test(`external device controls are accessible and separated from project copy at ${width}px`,async({page})=>{await ready(page,width,'light');for(const key of ['kicord','portfolio','kernelos']){const p=page.locator(`.stack [data-live-phone=${key}]`);await p.scrollIntoViewIfNeeded();const g=await p.evaluate(e=>{const b=e.getBoundingClientRect(),v=e.closest('.panel-visual').getBoundingClientRect(),i=e.closest('.panel-grid').querySelector('.panel-info').getBoundingClientRect(),z=e.querySelector('.phone-bezel').getBoundingClientRect();return {top:b.top,bottom:b.bottom,info:i.bottom,visualBottom:v.bottom,bezelDifference:Math.abs(z.height-b.height)};});expect(g.top).toBeGreaterThan(g.info);expect(g.bottom).toBeLessThanOrEqual(g.visualBottom+1);expect(g.bezelDifference).toBeLessThan(1);}expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);});
-test('reload controls have visible keyboard focus and do not open case studies',async({page})=>{await ready(page);const wrapper=page.locator('[data-phone-presentation=kernelos]').first();await wrapper.scrollIntoViewIfNeeded();const button=wrapper.locator('[data-phone-reload]');await button.focus();await expect(button).toBeFocused();await expect(button).toHaveCSS('outline-style','solid');await page.keyboard.press('Enter');await expect(page.locator('#case-study-modal')).toHaveAttribute('aria-hidden','true');});
-for(const theme of ['dark','light'])test(`device controls have no serious accessibility findings in ${theme} theme`,async({page})=>{await ready(page,390,theme);for(const key of ['kicord','portfolio','kernelos']){const selector=`.stack [data-phone-presentation=${key}] .live-phone-tools`;await page.locator(selector).scrollIntoViewIfNeeded();const audit=await new AxeBuilder({page}).include(selector).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze();expect(audit.violations.filter(v=>['critical','serious'].includes(v.impact))).toEqual([]);}});
+const keys=['kicord','portfolio','kernelos'];
+async function ready(page,key,width=390,theme='dark') {
+  await page.setViewportSize({width,height:960});
+  await page.emulateMedia({reducedMotion:'reduce',colorScheme:theme});
+  await page.goto('/projects/'+key);
+  await expect(page.locator('iframe')).toHaveCount(0);
+  await page.locator('.project-demo summary').click();
+}
+test('real devices have no fake tabs or nested clickable cards',async({page})=>{
+  const errors=[];page.on('pageerror',e=>errors.push(e.message));
+  for(const key of keys) {
+    await ready(page,key,1440);
+    await expect(page.locator('[data-project-phone]')).toHaveCount(1);
+    await expect(page.locator('.phone-mockup,.pf-tabs,.pf-status,.pf-toolbar,.pf-bottom')).toHaveCount(0);
+    const phone=page.locator('[data-live-phone]');await phone.scrollIntoViewIfNeeded();
+    await expect(phone.locator('iframe')).toHaveCount(1);
+    expect(await phone.evaluate(el=>el.closest('a,button')===null)).toBe(true);
+  }
+  expect(errors).toEqual([]);
+});
+for(const width of [320,390]) test(`device controls remain outside the display at ${width}px`,async({page})=>{
+  for(const key of keys) {
+    await ready(page,key,width,'light');const phone=page.locator('[data-live-phone]');
+    await phone.scrollIntoViewIfNeeded();
+    const geometry=await phone.evaluate(el=>{
+      const box=el.getBoundingClientRect(),bezel=el.querySelector('.phone-bezel').getBoundingClientRect();
+      const tools=el.parentElement.querySelector('.live-phone-tools').getBoundingClientRect();
+      return {bottom:box.bottom,tools:tools.top,bezelDifference:Math.abs(bezel.height-box.height)};
+    });
+    expect(geometry.tools).toBeGreaterThan(geometry.bottom);
+    expect(geometry.bezelDifference).toBeLessThan(1);
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+  }
+});
+test('reload controls have visible keyboard focus and preserve the parent route',async({page})=>{
+  await ready(page,'kernelos');const parentURL=page.url();
+  await page.keyboard.press('Tab');
+  const button=page.locator('[data-phone-reload]');await button.focus();
+  await expect(button).toBeFocused();await expect(button).toHaveCSS('outline-style','solid');
+  await page.keyboard.press('Enter');expect(page.url()).toBe(parentURL);
+});
+for(const theme of ['dark','light']) test(`device controls have no serious accessibility findings in ${theme}`,async({page})=>{
+  for(const key of keys) {
+    await ready(page,key,390,theme);await page.locator('.live-phone-tools').scrollIntoViewIfNeeded();
+    const audit=await new AxeBuilder({page}).include('.live-phone-tools').withTags(['wcag2a','wcag2aa','wcag21aa']).analyze();
+    expect(audit.violations.filter(v=>['critical','serious'].includes(v.impact))).toEqual([]);
+  }
+});
