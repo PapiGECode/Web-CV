@@ -385,3 +385,30 @@ html.light .status-archive { color:#475569; }
   .f-field .f-input, .f-field .f-textarea, .f-field .f-label::after { transition: none; }
   .f-field.is-typing .f-label::after { animation: none; opacity: 1; }
 }
+
+/* Shared utility rhythm; the large PABLO signature remains untouched. */
+.site-tools { align-items: center; gap: .75rem 2rem; padding-block: 1.5rem; border-color: var(--line-2); }
+.site-tools a, .site-tools button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  max-width: 100%;
+  color: var(--ash);
+  line-height: 1.5;
+  text-align: left;
+  overflow-wrap: anywhere;
+  transition: color .2s, border-color .2s, background-color .2s;
+}
+.site-tools [data-open-preferences] { padding: .7rem 1rem; border: 1px solid var(--line-2); border-radius: 999px; cursor: pointer; }
+.site-tools [data-open-preferences]:hover { color: var(--bone); border-color: var(--bone); text-decoration: none; }
+.site-tools a:focus-visible, .site-tools button:focus-visible { outline-offset: 4px; }
+@media (max-width: 600px) {
+  .site-tools { gap: .5rem 1.25rem; padding-block: 1.25rem; }
+  .site-tools [href='#hero'] { margin-left: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-tools a, .site-tools button { transition: none; }
+}
+.site-tools [data-open-preferences]:focus-visible { border-radius: 999px; }
+.project-page > .site-tools { margin-top: 2rem; }
