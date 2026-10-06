@@ -11,16 +11,16 @@
     // KernelOS uses a wider mobile layout; keep its hero controls inside the viewport.
     const canvasWidth = key === 'kernelos' ? 430 : 390;
     const template = root.querySelector('[data-live-template]');
-    const screen = root.querySelector('.pf-screen');
+    const viewport = root.querySelector('.pf-viewport');
     const cover = root.querySelector('.phone-preview-cover');
     const reload = root.closest('.live-phone-presentation')?.querySelector('[data-phone-reload]');
-    if (!Object.hasOwn(sites,key) || !template || !screen || !cover || !reload) return;
+    if (!Object.hasOwn(sites,key) || !template || !viewport || !cover || !reload) return;
     const abort = new AbortController();
-    let frame = screen.querySelector('iframe.pf-live-frame');
+    let frame = viewport.querySelector('iframe.pf-live-frame');
     const on = (el,type,handler,options={}) => el.addEventListener(type,handler,{...options,signal:abort.signal});
     function fit() {
       if (!frame) return;
-      const styles = getComputedStyle(screen);
+      const styles = getComputedStyle(viewport);
       const width = parseFloat(styles.width), height = parseFloat(styles.height);
       if (!(width > 0 && height > 0)) return;
       const scale = width / canvasWidth;
@@ -36,11 +36,11 @@
       // controller refuses further frames, including after internal navigation.
       frame.src = sites[key];
       frame.removeAttribute('data-frame-src');
-      screen.append(frame); cover.hidden = true; fit();
+      viewport.append(frame); cover.hidden = true; fit();
     }
     on(reload,'click',() => { if (!frame) attach(); else frame.src = sites[key]; });
     const resize = typeof ResizeObserver === 'function' ? new ResizeObserver(fit) : null;
-    resize?.observe(screen);
+    resize?.observe(viewport);
     if (!resize) on(window,'resize',fit,{passive:true});
     const observer = typeof IntersectionObserver === 'function' ? new IntersectionObserver(entries => {
       if (entries.some(entry=>entry.isIntersecting)) attach();
