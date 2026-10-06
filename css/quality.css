@@ -339,3 +339,20 @@ html.light .status-archive { color:#475569; }
   #skills .editorial-evidence .cap-lead { margin-bottom: 1rem; }
   .community-links { grid-template-columns: 1fr; }
 }
+
+/* Fixed, readable overlays above subtle image-only depth. */
+#portrait .portrait-stat { color: #EEE9DF; }
+#portrait .corner .mono { color: #EEE9DF; }
+#portrait::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(ellipse at var(--portrait-light-x, 50%) 20%, #fff1, transparent 70%);
+  opacity: var(--portrait-light-opacity, 0);
+}
+@media (prefers-reduced-motion: reduce) {
+  #portrait .portrait-img { transform: none !important; }
+  #portrait::before { opacity: 0; }
+}
