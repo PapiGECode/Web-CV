@@ -57,14 +57,14 @@ export const projects = [
     approach: 'Mi participación está en el desarrollo de la web. El trabajo se presenta como proyecto web, diferenciándolo del bot de la comunidad.',
     tags: ['Web', 'Creador', 'Comunidad'],
     links: [{ label: 'Visitar ThiagoIUTU', url: 'https://thiagoiutu.com/' }],
-    next: 'robleis',
+    next: 'thiago-community',
     details: [
       { title: 'Identidad del creador', text: 'Un espacio propio dedicado al universo de ThiagoIUTU.' },
       { title: 'Archivo y presente', text: 'Contenido y comunidad como punto de encuentro de la web.' },
     ],
   },
   {
-    id: 'robleis', slug: 'robleis', number: '05', title: 'Robleis',
+    id: 'robleis', slug: 'robleis', showcase: false, number: '05', title: 'Robleis',
     category: 'Proyecto web', status: 'Desarrollo web',
     summary: 'Un proyecto web dedicado al universo de Robleis.',
     role: 'Desarrollo del proyecto web',
@@ -99,3 +99,7 @@ export const projects = [
     ],
   },
 ];
+
+// Keep archived canonical pages while curating the visible project selection.
+export const showcaseProjects = projects.filter(project => project.showcase !== false)
+  .map((project, index) => ({ ...project, number: String(index + 1).padStart(2, '0') }));
