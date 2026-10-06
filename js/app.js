@@ -805,7 +805,12 @@
           csModal.classList.remove('cs-open');
           csModal.setAttribute('aria-hidden', 'true');
           setCaseBackground(false);
-          if (lastCaseStudyTrigger && lastCaseStudyTrigger.isConnected) lastCaseStudyTrigger.focus({ preventScroll: true });
+          // Restore after native fragment traversal has completed its own focus reset.
+          requestAnimationFrame(function () {
+            if (!csModal.classList.contains('cs-open') && lastCaseStudyTrigger && lastCaseStudyTrigger.isConnected) {
+              lastCaseStudyTrigger.focus({ preventScroll: true });
+            }
+          });
           csModal.inert = true;
           if (lenis) lenis.start();
           if (navigate !== false) history.replaceState(null, '', location.pathname + location.search + '#work');

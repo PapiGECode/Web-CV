@@ -33,7 +33,7 @@ test('older browsers without Navigation API close a navigated frame without leav
   await page.route('**/api/contact',r=>r.fulfill({json:{available:false}}));
   await page.goto('/');await page.waitForFunction(()=>window.__portfolioReady);
   const original=new URL(page.url());
-  await page.locator('.panel-title a').last().click();
+  await page.locator('.panel-title a[data-open-case=kernelos]').click();
   await page.locator('#case-study-modal .project-demo summary').click();
   const device=page.locator('#case-study-modal [data-live-phone=kernelos]');await device.scrollIntoViewIfNeeded();
   await expect(device.locator('iframe')).toHaveCount(1);

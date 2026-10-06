@@ -31,3 +31,47 @@ test('new work avoids unsupported public source links and preserves the historic
   const sitemap = await (await request.get('/sitemap.xml')).text();
   for (const project of projects) expect(sitemap).toContain('/projects/' + project.slug);
 });
+
+for (const width of [320,390,768,1440]) for (const theme of ['dark','light']) {
+  test(`editorial index is project-led at ${width}px in ${theme}`, async ({ page }) => {
+    await page.setViewportSize({width,height:960});
+    await page.emulateMedia({reducedMotion:'reduce',colorScheme:theme});
+    await page.goto('/#work');
+    await page.waitForFunction(() => window.__portfolioReady);
+    await expect(page.locator('.work-entry')).toHaveCount(projects.length);
+    await expect(page.locator('#work [data-project-phone], #work iframe')).toHaveCount(0);
+    for (const project of projects) {
+      const entry = page.locator('.work-entry').filter({has:page.locator(`#work-${project.slug}`)});
+      await expect(entry).toContainText(project.role);
+      await expect(entry.locator('.panel-title a')).toHaveAttribute('href','/projects/'+project.slug);
+      await expect(entry.locator('.project-art')).toBeVisible();
+    }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await page.locator('.work-entry').first().scrollIntoViewIfNeeded();
+    await page.screenshot({path:`review-reports/editorial-index-${width}-${theme}.png`});
+    await page.locator('.panel-links [data-open-case=robleis]').click();
+    await expect(page.locator('#cs-top-name')).toHaveText('Robleis');
+    await page.keyboard.press('Escape');
+    await expect(page.locator('.panel-links [data-open-case=robleis]')).toBeFocused();
+  });
+}
+
+test('the complete project index remains navigable without JavaScript', async ({ browser }) => {
+  const context = await browser.newContext({javaScriptEnabled:false});
+  const page = await context.newPage();
+  await page.goto(process.env.TEST_BASE_URL || 'http://localhost:3000');
+  await expect(page.locator('.work-entry')).toHaveCount(projects.length);
+  await page.locator('.panel-title a[data-open-case=thiagoiutu]').click();
+  await expect(page.locator('h1')).toHaveText('ThiagoIUTU');
+  await context.close();
+});
+
+test('every branded illustration decodes as an image in the production preview', async ({ page }) => {
+  await page.emulateMedia({reducedMotion:'reduce'});
+  await page.goto('/');
+  const images = page.locator('.project-index .project-art img');
+  for (const image of await images.all()) {
+    await image.scrollIntoViewIfNeeded();
+    await expect.poll(() => image.evaluate(el => el.complete && el.naturalWidth > 0)).toBe(true);
+  }
+});

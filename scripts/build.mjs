@@ -4,7 +4,7 @@ import crypto from 'node:crypto';
 import sharp from 'sharp';
 import { build, transform } from 'esbuild';
 import { renderProjectPhone } from './project-phones.mjs';
-import { projects, renderProjectPage, renderCaseTemplates } from './project-catalog.mjs';
+import { projects, renderProjectPage, renderCaseTemplates, renderProjectIndex } from './project-catalog.mjs';
 
 const root = process.cwd();
 const dist = path.join(root, 'dist');
@@ -87,6 +87,7 @@ for (const file of pages) {
   html = html.replace(/<div data-phone-placeholder="([a-z]+)" data-phone-instance="([a-z-]+)"><\/div>/g, (_, key, uid) => renderProjectPhone(key, uid));
   if (file === 'index.html') {
     html = html.replace('<!-- PROJECT_PHONE_TEMPLATES -->', renderCaseTemplates());
+    html = html.replace('<!-- PROJECT_INDEX -->', renderProjectIndex());
   }
   // Each device now includes its own external controls; remove old presentation captions.
   html = html.replace(/<p class="phone-caption">[^<]*<\/p>/g, '');

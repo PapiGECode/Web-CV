@@ -48,3 +48,22 @@ export function renderProjectPage(template, project) {
 export function renderCaseTemplates() {
   return projects.map(project => `<template data-project-case="${project.id}" data-title="${escapeHTML(project.title)}" data-number="${project.number}">${renderProjectBody(project, true)}</template>`).join('');
 }
+
+export function renderProjectIndex() {
+  const e = escapeHTML;
+  return `<div class="stack project-index">${projects.map(project => `
+    <article class="panel work-entry" aria-labelledby="work-${project.slug}">
+      <div class="shell work-layout">
+        <div class="panel-info">
+          <p class="panel-num">${project.number} / ${e(project.category)}</p>
+          <h3 class="panel-title" id="work-${project.slug}"><a href="/projects/${project.slug}" data-open-case="${project.id}">${e(project.title)}</a></h3>
+          <p class="work-role">${e(project.role)}</p>
+          <p class="panel-desc">${e(project.summary)}</p>
+          <p class="work-status">${e(project.status)}</p>
+          <div class="panel-tags">${project.tags.map(tag => `<span class="panel-tag">${e(tag)}</span>`).join('')}</div>
+          <div class="panel-links"><a class="btn btn-solid" href="/projects/${project.slug}" data-open-case="${project.id}"><span class="btn-t">Explorar proyecto ↗</span></a></div>
+        </div>
+        ${renderProjectIdentity(project)}
+      </div>
+    </article>`).join('')}</div>`;
+}

@@ -70,10 +70,10 @@ test('featured project facts agree across cards, modals and canonical pages', as
   await expect(page.locator('link[rel=canonical]')).toHaveAttribute('href','https://www.pabloschefer.com/projects/portfolio');
 });
 
-test('curated public collaborations replace filler and preserve the bento layout', async ({ page }) => {
+test('technical notes preserve credited contributions without duplicating featured work', async ({ page }) => {
   await ready(page, 'reduce');
-  await expect(page.locator('.bento-card')).toHaveCount(3);
-  for (const repo of ['thiagoiutu-portfolio','KiCord-DOOM-Plugin','duolingo-streak-keeper']) {
+  await expect(page.locator('.bento-card')).toHaveCount(2);
+  for (const repo of ['KiCord-DOOM-Plugin','duolingo-streak-keeper']) {
     await expect(page.locator(`.bento-card a[href="https://github.com/PapiGECode/${repo}"]`)).toHaveCount(1);
   }
   await expect(page.locator('.bento-card')).not.toContainText(['github-achievements-lab','project-vi-technical-archive','History-commits']);
