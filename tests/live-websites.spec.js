@@ -8,7 +8,8 @@ async function ready(page,width=1440,path='/',theme='dark') {
   if(path==='/') await page.waitForFunction(()=>window.__portfolioReady);
   await page.evaluate(()=>document.fonts.ready);await fs.mkdir('review-reports',{recursive:true});
 }
-async function view(page,key,scope='.stack') {
+async function view(page,key,scope='.pp-visual') {
+  if(scope==='.pp-visual' && new URL(page.url()).pathname!==`/projects/${key}`) await page.goto(`/projects/${key}`);
   const phone=page.locator(`${scope} [data-live-phone="${key}"]`);
   const disclosure=phone.locator('xpath=ancestor::details');
   if(await disclosure.count() && await disclosure.evaluate(el=>!el.open)) await disclosure.locator('summary').click();
@@ -63,21 +64,20 @@ for(const key of keys) test(`${key}: canonical phone keeps its top navigation cl
   else await expect.poll(()=>frame.url()).toContain(key==='kicord'?'/es/plugins':'/changelogs');
   expect(new URL(page.url()).pathname).toBe(`/projects/${key}`);
 });
-test('mounted phones resize their remaining viewport without replacing browsing contexts',async({page})=>{
-  await ready(page,390);
-  const phones=[];
-  for(const key of keys) phones.push(await view(page,key));
-  for(const width of [1440,320,768,390]) {
-    await page.setViewportSize({width,height:960});
-    for(const {phone,frame} of phones) {
+test('mounted canonical phones resize without replacing browsing contexts',async({page})=>{
+  for(const key of keys) {
+    await ready(page,390,`/projects/${key}`);
+    const {phone,frame}=await view(page,key);
+    for(const width of [1440,320,768,390]) {
+      await page.setViewportSize({width,height:960});
       await phone.scrollIntoViewIfNeeded();await expectSafeViewport(phone);
       expect(await(await phone.locator('iframe').elementHandle()).contentFrame()).toBe(frame);
-      expect(await frame.evaluate(()=>innerWidth)).toBe(await phone.getAttribute('data-live-phone')==='kernelos'?430:390);
+      expect(await frame.evaluate(()=>innerWidth)).toBe(key==='kernelos'?430:390);
     }
   }
 });
 for(const key of ['kicord','kernelos']) test(`${key}: remote navigation and scrolling stay in the matching frame`,async({page})=>{
-  await ready(page);const {phone,frame}=await view(page,key);const url=page.url();
+  await ready(page,1440,`/projects/${key}`);const {phone,frame}=await view(page,key);const url=page.url();
   const link=frame.locator('#remote-navigation');await link.scrollIntoViewIfNeeded();
   const local=await link.evaluate(el=>{const r=el.getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height,viewport:innerWidth};});
   const display=await phone.locator('iframe').boundingBox();const ratio=display.width/local.viewport;
@@ -88,7 +88,7 @@ for(const key of ['kicord','kernelos']) test(`${key}: remote navigation and scro
   const y=await page.evaluate(()=>scrollY),box=await phone.locator('iframe').boundingBox();
   await page.mouse.move(box.x+box.width/2,box.y+box.height/2);await page.mouse.wheel(0,180);
   await expect.poll(()=>frame.evaluate(()=>scrollY)).toBeGreaterThan(0);expect(Math.abs(await page.evaluate(()=>scrollY)-y)).toBeLessThan(2);
-  await expect(page.locator('#case-study-modal')).toHaveAttribute('aria-hidden','true');
+  expect(page.url()).toBe(url);
 });
 test('the actual portfolio never creates recursive frames, including inside cases and new routes',async({page})=>{
   await ready(page,390);const {frame}=await view(page,'portfolio');
@@ -98,24 +98,29 @@ test('the actual portfolio never creates recursive frames, including inside case
   await frame.goto(new URL('/projects/portfolio',page.url()).href);await expect(frame.locator('h1')).toContainText('PabloSchefer.com');await expect(frame.locator('iframe')).toHaveCount(0);await expect(frame.locator('html')).toHaveClass(/phone-preview/);
   await frame.goto(new URL('/',page.url()).href);await frame.waitForFunction(()=>window.__portfolioReady);await expect(frame.locator('iframe')).toHaveCount(0);
 });
-test('a distant device stays unloaded; only its own reload button resets its website',async({page})=>{
-  await ready(page,390);await expect(page.locator('.stack [data-live-phone=kernelos] iframe')).toHaveCount(0);
-  const first=await view(page,'kicord');await first.frame.locator('#remote-navigation').press('Enter');
-  const other=await view(page,'kernelos');await other.frame.locator('#remote-navigation').press('Enter');
-  await other.tools.locator('button').click();await expect.poll(()=>other.frame.url()).toBe(sources.kernelos);expect(first.frame.url()).toContain('/es/plugins');
+test('closed demos stay unloaded; reload resets the selected real website, not the parent',async({page})=>{
+  for(const key of ['kicord','kernelos']) {
+    await ready(page,390,`/projects/${key}`);
+    await expect(page.locator('iframe')).toHaveCount(0);
+    const {frame,tools}=await view(page,key);const parentURL=page.url();
+    await frame.locator('#remote-navigation').press('Enter');
+    await expect.poll(()=>frame.url()).not.toBe(sources[key]);
+    await tools.locator('button').click();await expect.poll(()=>frame.url()).toBe(sources[key]);
+    expect(page.url()).toBe(parentURL);
+  }
 });
 test('closing and reopening every case removes only its frame and retains browser history',async({page})=>{
-  await ready(page,390);await view(page,'kicord');
+  await ready(page,390);
   for(let i=0;i<keys.length;i++) {
     await page.locator('.panel-title a').nth(i).click();const modal=page.locator('#case-study-modal');await expect(modal).toHaveAttribute('aria-hidden','false');
     const {phone}=await view(page,keys[i],'#case-study-modal');await expectSafeViewport(phone);await page.locator('#cs-btn-close').click();await expect(modal).toHaveAttribute('aria-hidden','true');await expect(modal.locator('iframe')).toHaveCount(0);
     await page.goForward();await expect(modal).toHaveAttribute('aria-hidden','false');await view(page,keys[i],'#case-study-modal');await page.locator('#cs-btn-close').click();await expect(modal).toHaveAttribute('aria-hidden','true');
   }
-  await expect(page.locator('.stack [data-live-phone=kicord] iframe')).toHaveCount(1);
+  await expect(page.locator('#case-study-modal iframe')).toHaveCount(0);
 });
 test('page lifecycle restoration reuses existing browsing contexts without duplicates',async({page})=>{
   await ready(page);await view(page,'kicord');
-  const result=await page.evaluate(()=>{const original=document.querySelector('.stack iframe');dispatchEvent(new PageTransitionEvent('pagehide',{persisted:true}));dispatchEvent(new PageTransitionEvent('pageshow',{persisted:true}));return {same:original===document.querySelector('.stack iframe'),count:document.querySelectorAll('.stack [data-live-phone=kicord] iframe').length};});
+  const result=await page.evaluate(()=>{const original=document.querySelector('.pp-visual iframe');dispatchEvent(new PageTransitionEvent('pagehide',{persisted:true}));dispatchEvent(new PageTransitionEvent('pageshow',{persisted:true}));return {same:original===document.querySelector('.pp-visual iframe'),count:document.querySelectorAll('.pp-visual [data-live-phone=kicord] iframe').length};});
   expect(result).toEqual({same:true,count:1});
 });
 test('CSP permits only intended origins and external sandboxes cannot navigate the parent',async({request,page})=>{
@@ -130,7 +135,16 @@ test('blocked external pages leave visible external controls without false succe
 });
 test('no JavaScript provides real links without starting a recursion chain',async({browser})=>{
   const context=await browser.newContext({javaScriptEnabled:false,viewport:{width:390,height:844}});
-  try{await stubKiCord(context);const p=await context.newPage();await p.goto(process.env.TEST_BASE_URL || 'http://localhost:3000');await expect(p.locator('.stack [data-project-phone]')).toHaveCount(3);await expect(p.locator('iframe')).toHaveCount(0);for(const key of keys){const tools=p.locator(`[data-phone-presentation=${key}] .live-phone-tools`);await tools.scrollIntoViewIfNeeded();await expect(tools.locator('a')).toBeVisible();await expect(tools.locator('button')).toBeHidden();}}finally{await context.close();}
+  try {
+    await stubKiCord(context);const p=await context.newPage();
+    for(const key of keys) {
+      await p.goto((process.env.TEST_BASE_URL || 'http://localhost:3000')+`/projects/${key}`);
+      await p.locator('.project-demo summary').click();
+      await expect(p.locator('[data-project-phone]')).toHaveCount(1);await expect(p.locator('iframe')).toHaveCount(0);
+      const tools=p.locator('.live-phone-tools');await tools.scrollIntoViewIfNeeded();
+      await expect(tools.locator('a')).toBeVisible();await expect(tools.locator('button')).toBeHidden();
+    }
+  } finally {await context.close();}
 });
 test('embedded portfolio visits never emit duplicate measurement events',async({page,context})=>{
   const events=[];await context.route('**/api/metrics',r=>{events.push({body:r.request().postData(),url:r.request().frame().url()});return r.fulfill({status:204});});
