@@ -57,7 +57,7 @@ Capabilities become readable numbered editorial rows with concrete evidence rath
 - Real browser screenshots inspected; mocked external tests reported separately from real public-site checks.
 
 ## Progress / next step
-T1–T6 implemented; T2–T4 independent verification and its disclosure-focus correction recorded below. T5–T6 self-verification complete; T7 parent independent integration/readback remains. Feature-branch-chain selected under explicit user delegation; local commit only, no remote delivery. Unknown/publicly inaccessible project details remain conservative unless the user provides evidence or authorizes scoped authenticated inspection.
+T1–T7 completed and independently verified. All requested local changes are committed on the integration branch; next step is user review of the local preview, not automatic publication. Unknown project details remain conservatively described.
 
 ### T1 evidence and review slice
 - Complete `.btn`/`.f-submit` surfaces and labels move together, bounded to 5px horizontally and 3px vertically with a transform-corrected baseline. Native press kills the tween without resetting position; release/cancel resets only after native activation has completed. No pointer capture or synthetic click. Keyboard, touch and live reduced-motion changes remain stable.
