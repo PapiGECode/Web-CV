@@ -117,7 +117,7 @@ html.light #form-ok[data-error] .ok-t { color:#982820; }
  .cs-hero-actions .btn { padding:.8rem 1rem; font-size:.68rem; }
  .cs-meta-grid, .cs-compare-grid { grid-template-columns:1fr; }
  .f-row { grid-template-columns:1fr; }
- .foot-word { font-size:24vw; }
+ .foot-word { font-size:18vw; }
 }
 @media (prefers-reduced-motion:reduce) {
  *, *::before, *::after { scroll-behavior:auto !important; animation:none !important; transition:none !important; }

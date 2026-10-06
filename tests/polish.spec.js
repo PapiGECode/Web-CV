@@ -16,7 +16,7 @@ for (const width of [390, 1440]) {
     await openPortfolio(page);
     await expect(page.locator('h1.hero-name')).toHaveAttribute('aria-label', 'Pablo Schefer');
     await expect(page.locator('h1 .hero-line')).toHaveCount(2);
-    await expect(page.locator('#foot-word')).toHaveText('Pablo');
+    await expect(page.locator('#foot-word')).toHaveText('Schefer');
     await expect(page.locator('.foot-grid .foot-col')).toHaveCount(2);
     await expect(page.locator('#orbit-canvas')).toHaveCount(0);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
