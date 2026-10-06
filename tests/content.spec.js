@@ -100,7 +100,7 @@ test('contact keeps one copy-email action in context and no copy-message control
   await expect(page.locator('#form-ok')).toContainText('Borrador listo');
   await page.screenshot({path:'review-reports/contact-clean-390.png'});
   await page.evaluate(()=>scrollTo(0,document.body.scrollHeight));
-  await expect(page.locator('#foot-word')).toHaveText('Pablo');
+  await expect(page.locator('#foot-word')).toHaveText('Schefer');
   await expect(page.locator('.foot-grid .foot-col')).toHaveCount(2);
   await page.screenshot({path:'review-reports/footer-clean-390.png'});
 });

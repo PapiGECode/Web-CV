@@ -521,11 +521,12 @@
                   },
                   {
                     x: function (i) {
-                      return (i - (fs.chars.length - 1) / 2) * 16;
+                      return (i - (fs.chars.length - 1) / 2) * Math.min(16, fw.clientWidth * 0.018);
                     },
                     ease: "none",
                     scrollTrigger: {
                       trigger: "footer",
+                      invalidateOnRefresh: true,
                       start: "top bottom",
                       end: "bottom bottom",
                       scrub: 0.8,
