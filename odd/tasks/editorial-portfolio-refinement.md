@@ -57,7 +57,7 @@ Capabilities become readable numbered editorial rows with concrete evidence rath
 - Real browser screenshots inspected; mocked external tests reported separately from real public-site checks.
 
 ## Progress / next step
-T1–T17 completed and independently verified locally; publication remains unauthorized. Preserve all valid completed work. Final follow-up memory synchronization is pending runtime session registration.
+T1–T17 completed and independently verified locally; publication was subsequently authorized on 2026-10-07 within the release scope below. Preserve all valid completed work. Final follow-up memory synchronization is pending runtime session registration.
 
 ### T1 evidence and review slice
 - Complete `.btn`/`.f-submit` surfaces and labels move together, bounded to 5px horizontally and 3px vertically with a transform-corrected baseline. Native press kills the tween without resetting position; release/cancel resets only after native activation has completed. No pointer capture or synthetic click. Keyboard, touch and live reduced-motion changes remain stable.
@@ -227,3 +227,42 @@ Checks: npm run check; npm test; npm run build; focused Playwright for catalog/c
 - Five deferred rounded desktop views and persistent fallbacks, retained bot/case art/mobile phones, resize context retention, native frame/modal Back/Forward/focus/teardown, query-loss recursion and analytics guards passed. All four widths/both themes/no-JS/accessibility/button regressions passed. Independent verifier inspected ten writer real-site screenshots at390/1440; actual external availability remains time-specific, automated external content uses fixtures. BFCache proof remains synthetic persisted lifecycle events, not actual browser cache admission.
 - Parent checked renderer/controller/CSS/CSP/disclosure diffs and real KiCorddesktop/portfolio-mobile captures; npm run check and diff-check passed. Writer build10pages33assets passed; independent install/audit/build not repeated because dependencies unchanged. No observed source defects. RDDoff/unmanaged; no native review or remote delivery.
 - Complete local result at http://localhost:3103/#work; old3102 retains startup CSP and must not be used for this change. Owned3103 session94228 remains running. Next step user review; publishing requires explicit authorization. Final Engram mirror/session summary still pending host identity registration; no agent-attributed memory tools used. Rollback this documentation-only unit without changing site behavior.
+
+## Authorized release — 2026-10-07
+- User explicitly requested publication and authorized configured GitHub/Vercel sessions for PapiGECode/Web-CV and the existing web-cv project prj_oYpw2qDCbqJwjYeT6Vq6zOCOqM78 under team_4Ovahf5yk3wGCdbGCczVEJd7. Keep master and both existing pabloschefer.com domains. This supersedes earlier local-only delivery limits; no other repository/project/domain is authorized.
+- [x] T18 — Release preflight: refresh master, inspect authorized connections/CI, rerun npm ci, npm audit --audit-level=high, npm test, npm run build and npm run test:e2e sequentially. Make one honest feature-branch-chain slicing pass with exact authored line counts and report any necessary size exception. Delegated direct; bounded preparation permits read-only authenticated operations and local tracking edits only, no remote mutations yet.
+- [ ] T19 — After parent release routing, create the authorized tracker/child PR chain, wait for applicable CI, inspect the existing project's preview, integrate and merge to master only if checks pass. No force push, safety disabling, new project or alternate domain.
+- [ ] T20 — Wait for existing project production READY; verify www.pabloschefer.com serves the exact merged commit, check responsive behavior and relevant errors. Report publication only with observed domain/revision/deployment proof.
+- Baseline ebf5355; explicit URL fetch confirms current master f8b06ae unchanged. Local repository has no configured remote; origin fetch therefore failed, then the explicit authorized GitHub URL fetch succeeded without adding/changing remotes. GitHub MCP/CLI identity PapiGECode, repository permission ADMIN. Vercel MCP confirms exact project/team, both domains and Node24.x; previews have SSO protection. No credentials were printed or modified.
+- RDD remains off. Preserve .atl and local source state; no reset/rebase during preflight. Runtime memory identity remains unavailable: no memory writes/session registration; retain full local checkpoint pending synchronization.
+
+### T18 — Release preflight and one-pass chain plan
+- Read current README/package/vercel, static catalog/build architecture and test/CI configuration. Node24.19.0 matches engine24.x. Required commands ran sequentially: npm ci passed (17 packages added, 18 audited); npm audit --audit-level=high passed (0 vulnerabilities); npm test13/13; npm run build passed (including npm run check, 10 pages/33 assets); npm run test:e2e168/168 in2.0m with no failures/skips. Logs: review-reports/release-ci.log, release-audit.log, release-unit.log, release-build.log and release-e2e.log. npm emitted unapproved install-script notices for agent-browser/esbuild; no approvals or configuration changed, and build/browser verification still passed.
+- GitHub authenticated identity PapiGECode has ADMIN access; master is not protected, no open PRs returned. Read-only explicit-URL fetch confirmed f8b06ae. Vercel authenticated MCP confirms production deployment dpl_BuVvC2ptxrtXYSkP4QS9MZRkUdD3 READY, git source PapiGECode/Web-CV/master at f8b06ae, assigned to the two intended domains. This is the previous production commit, not a claim that the new work is published.
+- One honest slicing pass below preserves existing contiguous work units and their tests/docs. Counts are exact net additions+deletions between listed commit boundaries (binary assets listed separately), not the sum of intermediate churn. At baseline ebf5355, aggregate master diff is2183 additions+989 deletions=3172 lines across56 files. The18 review slices total3416 lines because later refinements replace earlier code. No individual cohesive slice exceeds400; no source-code size exception is required for this plan. Release tracking adds documentation to the final slice and will be counted again at its actual branch head.
+
+| Slice | Prior boundary → head | Authored +/- | Outcome |
+| --- | --- | ---: | --- |
+| 01 | f8b06ae → 180c3ec | 131 | Phone island safe area |
+| 02 | 180c3ec → 02d0b23 | 331 | Stable full-button and marquee motion |
+| 03 | 02d0b23 → 34ad7c9 | 329 | KiCord catalog foundation |
+| 04 | 34ad7c9 → 9631d51 | 389 | Portfolio and KernelOS catalog cases |
+| 05 | 9631d51 → 6677224 | 366 | Catalog runtime and modal motion integration |
+| 06 | 6677224 → 90d05f7 | 361 | Verified entries and secondary live demos; two binary assets |
+| 07 | 90d05f7 → 301c9cd | 253 | Editorial index and disclosure focus correction |
+| 08 | 301c9cd → 75bc1a6 | 174 | Evidence and community membership rows |
+| 09 | 75bc1a6 → 8f388d1 | 103 | Contained portrait depth |
+| 10 | 8f388d1 → 4cfd63d | 108 | Stable contact feedback |
+| 11 | 4cfd63d → 097fcf5 | 93 | Measurement utilities |
+| 12 | 097fcf5 → 2966b6c | 43 | Visible artwork outline and verified close |
+| 13 | 2966b6c → adeacae | 67 | Showcase curation and rounded artwork |
+| 14 | adeacae → 181a2ce | 100 | Official local community avatars; six binary assets |
+| 15 | 181a2ce → 749d536 | 115 | Decorative glow exit |
+| 16 | 749d536 → 298fe54 | 57 | Native PNG logos |
+| 17 | 298fe54 → 3a45816 | 82 | Animated surname footer |
+| 18 | 3a45816 → ebf5355 | 314 | Live landscape showcase and isolation |
+
+- Proposed topology: master ← draft/no-merge tracker codex/editorial-release ← child01 ← child02 … ← child18; each child targets its immediate parent, and only the final tracker integrates into master. The completed local feature branch is the immutable source checkpoint, not the initial tracker base (using it as that base would produce empty/reversed child diffs). Bootstrap the tracker from master with a small delivery-plan-only seed, then replay unchanged work-unit commits onto the chain; verify the final source tree against this checkpoint. No branches, PRs, rebase or remote writes were performed during this preparation.
+- CI caveat: Portfolio quality currently triggers pull_request only for master, not child bases. The existing workflow_dispatch supports explicitly running each child ref without weakening CI or changing its filters. Every slice needs its own CI result; this preflight proves the final integrated tree only, not every historical intermediate branch. Expect18 child CI runs and associated Vercel previews plus the tracker check. Merge children in order with bases retargeted to the accumulating tracker as needed; preserve ancestry/no force push.
+- Preview protection is SSO for all except custom domains. Use the authorized Vercel protected-preview tooling/session for testing; do not disable protection. Confirm each deployment project/team/commit before inspection. No secret values, unrelated projects or domains were read or changed.
+- Next gate: parent routes T19 with this18-slice plan (or obtains an explicit maintainer size exception if changing to an oversized single release PR). T19/T20 remain unchecked. RDDoff/unmanaged, .atl untouched; memory mirror remains pending runtime registration. Local preflight-document rollback does not change site source behavior.
