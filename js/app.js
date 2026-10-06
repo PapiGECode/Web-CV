@@ -58,50 +58,7 @@
         };
 
         // Keep the native cursor; motion is enhancement, not navigation.
-        /* Move the entire button, but never between native pointerdown and click. */
         var motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
-        if (hasGSAP) {
-          document.querySelectorAll('.btn, .f-submit').forEach(function (el) {
-            var pressed = null, releaseTimer;
-            function reset() {
-              if (pressed !== null) return;
-              gsap.killTweensOf(el, 'x,y');
-              gsap.set(el, { x: 0, y: 0 });
-            }
-            el.addEventListener('pointermove', function (e) {
-              if (pressed !== null) return;
-              if (e.pointerType !== 'mouse' || e.buttons || el.disabled ||
-                  document.activeElement === el || motionPreference.matches || !FINE) {
-                reset(); return;
-              }
-              // Subtract our transform: the attraction never feeds back into its baseline.
-              var r = el.getBoundingClientRect();
-              var x = Number(gsap.getProperty(el, 'x')), y = Number(gsap.getProperty(el, 'y'));
-              gsap.to(el, {
-                x: Math.max(-5, Math.min(5, (e.clientX - r.left + x - r.width / 2) * .12)),
-                y: Math.max(-3, Math.min(3, (e.clientY - r.top + y - r.height / 2) * .12)),
-                duration: .25, ease: 'power3.out', overwrite: 'auto',
-              });
-            }, { passive: true });
-            el.addEventListener('pointerdown', function (e) {
-              clearTimeout(releaseTimer);
-              pressed = e.pointerId;
-              gsap.killTweensOf(el, 'x,y');
-            });
-            function release(e) {
-              if (e.pointerId !== pressed) return;
-              // Native click follows pointerup in the same task. Do not move its target first.
-              releaseTimer = setTimeout(function () { pressed = null; reset(); }, 0);
-            }
-            addEventListener('pointerup', release, true);
-            addEventListener('pointercancel', release, true);
-            addEventListener('blur', function () { pressed = null; reset(); });
-            ['pointerleave', 'focus', 'keydown'].forEach(function (event) {
-              el.addEventListener(event, reset);
-            });
-            motionPreference.addEventListener('change', reset);
-          });
-        }
 
         /* One continuous timeline: ease speed, never restart the marquee phase. */
         var marquee = document.querySelector('.marquee');
@@ -810,12 +767,14 @@
           csTopNum.textContent = data.number;
           csTopName.textContent = data.title;
           if (window.ProjectPhones) window.ProjectPhones.destroy(csContent);
+          if (window.ButtonMotion) window.ButtonMotion.destroy(csContent);
           csContent.replaceChildren(data.template.content.cloneNode(true));
           csScroller.scrollTop = 0;
           csModal.inert = false;
           csModal.classList.add('cs-open');
           csModal.setAttribute('aria-hidden', 'false');
           if (window.ProjectPhones) window.ProjectPhones.mount(csContent);
+          if (window.ButtonMotion) window.ButtonMotion.mount(csContent);
           setCaseBackground(true);
           if (lenis) lenis.stop();
           csBtnClose.focus({ preventScroll: true });
@@ -842,6 +801,7 @@
             return;
           }
           if (window.ProjectPhones) window.ProjectPhones.destroy(csContent);
+          if (window.ButtonMotion) window.ButtonMotion.destroy(csContent);
           csModal.classList.remove('cs-open');
           csModal.setAttribute('aria-hidden', 'true');
           setCaseBackground(false);
