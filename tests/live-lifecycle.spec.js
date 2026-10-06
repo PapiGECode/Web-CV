@@ -58,6 +58,9 @@ test('modal disclosure participates in forward and reverse keyboard order',async
   await page.keyboard.press('Tab');await expect(summary).toBeFocused();
   await page.keyboard.press('Enter');
   await expect(modal.locator('iframe')).toHaveCount(1);
+  // Initial about:blank navigation can reset native focus; test the loaded document.
+  const embedded = await (await modal.locator('iframe').elementHandle()).contentFrame();
+  await expect(embedded.locator('#remote-navigation')).toBeVisible();
   await page.keyboard.press('Tab');
   await expect.poll(()=>page.evaluate(()=>document.activeElement?.tagName)).toBe('IFRAME');
   await summary.focus();await page.keyboard.press('Shift+Tab');await expect(previous).toBeFocused();
