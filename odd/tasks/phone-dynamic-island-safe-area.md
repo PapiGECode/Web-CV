@@ -17,7 +17,7 @@ The iframe begins at the full display top, behind the island. Reserve a proporti
 - Engram mirror pending: detected project is rejected as unknown/unbacked; local progress remains authoritative until sync can succeed.
 
 ## Tasks
-- [ ] T1 — Implement proportional phone safe viewport and verify it. Route: delegated direct (three non-trivial source files plus regression tests/docs; mandatory writer/preparation triggers). Preserve island and original asset, remove redundant portfolio-only header offset, update legitimate edge geometry expectations, add responsive regression coverage. Commit source/tests/docs as one conventional work unit after checks.
+- [x] T1 — Implement proportional phone safe viewport and verify it. Route: delegated direct (three non-trivial source files plus regression tests/docs; mandatory writer/preparation triggers). Preserve island and original asset, remove redundant portfolio-only header offset, update legitimate edge geometry expectations, add responsive regression coverage. Commit source/tests/docs as one conventional work unit after checks.
 
 ## Acceptance and checks
 - Headers start below island, with small visual clearance; original bezel unchanged and island visible.
@@ -38,7 +38,7 @@ The iframe begins at the full display top, behind the island. Reserve a proporti
 - `npm run check`: passed. `npm test`: 12/12 passed. `npm run build`: passed (6 pages, 19 versioned assets); final build rerun after whitespace normalization also passed.
 - `npx playwright test tests/live-websites.spec.js tests/live-lifecycle.spec.js tests/phones.spec.js`: 32/32 passed (26.0s). `npm run test:e2e`: 70/70 passed (47.9s). `git diff --check`: passed.
 - Local preview on port 3101 verified with agent-browser: meaningful page content, expected navigation/actions and no reported page errors. Real unmocked KiCord, portfolio and KernelOS rendered at 390 and 1440; titles/body checked, no captured page errors. Evidence: ignored `review-reports/real-sites-report.json` and `review-reports/real-{kicord,portfolio,kernelos}-{390,1440}.png`. Inspected KiCord 390, portfolio 390 and KernelOS 1440 screenshots: island preserved, headers clearly below, remaining display filled.
-- No commit or remote operation performed. T1 remains unchecked pending parent structural/independent verification, spot check and work-unit commit. Engram mirror remains pending as previously documented.
+- T1 completed in e41ae5738a1039e0cee45b569529694bfcba1d04 (fix(phones): keep website headers below dynamic island). Parent structural readback, real screenshots, npm run check and git diff --check passed. Independent verifier reran focused tests: 32/32 passed (23.4s); all three no-JS/phone-preview fallback links visible and at least 44px at 320px, no nested frames; original bezel byte-identical to HEAD. Native risk assessment unavailable because untracked inventory requires declaration; treated as high/unassessable and obtained independent functional verification. RDD remains off; no native review initiated. Authored implementation including initial task document: 131 lines added plus removed. No push, PR, merge or deployment. Next: user review of local preview; remote delivery only when authorized. Engram mirror pending.
 
 ## Rollback
 Revert safe-area CSS, viewport renderer/fit changes and matching tests/docs as one unit. No external state changes.
