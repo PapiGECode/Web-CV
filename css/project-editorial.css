@@ -27,14 +27,17 @@
 .project-art-thiagoiutu em { font-style: normal; -webkit-text-stroke: 1px #151916; color: transparent; }
 .project-art-robleis { background: linear-gradient(130deg, #462523, #b85040 55%, #a69179); }
 .project-art-robleis > img { width: 90%; }
-.project-art-thiago-community { background: #081a2c; }
+.project-art-thiago-community { background: #0b141d; }
 .project-art > .project-art-cover { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.project-art-thiago-community .project-art-note { background: #081a2c; width: fit-content; max-width: calc(100% - 4rem); padding: .5rem .8rem; }
+.pp-hero > .project-art.project-art-thiago-community { aspect-ratio: 1.6; }
+.project-art-thiago-community .project-art-note { background: #0b141d; width: fit-content; max-width: calc(100% - 4rem); padding: .5rem .8rem; }
 .project-art-papigegamer-web { background: #1e2534; }
 .project-art-papigegamer-web > img { border-radius: 50%; width: 27%; }
 .pp-hero { display: block; padding-bottom: 0; border: 0; }
 .pp-hero > div:first-child { max-width: 850px; }
 .pp-hero .pp-title { font-size: clamp(2.6rem, 8vw, 7rem); }
+.pp-hero .pp-title-domain { font-size: clamp(1.9rem, 5vw, 4.5rem); line-height: 1.05; }
+.pp-title-domain > span, .panel-title-domain a > span { display: inline-block; white-space: nowrap; }
 .pp-hero .project-art { margin-top: 3rem; aspect-ratio: 2.6; }
 .pp-hero .project-art strong { font-size: clamp(2.6rem, 6vw, 6rem); }
 .pp-hero .project-art > img:not(.project-art-cover) { max-height: 180px; }
@@ -51,6 +54,9 @@
   .project-art strong span { font-size: .5rem; margin-top: 1rem; }
   .project-art-thiagoiutu strong, .project-art-portfolio strong { font-size: 3.5rem; }
   .pp-hero .project-art { aspect-ratio: 4 / 3; margin-top: 2rem; }
+  .pp-hero .project-art-papigegamer-web { flex-direction: column; text-align: center; }
+  .pp-hero .project-art-papigegamer-web strong { font-size: clamp(1.9rem, 6vw, 2.6rem); }
+  .pp-hero .project-art-papigegamer-web > img { width: 27%; max-height: 100px; }
   .project-art-note { left: 1.2rem; right: 1.2rem; bottom: 1.2rem; font-size: .5rem; }
 }
 /* A project-led index: open composition, clear roles, no moving card containers. */
@@ -110,3 +116,10 @@
 .landscape-external:hover { color: var(--bone); }
 .work-entry:nth-child(even) .live-landscape-presentation { order: -1; }
 @media (max-width: 900px) { .work-entry:nth-child(even) .live-landscape-presentation { order: 0; } }
+
+/* Widen live websites without increasing their desktop height or changing artwork. */
+@media (min-width: 901px) {
+  .work-layout-live { grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: clamp(2rem, 4vw, 4rem); }
+  .work-entry:nth-child(even) .work-layout-live { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); }
+  .project-index .work-layout-live .project-art { aspect-ratio: 1.5; }
+}

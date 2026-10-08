@@ -9,7 +9,7 @@ export const projects = [
     approach: 'Desarrollar y mantener opciones de personalización, integración de plugins y mejoras de interfaz. KiCord no es un producto oficial de Discord.',
     tags: ['Discord', 'Personalización', 'Plugins', 'UX'],
     links: [{ label: 'Visitar KiCord', url: 'https://www.kicord.es/es' }],
-    phone: 'kicord', next: 'portfolio',
+    phone: 'kicord',
     details: [
       { title: 'Cliente', text: 'Desarrollo y personalización de un cliente modificado de Discord de código cerrado.' },
       { title: 'Web', text: 'Desarrollo de la presencia web del proyecto; el sitio público utiliza Next.js.' },
@@ -25,7 +25,7 @@ export const projects = [
     approach: 'Una identidad editorial con mejora progresiva: contenido accesible sin JavaScript, imágenes adaptables y estados de contacto que distinguen un borrador de un envío aceptado.',
     tags: ['HTML', 'CSS', 'JavaScript', 'GSAP', 'Vercel'],
     links: [{ label: 'Ver código de la web', url: 'https://github.com/PapiGECode/Web-CV' }],
-    phone: 'portfolio', next: 'kernelos',
+    phone: 'portfolio',
     details: [
       { title: 'Contenido indexable', text: 'Páginas estáticas de proyecto y navegación útil sin depender de una aplicación React.' },
       { title: 'Accesibilidad y movimiento', text: 'Pruebas de teclado, temas, tamaños de pantalla y preferencias de movimiento.' },
@@ -41,7 +41,7 @@ export const projects = [
     approach: 'Ayudar con incidencias, orientar a usuarios y trasladar problemas recurrentes. Esta labor de soporte es distinta de la autoría y del desarrollo de la ISO.',
     tags: ['Windows', 'Diagnóstico', 'Soporte', 'Comunidad'],
     links: [{ label: 'Visitar KernelOS', url: 'https://kernelos.org/' }],
-    phone: 'kernelos', next: 'kicord',
+    phone: 'kernelos',
     details: [
       { title: 'Diagnóstico', text: 'Orientación sobre configuración, controladores y compatibilidad.' },
       { title: 'Comunidad', text: 'Ayuda a usuarios y organización de consultas técnicas.' },
@@ -57,7 +57,6 @@ export const projects = [
     approach: 'Mi participación está en el desarrollo de la web. El trabajo se presenta como proyecto web, diferenciándolo del bot de la comunidad.',
     tags: ['Web', 'Creador', 'Comunidad'],
     links: [{ label: 'Visitar ThiagoIUTU', url: 'https://thiagoiutu.com/' }],
-    next: 'thiago-community',
     details: [
       { title: 'Identidad del creador', text: 'Un espacio propio dedicado al universo de ThiagoIUTU.' },
       { title: 'Archivo y presente', text: 'Contenido y comunidad como punto de encuentro de la web.' },
@@ -80,7 +79,7 @@ export const projects = [
     role: 'Desarrollo del bot',
     overview: 'Thiago Community es un proyecto de bot para la comunidad de ThiagoIUTU. Se presenta como un trabajo independiente de su web.',
     approach: 'Mi participación se centra en el desarrollo de este bot y su contexto comunitario.',
-    tags: ['Bot', 'Comunidad'], links: [], next: 'papigegamer-web',
+    tags: ['Bot', 'Comunidad'], links: [],
     details: [{ title: 'Proyecto independiente', text: 'La web de ThiagoIUTU y el bot de su comunidad son trabajos diferentes dentro del mismo entorno.' }],
   },
   {
@@ -92,7 +91,6 @@ export const projects = [
     approach: 'Separar el espacio de exploración personal de la presentación profesional, manteniendo una identidad propia para cada proyecto.',
     tags: ['Next.js', 'Software', 'Experimentación'],
     links: [{ label: 'Visitar PapiGEGamer.com', url: 'https://papigegamer.com/' }],
-    next: 'kicord',
     details: [
       { title: 'Laboratorio', text: 'Un espacio personal de proyectos de software y experimentación.' },
       { title: 'Web independiente', text: 'Su sitio público utiliza Next.js; no es la implementación de PabloSchefer.com.' },
@@ -103,3 +101,10 @@ export const projects = [
 // Keep archived canonical pages while curating the visible project selection.
 export const showcaseProjects = projects.filter(project => project.showcase !== false)
   .map((project, index) => ({ ...project, number: String(index + 1).padStart(2, '0') }));
+
+export function getNextProject(project) {
+  const index = showcaseProjects.findIndex(candidate => candidate.slug === project.slug);
+  if (index >= 0) return showcaseProjects[(index + 1) % showcaseProjects.length];
+  // Archived cases retain an intentional exit into the current selection.
+  return showcaseProjects.find(candidate => candidate.slug === project.next) || showcaseProjects[0];
+}
