@@ -1,7 +1,12 @@
-import { projects, showcaseProjects } from '../content/projects.mjs';
+import { projects, showcaseProjects, getNextProject } from '../content/projects.mjs';
 import { renderProjectPhone, renderProjectLandscape } from './project-phones.mjs';
 export { projects };
 export const escapeHTML = value => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
+
+function renderProjectTitle(project) {
+  const title = escapeHTML(project.title);
+  return project.slug === 'portfolio' ? title.replace(/^(.*)(\.com)$/i, '<span>$1</span><wbr><span>$2</span>') : title;
+}
 
 export function renderProjectIdentity(project, sizes = '(max-width: 680px) 90vw, 1100px') {
   const art = {
@@ -22,10 +27,12 @@ export function renderProjectBody(project, modal = false) {
   const details = project.details.map(detail => `<article class="pp-card"><h3>${e(detail.title)}</h3><p>${e(detail.text)}</p></article>`).join('');
   const phone = project.phone ? renderProjectPhone(project.phone, `${modal ? 'modal' : 'page'}-${project.slug}`) : '';
   const prefix = modal ? 'case-' : '';
+  const title = renderProjectTitle(project);
+  const nextProject = getNextProject(project);
   return `<header class="pp-hero cs-hero">
     <div>
       <p class="pp-kicker">${e(project.category)}</p>
-      <h1 class="pp-title cs-title long">${e(project.title)}</h1>
+      <h1 class="pp-title cs-title long${project.slug === 'portfolio' ? ' pp-title-domain' : ''}">${title}</h1>
       <p class="pp-tagline">${e(project.summary)}</p>
       <div class="pp-status">${e(project.status)}</div>
       <div class="pp-actions">${links}<a class="btn btn-ghost" href="${modal ? '/projects/' + project.slug : '/#work'}"><span class="btn-t">${modal ? 'URL permanente' : 'Volver a proyectos'}</span></a></div>
@@ -37,7 +44,7 @@ export function renderProjectBody(project, modal = false) {
   <section id="${prefix}approach" class="pp-section"><p class="pp-label">Mi participación</p><h2>${e(project.role)}</h2><p class="pp-copy">${e(project.approach)}</p></section>
   <section id="${prefix}implementation" class="pp-section"><p class="pp-label">Detalles</p><h2>Trabajo y enfoque.</h2><div class="pp-grid">${details}</div><div class="pp-stack">${project.tags.map(tag => `<span>${e(tag)}</span>`).join('')}</div></section>
   ${phone ? `<details class="project-demo"><summary>Explorar la web real <span>Vista móvil ↗</span></summary><div class="pp-visual">${phone}</div></details>` : ''}
-  <a class="pp-next" href="/projects/${e(project.next)}"><span>Continuar explorando</span><strong>Siguiente proyecto ↗</strong></a>`;
+  <a class="pp-next" href="/projects/${e(nextProject.slug)}"><span>Siguiente proyecto</span><strong>${e(nextProject.title)} ↗</strong></a>`;
 }
 
 export function renderProjectPage(template, project) {
@@ -51,19 +58,22 @@ export function renderCaseTemplates() {
 
 export function renderProjectIndex() {
   const e = escapeHTML;
-  return `<div class="stack project-index">${showcaseProjects.map(project => `
+  return `<div class="stack project-index">${showcaseProjects.map(project => {
+    const landscape = renderProjectLandscape(project.slug);
+    return `
     <article class="panel work-entry" aria-labelledby="work-${project.slug}">
-      <div class="shell work-layout">
+      <div class="shell work-layout${landscape ? ' work-layout-live' : ''}">
         <div class="panel-info">
           <p class="panel-num">${project.number} / ${e(project.category)}</p>
-          <h3 class="panel-title" id="work-${project.slug}"><a href="/projects/${project.slug}" data-open-case="${project.id}">${e(project.title)}</a></h3>
+          <h3 class="panel-title${project.slug === 'portfolio' ? ' panel-title-domain' : ''}" id="work-${project.slug}"><a href="/projects/${project.slug}" data-open-case="${project.id}">${renderProjectTitle(project)}</a></h3>
           <p class="work-role">${e(project.role)}</p>
           <p class="panel-desc">${e(project.summary)}</p>
           <p class="work-status">${e(project.status)}</p>
           <div class="panel-tags">${project.tags.map(tag => `<span class="panel-tag">${e(tag)}</span>`).join('')}</div>
           <div class="panel-links"><a class="btn btn-solid" href="/projects/${project.slug}" data-open-case="${project.id}"><span class="btn-t">Explorar proyecto ↗</span></a></div>
         </div>
-        ${renderProjectLandscape(project.slug) || renderProjectIdentity(project, '(max-width: 900px) 90vw, 45vw')}
+        ${landscape || renderProjectIdentity(project, '(max-width: 900px) 90vw, 45vw')}
       </div>
-    </article>`).join('')}</div>`;
+    </article>`;
+  }).join('')}</div>`;
 }

@@ -84,7 +84,7 @@ html.light #form-ok[data-error] .ok-t { color:#982820; }
 .preferences-dialog p { color:var(--ash); font-size:.9rem; line-height:1.7; }
 .dialog-close { position:absolute; top:.5rem; right:.5rem; width:44px; height:44px; background:none; color:var(--bone); border:0; font-size:1.8rem; }
 .preference-option { display:flex; align-items:center; gap:.75rem; padding:1.1rem 0; font-size:.95rem; }
-.preference-option input { width:20px; height:20px; accent-color:var(--bone); }
+.preference-option input { flex:0 0 20px; width:20px; height:20px; accent-color:var(--bone); }
 .preferences-dialog .preference-note { font-size:.8rem; margin:0 0 1.5rem; }
 .ui-toast { position:fixed; z-index:100000; bottom:1.5rem; left:50%; transform:translate(-50%,16px); opacity:0; pointer-events:none; background:var(--bone); color:var(--ink); padding:.85rem 1.2rem; border-radius:12px; width:max-content; max-width:calc(100vw - 2rem); font-size:.9rem; transition:opacity .2s,transform .2s; }
 .ui-toast.show { opacity:1; transform:translate(-50%,0); }
