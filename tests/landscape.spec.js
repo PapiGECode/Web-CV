@@ -62,3 +62,63 @@ test('without JavaScript the five views remain inert with permanent external lin
     }
   } finally { await context.close(); }
 });
+
+for (const theme of ['dark', 'light']) {
+  test(`live previews gain desktop width without changing mobile or bot artwork in ${theme}`, async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce', colorScheme: theme });
+    await page.goto('/');
+    await page.waitForFunction(() => window.__portfolioReady);
+    await page.evaluate(() => document.fonts.ready);
+    for (const width of [320, 390, 768, 899, 900, 901, 1024, 1440]) {
+      await page.setViewportSize({ width, height: 960 });
+      const geometry = await page.locator('.work-entry').evaluateAll(rows => rows.map(row => {
+        const art = row.querySelector('.project-art');
+        const layout = row.querySelector('.work-layout');
+        const info = row.querySelector('.panel-info');
+        const box = element => {
+          const { x, y, width, height } = element.getBoundingClientRect();
+          return { x, y, width, height };
+        };
+        const style = getComputedStyle(layout);
+        return {
+          live: Boolean(art.dataset.liveLandscape), art: box(art), info: box(info),
+          innerWidth: layout.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight),
+          textFits: info.scrollWidth <= info.clientWidth + 1,
+          radius: parseFloat(getComputedStyle(art).borderTopLeftRadius),
+        };
+      }));
+      expect(geometry.filter(row => row.live)).toHaveLength(5);
+      for (const [index, row] of geometry.entries()) {
+        expect(row.textFits).toBe(true);
+        expect(row.radius).toBeGreaterThanOrEqual(16);
+        if (width <= 900) {
+          expect(row.art.width).toBeCloseTo(row.innerWidth, 0);
+          expect(row.art.y).toBeGreaterThanOrEqual(row.info.y + row.info.height);
+        } else {
+          expect(row.art.width / row.info.width).toBeCloseTo(row.live ? 1.3 : 1.1, 2);
+          expect(row.info.width).toBeGreaterThan(300);
+          expect(row.art.x < row.info.x).toBe(index % 2 === 1);
+        }
+        if (width === 1440) {
+          // The previous 558.19px displays grow horizontally, not into taller panels.
+          if (row.live) {
+            expect(row.art.width).toBeGreaterThan(558.19 * 1.1);
+            expect(row.art.height).toBeGreaterThan(400);
+            expect(row.art.height).toBeLessThan(420);
+          } else {
+            expect(row.art.width).toBeCloseTo(558.19, 1);
+            expect(row.art.height).toBeCloseTo(413.47, 1);
+          }
+        }
+      }
+      const title = page.locator('#work-portfolio');
+      await expect(title).toHaveText('PabloSchefer.com');
+      await expect(title.locator('a > span')).toHaveText(['PabloSchefer', '.com']);
+      expect(await title.evaluate(el => [...el.querySelectorAll('span')].every(span => {
+        const text = span.getBoundingClientRect(), heading = el.getBoundingClientRect();
+        return text.left >= heading.left - 1 && text.right <= heading.right + 1;
+      }))).toBe(true);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    }
+  });
+}
