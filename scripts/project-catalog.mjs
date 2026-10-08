@@ -3,14 +3,14 @@ import { renderProjectPhone, renderProjectLandscape } from './project-phones.mjs
 export { projects };
 export const escapeHTML = value => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
 
-export function renderProjectIdentity(project) {
+export function renderProjectIdentity(project, sizes = '(max-width: 680px) 90vw, 1100px') {
   const art = {
     kicord: '<img src="/assets/kicord-mark.webp" width="512" height="512" alt="" loading="lazy"><strong>KiCord<span>YOUR DISCORD. REFINED.</span></strong>',
     portfolio: '<strong>PABLO<br>SCHEFER<span>DESIGN / CODE / CARE</span></strong>',
     kernelos: '<img src="/assets/kernelos-logo.webp" width="160" height="160" alt="" loading="lazy"><strong>KernelOS<span>WINDOWS / GAMING / COMMUNITY</span></strong>',
     thiagoiutu: '<strong>THIAGO<br><em>IUTU.</em><span>ARCHIVO · PRESENTE · COMUNIDAD</span></strong>',
     robleis: '<img src="/assets/robleis-wordmark.svg" width="1511" height="143" alt="" loading="lazy"><span class="project-art-note">UN UNIVERSO / UN PROYECTO WEB</span>',
-    'thiago-community': '<img class="project-art-cover" src="/assets/thiago-community-banner.webp" width="1670" height="942" alt="" loading="lazy"><span class="project-art-note">THIAGO COMMUNITY / BOT</span>',
+    'thiago-community': `<img class="project-art-cover" src="/assets/thiago-community-sketch-960.webp" srcset="/assets/thiago-community-sketch-640.webp 640w, /assets/thiago-community-sketch-960.webp 960w, /assets/thiago-community-sketch-1280.webp 1280w" sizes="${escapeHTML(sizes)}" width="1586" height="992" alt="" loading="lazy" decoding="async"><span class="project-art-note">THIAGO COMMUNITY / BOT</span>`,
     'papigegamer-web': '<img src="/assets/papige-logo.webp" width="360" height="360" alt="" loading="lazy"><strong>PapiGECode<span>SOFTWARE & EXPERIMENTS</span></strong>',
   };
   return `<div class="project-art project-art-${project.slug}" aria-hidden="true">${art[project.slug] || escapeHTML(project.title)}</div>`;
@@ -63,7 +63,7 @@ export function renderProjectIndex() {
           <div class="panel-tags">${project.tags.map(tag => `<span class="panel-tag">${e(tag)}</span>`).join('')}</div>
           <div class="panel-links"><a class="btn btn-solid" href="/projects/${project.slug}" data-open-case="${project.id}"><span class="btn-t">Explorar proyecto ↗</span></a></div>
         </div>
-        ${renderProjectLandscape(project.slug) || renderProjectIdentity(project)}
+        ${renderProjectLandscape(project.slug) || renderProjectIdentity(project, '(max-width: 900px) 90vw, 45vw')}
       </div>
     </article>`).join('')}</div>`;
 }

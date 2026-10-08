@@ -64,9 +64,14 @@ for (const [base, source, width] of [['pablo-casual', 'pablo-casual.png', 1024],
 }
 await fs.copyFile(input('assets/iphone18-pro-max-bezel.png'), output('assets/iphone18-pro-max-bezel.png'));
 for (const name of ['kicord-logo', 'kernelos-logo']) await webp(name + '.png', name + '.webp', 160, 90);
-for (const [source, width] of [['kicord-mark', 512], ['papige-logo', 360], ['thiago-community-banner', 1280]]) {
+for (const [source, width] of [['kicord-mark', 512], ['papige-logo', 360]]) {
   const bytes = await sharp(input('assets', source + '.png')).resize({ width, withoutEnlargement: true }).webp({ quality: 86 }).toBuffer();
   await hashedFile('assets/' + source + '.webp', bytes);
+}
+// Preserve the full conceptual source; browsers select a local, versioned size.
+for (const width of [640, 960, 1280]) {
+  const bytes = await sharp(input('assets/thiago-community-sketch.png')).resize({ width }).webp({ quality: 86 }).toBuffer();
+  await hashedFile(`assets/thiago-community-sketch-${width}.webp`, bytes);
 }
 // Official public organization avatars, served locally rather than through GitHub.
 const communityLogos = JSON.parse(await fs.readFile(input('content/community-logos.json'), 'utf8'));
@@ -99,6 +104,10 @@ for (const file of pages) {
   html = html.replace(/<p class="phone-caption">[^<]*<\/p>/g, '');
   html = html.replace(/(href|src)="((?:css|js|assets)\/[^\"]+)"/g, '$1="/$2"');
   for (const [before, after] of replacements) html = html.split(`"${before}"`).join(`"${after}"`);
+  html = html.replace(/srcset="([^"]+)"/g, (_, candidates) => `srcset="${candidates.split(',').map(candidate => {
+    const [url, descriptor] = candidate.trim().split(/\s+/);
+    return [replacements.get(url) || url, descriptor].filter(Boolean).join(' ');
+  }).join(', ')}"`);
   html = html.replace('</head>', `<meta name="build-revision" content="${revision.replace(/[^a-zA-Z0-9_-]/g, '')}"><link rel="preload" href="${displayFont}" as="font" type="font/woff2" crossorigin></head>`);
   const assets = new Set();
   for (const match of html.matchAll(/(?:src|href)="(\/(?:assets|css|js)\/[^"?#]+)(?:[?#][^"]*)?"/g)) assets.add(match[1]);
