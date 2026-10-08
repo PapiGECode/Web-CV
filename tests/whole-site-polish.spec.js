@@ -70,3 +70,51 @@ for (const theme of ['dark', 'light']) test(`compact case compositions work with
   }
   await context.close();
 });
+
+async function assertContactHeading(page, width) {
+  const heading = page.locator('#contact-head');
+  await page.evaluate(() => document.fonts.ready);
+  await heading.scrollIntoViewIfNeeded();
+  await expect(heading).toHaveText('Construyamos algo útil.');
+  const geometry = await heading.evaluate(element => {
+    const bounds = element.getBoundingClientRect();
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+    const fragments = [];
+    while (walker.nextNode()) {
+      if (!walker.currentNode.textContent.trim()) continue;
+      const range = document.createRange();
+      range.selectNodeContents(walker.currentNode);
+      fragments.push(...Array.from(range.getClientRects(), rect => ({ left: rect.left, right: rect.right })));
+    }
+    return { left: bounds.left, right: bounds.right, clientWidth: element.clientWidth, scrollWidth: element.scrollWidth, fragments };
+  });
+  expect(geometry.scrollWidth, `internal contact text width at ${width}px`).toBeLessThanOrEqual(geometry.clientWidth + 1);
+  expect(geometry.fragments.length).toBeGreaterThan(0);
+  for (const fragment of geometry.fragments) {
+    expect(fragment.left, `contact text left edge at ${width}px`).toBeGreaterThanOrEqual(geometry.left - 1);
+    expect(fragment.right, `contact text right edge at ${width}px`).toBeLessThanOrEqual(geometry.right + 1);
+  }
+}
+
+const contactWidths = [320, 390, 768, 1440, 679, 680, 681, 767, 769];
+for (const theme of ['dark', 'light']) test(`contact heading fits its inner text at responsive boundaries in ${theme}`, async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce', colorScheme: theme });
+  await page.goto('/');
+  await page.waitForFunction(() => window.__portfolioReady);
+  for (const width of contactWidths) {
+    await page.setViewportSize({ width, height: 960 });
+    await assertContactHeading(page, width);
+    if ([320, 768, 1440].includes(width)) await page.screenshot({ path: `review-reports/polish-contact-heading-${width}-${theme}.png` });
+  }
+});
+
+for (const theme of ['dark', 'light']) test(`contact heading fits without JavaScript in ${theme}`, async ({ browser }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false, colorScheme: theme });
+  const page = await context.newPage();
+  await page.goto(process.env.TEST_BASE_URL || 'http://localhost:3000');
+  for (const width of contactWidths) {
+    await page.setViewportSize({ width, height: 960 });
+    await assertContactHeading(page, width);
+  }
+  await context.close();
+});
