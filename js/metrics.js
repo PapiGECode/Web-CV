@@ -1,5 +1,6 @@
 import { onCLS, onINP, onLCP, onTTFB } from 'web-vitals';
-const paths = new Set(['/', '/projects/kicord', '/projects/papigegamer', '/projects/kernelos', '/privacidad']);
+import { metricPaths } from '../content/metric-paths.mjs';
+const paths = new Set(metricPaths);
 const path = location.pathname.replace(/\/$/, '') || '/';
 let started = false;
 // An embedded view is not another portfolio visit and must not duplicate telemetry.
