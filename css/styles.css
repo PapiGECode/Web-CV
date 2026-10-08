@@ -2831,7 +2831,7 @@
         position: relative;
         font-family: var(--font-display);
         font-weight: 800;
-        font-size: clamp(3rem, 12vw, 9rem);
+        font-size: clamp(3rem, 10.5vw, 9rem);
         letter-spacing: -0.045em;
         line-height: 0.9;
         text-transform: uppercase;
