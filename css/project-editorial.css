@@ -37,7 +37,7 @@
 .pp-hero > div:first-child { max-width: 850px; }
 .pp-hero .pp-title { font-size: clamp(2.6rem, 8vw, 7rem); }
 .pp-hero .pp-title-domain { font-size: clamp(1.9rem, 5vw, 4.5rem); line-height: 1.05; }
-.pp-title-domain > span { display: inline-block; white-space: nowrap; }
+.pp-title-domain > span, .panel-title-domain a > span { display: inline-block; white-space: nowrap; }
 .pp-hero .project-art { margin-top: 3rem; aspect-ratio: 2.6; }
 .pp-hero .project-art strong { font-size: clamp(2.6rem, 6vw, 6rem); }
 .pp-hero .project-art > img:not(.project-art-cover) { max-height: 180px; }
@@ -116,3 +116,10 @@
 .landscape-external:hover { color: var(--bone); }
 .work-entry:nth-child(even) .live-landscape-presentation { order: -1; }
 @media (max-width: 900px) { .work-entry:nth-child(even) .live-landscape-presentation { order: 0; } }
+
+/* Widen live websites without increasing their desktop height or changing artwork. */
+@media (min-width: 901px) {
+  .work-layout-live { grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: clamp(2rem, 4vw, 4rem); }
+  .work-entry:nth-child(even) .work-layout-live { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); }
+  .project-index .work-layout-live .project-art { aspect-ratio: 1.5; }
+}
