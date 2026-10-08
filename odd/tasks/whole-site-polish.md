@@ -24,7 +24,7 @@ Complete an evidence-backed aesthetic and functional polish of the existing port
 ## Tasks and acceptance
 - [x] P1 — Refine case typography/artwork responsiveness, collaboration-action spacing and consent checkbox sizing. Keep desktop art direction, intentional line breaks, full artwork visibility and native hit geometry. Route delegated direct; forecast80–150 lines including regression tests. Check320/390/768/1440 both themes, modal/canonical, no-JS/reduced motion and checkbox label interaction.
 - [x] P2 — Derive a complete six-project next-case cycle from curated order while preserving archived Robleis canonical exit; honor the existing theme on404 with the shared prepaint boot. Route delegated direct; forecast70–120 lines. Check actual links on canonical/modal surfaces and missing-route return navigation in both themes/no-JS.
-- [ ] P3 — Synchronize explicit current project metric route allowlists frontend/server and prove opt-in delivery across current canonical pages. Route delegated direct; forecast80–140 lines. Preserve rejection of unknown/private paths, payload allowlist and all consent/DNT/GPC/iframe exclusions. No new event types or user data.
+- [x] P3 — Synchronize explicit current project metric route allowlists frontend/server and prove opt-in delivery across current canonical pages. Route delegated direct; forecast80–140 lines. Preserve rejection of unknown/private paths, payload allowlist and all consent/DNT/GPC/iframe exclusions. No new event types or user data.
 - [ ] P4 — Run final integrated checks, inspect desktop/mobile before/after captures and independent verifier; preserve a working local preview. Route delegated verification plus parent readback/spot check; forecast10–20 documentation lines.
 
 ## Verification and progress
@@ -32,7 +32,7 @@ Complete an evidence-backed aesthetic and functional polish of the existing port
 - No install/audit repeat required unless dependency files change; no production merge in scope.
 - Each implementation unit receives a conventional commit with tests/docs and a stated rollback boundary. No AI attribution.
 - Memory project: pabloschefer.com continuación. New runtime instructions allow writes without session_id when no authoritative registered identity is available; never invent/register an identity. Mirror this full file at odd/whole-site-polish/tasks before source writes and after each completed unit.
-- Current status: audits complete; P1–P2 complete; P3–P4 pending. This document is the current work plan; the long prior history remains in odd/tasks/editorial-portfolio-refinement.md.
+- Current status: audits complete; P1–P3 complete; P4 pending. This document is the current work plan; the long prior history remains in odd/tasks/editorial-portfolio-refinement.md.
 
 ### P1 — completed
 - Fixed mobile PapiGECode identity clipping with a scoped stacked composition below680px; desktop remains horizontal. The portfolio domain now has a meaningful `.com` break opportunity with scoped title sizing, preserving its full accessible text.
@@ -51,3 +51,19 @@ Complete an evidence-backed aesthetic and functional polish of the existing port
 - Runtime proof: real canonical/modal next-link activation across every case; all six reachable exactly once before cycling; modal iframe history/focus unchanged; saved/system light/dark404 and return-home links; no-JS return/next links. Compact next-link test first detected two-line domain wrapping, then passed after the scoped layout refinement.
 - Inspected `review-reports/polish-404-*` and `review-reports/polish-next-*` screenshots in both themes.
 - Rollback boundary: derived next-project helper and links, compact next-link layout,404 boot script and associated assertions. No project facts, SEO routes, iframe lifecycle, metrics or theme-storage behavior changed.
+- P2 work-unit commit: 4380d89.
+
+### P3 — completed
+- Replaced stale duplicate metric-route lists with a small shared explicit public-route array. Includes all seven canonical cases (including archived Robleis) and the historical redirect; arbitrary URLs are never inferred from the catalog at runtime.
+- Added server coverage for exact canonical coverage, sanitized accepted events and rejection of private/arbitrary/encoded/parameterized paths. Added browser proof for every canonical case: default-off, explicit opt-in, persisted consent, one page view, revocation, DNT/GPC and phone-preview exclusions. Expanded real self-iframe navigation proof to the newly admitted routes.
+- Observed `npm run check` pass; `npm test`17/17; `npm run build`10pages/35assets. Focused command `npx playwright test tests/metric-routes.spec.js tests/landscape-lifecycle.spec.js tests/utility-preferences.spec.js`:37/37 pass (18.3s).
+- Runtime requests are intercepted locally in browser tests; server handlers use synthetic requests and captured logs. No production metrics were emitted and no real messages sent.
+- Rollback boundary: shared metric-path module, two imports and route/privacy regressions. No event names, consent defaults, origin policy, byte limits, rate limits, PII rules, iframe exclusion or dependency changes.
+- P3 work-unit commit: 38c9350.
+
+### Integrated writer verification (P4 independent check still pending)
+- Final sequential `npm run test:e2e`:207/207 passed in1.9minutes, zero failures/skips. Full suites retain visual, accessible, no-JS, both-theme, contact, metrics, native click/focus/history and iframe safety coverage.
+- Latest check/server/build remain passing (17/17 unit/server tests;10pages/35assets). Dependency files unchanged; no install/audit repeat was needed.
+- Inspected canonical/modal case artwork/title captures across320/390/768/1440 and light/dark, compact consent dialog,404 and next-link composition. Main hero, SCHEFER footer and local conceptual bot sketch remain covered by the full suite.
+- Existing preview3104 remains reachable (HTTP200 for `/projects/portfolio`) and serves the new domain-title and next-link markup. No server was stopped or replaced; production remains unchanged.
+- Source commits: P1 `ab2e38d`, P2 `4380d89`, P3 `38c9350`. Next: parent structural spot check and independent P4 verification, then mirror this final writer record.

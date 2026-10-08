@@ -1,5 +1,6 @@
 import { allowedOrigin, boundedJson, digest, HttpError, json, memoryLimiter } from './http.js';
-const PATHS = new Set(['/', '/projects/kicord', '/projects/papigegamer', '/projects/kernelos', '/privacidad']);
+import { metricPaths } from '../content/metric-paths.mjs';
+const PATHS = new Set(metricPaths);
 const EVENTS = new Set(['page_view', 'download_cv', 'contact_sent', 'project_open']);
 const BOUNDS = { LCP: 120000, INP: 60000, CLS: 100, TTFB: 60000 };
 export function createMetricsHandler({ env = {}, log = console.info, limiter = memoryLimiter({ limit: 40, windowMs: 60000 }), salt = crypto.randomUUID() } = {}) {

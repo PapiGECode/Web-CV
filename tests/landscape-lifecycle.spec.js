@@ -88,7 +88,7 @@ test('self landscape never recurses or measures after navigation loses the previ
   await context.addInitScript(() => localStorage.setItem('ps-measurement', 'yes'));
   await ready(page);
   const { frame } = await openView(page, 'portfolio');
-  for (const path of ['/?phone-preview=1', '/projects/kicord', '/']) {
+  for (const path of ['/?phone-preview=1', '/projects/kicord', '/projects/portfolio', '/projects/thiagoiutu', '/projects/thiago-community', '/projects/papigegamer-web', '/']) {
     await frame.goto(new URL(path, page.url()).href);
     await frame.evaluate(() => scrollTo(0, document.body.scrollHeight));
     await expect(frame.locator('html')).toHaveClass(/phone-preview/);
