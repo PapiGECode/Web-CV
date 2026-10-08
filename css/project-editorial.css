@@ -27,9 +27,10 @@
 .project-art-thiagoiutu em { font-style: normal; -webkit-text-stroke: 1px #151916; color: transparent; }
 .project-art-robleis { background: linear-gradient(130deg, #462523, #b85040 55%, #a69179); }
 .project-art-robleis > img { width: 90%; }
-.project-art-thiago-community { background: #081a2c; }
+.project-art-thiago-community { background: #0b141d; }
 .project-art > .project-art-cover { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.project-art-thiago-community .project-art-note { background: #081a2c; width: fit-content; max-width: calc(100% - 4rem); padding: .5rem .8rem; }
+.pp-hero > .project-art.project-art-thiago-community { aspect-ratio: 1.6; }
+.project-art-thiago-community .project-art-note { background: #0b141d; width: fit-content; max-width: calc(100% - 4rem); padding: .5rem .8rem; }
 .project-art-papigegamer-web { background: #1e2534; }
 .project-art-papigegamer-web > img { border-radius: 50%; width: 27%; }
 .pp-hero { display: block; padding-bottom: 0; border: 0; }
