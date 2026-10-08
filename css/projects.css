@@ -57,4 +57,5 @@
  .pp-nav{padding-top:.25rem;padding-bottom:2rem;}
  .pp-nav > div > span{display:none;}
  .pp-section{padding-block:3rem;}
+ .pp-next{flex-direction:column;align-items:flex-start;gap:.4rem;}
 }
