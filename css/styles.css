@@ -1260,12 +1260,12 @@
         padding: 0.6rem 1.1rem;
         border-radius: 6px;
         text-decoration: none;
-        transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease), opacity 0.25s;
+        transition: box-shadow 0.25s var(--ease), opacity 0.25s;
         width: fit-content;
-        margin-top: auto;
+        min-height: 44px;
+        margin-top: 1.25rem;
       }
       .now-collab-btn:hover {
-        transform: translateY(-2px);
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
         opacity: 0.94;
       }

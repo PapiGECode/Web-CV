@@ -1,4 +1,4 @@
-import { projects, showcaseProjects } from '../content/projects.mjs';
+import { projects, showcaseProjects, getNextProject } from '../content/projects.mjs';
 import { renderProjectPhone, renderProjectLandscape } from './project-phones.mjs';
 export { projects };
 export const escapeHTML = value => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
@@ -22,10 +22,12 @@ export function renderProjectBody(project, modal = false) {
   const details = project.details.map(detail => `<article class="pp-card"><h3>${e(detail.title)}</h3><p>${e(detail.text)}</p></article>`).join('');
   const phone = project.phone ? renderProjectPhone(project.phone, `${modal ? 'modal' : 'page'}-${project.slug}`) : '';
   const prefix = modal ? 'case-' : '';
+  const title = project.slug === 'portfolio' ? e(project.title).replace(/^(.*)(\.com)$/i, '<span>$1</span><wbr><span>$2</span>') : e(project.title);
+  const nextProject = getNextProject(project);
   return `<header class="pp-hero cs-hero">
     <div>
       <p class="pp-kicker">${e(project.category)}</p>
-      <h1 class="pp-title cs-title long">${e(project.title)}</h1>
+      <h1 class="pp-title cs-title long${project.slug === 'portfolio' ? ' pp-title-domain' : ''}">${title}</h1>
       <p class="pp-tagline">${e(project.summary)}</p>
       <div class="pp-status">${e(project.status)}</div>
       <div class="pp-actions">${links}<a class="btn btn-ghost" href="${modal ? '/projects/' + project.slug : '/#work'}"><span class="btn-t">${modal ? 'URL permanente' : 'Volver a proyectos'}</span></a></div>
@@ -37,7 +39,7 @@ export function renderProjectBody(project, modal = false) {
   <section id="${prefix}approach" class="pp-section"><p class="pp-label">Mi participación</p><h2>${e(project.role)}</h2><p class="pp-copy">${e(project.approach)}</p></section>
   <section id="${prefix}implementation" class="pp-section"><p class="pp-label">Detalles</p><h2>Trabajo y enfoque.</h2><div class="pp-grid">${details}</div><div class="pp-stack">${project.tags.map(tag => `<span>${e(tag)}</span>`).join('')}</div></section>
   ${phone ? `<details class="project-demo"><summary>Explorar la web real <span>Vista móvil ↗</span></summary><div class="pp-visual">${phone}</div></details>` : ''}
-  <a class="pp-next" href="/projects/${e(project.next)}"><span>Continuar explorando</span><strong>Siguiente proyecto ↗</strong></a>`;
+  <a class="pp-next" href="/projects/${e(nextProject.slug)}"><span>Siguiente proyecto</span><strong>${e(nextProject.title)} ↗</strong></a>`;
 }
 
 export function renderProjectPage(template, project) {
