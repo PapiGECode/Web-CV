@@ -70,3 +70,7 @@ Comprobación optativa contra Thiago Community real (sin fixtures para ese orige
 ## Revisión de GitHub
 
 La selección de repositorios y las membresías se contrastaron el 7/11/2026. Las fuentes y los límites de atribución están en content/github-verification.md; los avatares y nombres de organizaciones, en content/community-logos.json. K1R4LABS se conserva por confirmación expresa de Pablo, aunque no aparezca en la API de membresías públicas. El contenido no infiere membresías privadas ni presenta ejecutables sin fuentes como open source.
+
+## Navegación activa
+
+El espacio para la barra fija se define una sola vez con scroll-padding-top en la raíz. Los enlaces controlados por JavaScript usan una coordenada de documento, no un elemento más un offset: Lenis ya incorpora los márgenes CSS al recibir un elemento. El indicador activo compara la posición visible de las secciones con ese mismo margen. No acumular scroll-padding, scroll-margin y offset, porque deja seleccionada la sección anterior. tests/navigation-active.spec.js cubre clics repetidos, ambos modos de movimiento, menú móvil, scroll manual, historial y enlaces sin JavaScript.

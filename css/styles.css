@@ -742,7 +742,8 @@
       }
       section {
         position: relative;
-        scroll-margin-top: 5rem;
+        /* Root scroll-padding already reserves space for the fixed navigation. */
+        scroll-margin-top: 0;
       }
       .sec-head {
         display: flex;
