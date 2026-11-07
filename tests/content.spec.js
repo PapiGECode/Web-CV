@@ -72,11 +72,22 @@ test('featured project facts agree across cards, modals and canonical pages', as
 
 test('technical notes preserve credited contributions without duplicating featured work', async ({ page }) => {
   await ready(page, 'reduce');
-  await expect(page.locator('.bento-card')).toHaveCount(2);
-  for (const repo of ['KiCord-DOOM-Plugin','duolingo-streak-keeper']) {
+  await expect(page.locator('.bento-card')).toHaveCount(3);
+  for (const repo of ['KiCord-DOOM-Plugin','duolingo-streak-keeper','refind-ice']) {
     await expect(page.locator(`.bento-card a[href="https://github.com/PapiGECode/${repo}"]`)).toHaveCount(1);
   }
   await expect(page.locator('.bento-card')).not.toContainText(['github-achievements-lab','project-vi-technical-archive','History-commits']);
+  const duolingo = page.locator('.bento-card').filter({ hasText: 'Duolingo Streak Bot' });
+  await expect(duolingo).toContainText('detección visual');
+  await expect(duolingo).toContainText('no el código fuente completo');
+  await expect(duolingo).not.toContainText('Playwright');
+  await expect(duolingo).not.toContainText('GitHub Actions');
+  const ice = page.locator('.bento-card').filter({ hasText: 'ICE — tema para rEFInd' });
+  await expect(ice).toContainText('finn-term');
+  await expect(ice).toContainText('no instala ni modifica el arranque');
+  await expect(page.locator('.bento-card').filter({ hasText: 'DOOM —' })).toContainText('nexpID');
+  await expect(page.locator('#skills')).toContainText('Duolingo Streak Bot');
+  await expect(page.locator('#skills')).not.toContainText('Automatización con Playwright');
   await page.locator('#bento-projects-grid').scrollIntoViewIfNeeded();
   await page.screenshot({path:'review-reports/collaborations.png'});
 });
@@ -103,4 +114,15 @@ test('contact keeps one copy-email action in context and no copy-message control
   await expect(page.locator('#foot-word')).toHaveText('Schefer');
   await expect(page.locator('.foot-grid .foot-col')).toHaveCount(2);
   await page.screenshot({path:'review-reports/footer-clean-390.png'});
+});
+
+test('laboratory public repository is linked from its canonical case and modal', async ({ page }) => {
+  await ready(page, 'reduce');
+  const repo = 'a[href="https://github.com/PapiGECode/pablo-schefer-portfolio"]';
+  await page.locator('.panel-title a[href="/projects/papigegamer-web"]').click();
+  await expect(page.locator('#cs-content').locator(repo)).toBeVisible();
+  await page.keyboard.press('Escape');
+  await page.goto('/projects/papigegamer-web');
+  await expect(page.locator('main').locator(repo)).toBeVisible();
+  await expect(page.locator('main')).toContainText('TypeScript');
 });

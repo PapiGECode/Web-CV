@@ -66,3 +66,7 @@ KiCord y Thiago Community requieren desplegar en sus propios servidores las exce
 KernelOS no está bajo nuestro control y no se fuerza su incrustación. `/demos/kernelos` es un recorrido local independiente, claramente identificado, con navegación, información sobre la colaboración y desplegables nativos. No copia la web completa, no ofrece descargas ni simula resultados. Su iframe tiene sandbox sin `allow-same-origin` y conserva el enlace a https://kernelos.org/. Funciona sin JavaScript y no recoge métricas.
 
 Comprobación optativa contra Thiago Community real (sin fixtures para ese origen): `LIVE_COMMUNITY=1 TEST_BASE_URL=http://localhost:3105 npx playwright test tests/community-live.spec.js`. Requiere la conexión externa y el origen autorizado; no se ejecuta en la suite determinista de CI.
+
+## Revisión de GitHub
+
+La selección de repositorios y las membresías se contrastaron el 7/11/2026. Las fuentes y los límites de atribución están en content/github-verification.md; los avatares y nombres de organizaciones, en content/community-logos.json. K1R4LABS se conserva por confirmación expresa de Pablo, aunque no aparezca en la API de membresías públicas. El contenido no infiere membresías privadas ni presenta ejecutables sin fuentes como open source.

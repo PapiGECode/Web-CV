@@ -1,7 +1,7 @@
 import { test, expect } from './fixtures.js';
 
 for (const theme of ['dark', 'light']) {
-  test(`both technical notes fade and resume without moving in ${theme}`, async ({ page }) => {
+  test(`all technical notes fade and resume without moving in ${theme}`, async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 960 });
     await page.emulateMedia({ reducedMotion: 'no-preference', colorScheme: theme });
     await page.goto('/');

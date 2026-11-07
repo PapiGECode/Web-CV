@@ -86,12 +86,13 @@
 .project-index .project-art-portfolio strong, .project-index .project-art-thiagoiutu strong { font-size: clamp(3rem, 5vw, 5.5rem); }
 .work-notes { margin-top: 3rem; }
 .work-notes .bento-title { font-size: clamp(1.5rem, 3vw, 2.2rem); }
-.work-notes #bento-projects-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3rem; }
+.work-notes #bento-projects-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 3rem; }
 .work-notes #bento-projects-grid .bento-card { border: 0; border-top: 1px solid var(--line-2); border-radius: 0; background: transparent; box-shadow: none; padding: 2rem 0; }
 .work-notes .bento-card::before, .work-notes .bento-status-badge, .work-notes .bento-num, .work-notes .bento-specs-row { display: none; }
 .work-notes .bento-card-inner { padding: 0; }
 .work-notes .bento-card-title { font-size: 1.3rem; }
 @media (max-width: 900px) {
+  .work-notes #bento-projects-grid { grid-template-columns: 1fr; }
   .work-layout, .work-entry:nth-child(even) .work-layout { grid-template-columns: 1fr; gap: 2rem; }
   .work-entry:nth-child(even) .project-art { order: 0; }
   .project-index .panel-title { font-size: clamp(2.2rem, 8vw, 4rem); }

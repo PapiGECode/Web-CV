@@ -89,8 +89,8 @@ export const projects = [
     role: 'Desarrollo del laboratorio web',
     overview: 'PapiGEGamer.com es mi laboratorio PapiGECode: un espacio para software y experimentos. Es una web distinta de este portfolio profesional, PabloSchefer.com.',
     approach: 'Separar el espacio de exploración personal de la presentación profesional, manteniendo una identidad propia para cada proyecto.',
-    tags: ['Next.js', 'Software', 'Experimentación'],
-    links: [{ label: 'Visitar PapiGEGamer.com', url: 'https://papigegamer.com/' }],
+    tags: ['Next.js', 'React', 'TypeScript', 'Experimentación'],
+    links: [{ label: 'Visitar PapiGEGamer.com', url: 'https://papigegamer.com/' }, { label: 'Ver repositorio', url: 'https://github.com/PapiGECode/pablo-schefer-portfolio' }],
     details: [
       { title: 'Laboratorio', text: 'Un espacio personal de proyectos de software y experimentación.' },
       { title: 'Web independiente', text: 'Su sitio público utiliza Next.js; no es la implementación de PabloSchefer.com.' },
