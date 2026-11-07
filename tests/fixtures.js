@@ -6,7 +6,7 @@ export const fixtureHTML = remoteFixture('KiCord','/es/plugins');
 // Keep the historical helper name for existing non-phone regression tests.
 export async function stubKiCord(context) {
   await context.route(/^https:\/\/(?:www\.)?kicord\.es\//, r=>r.fulfill({contentType:'text/html; charset=utf-8',body:fixtureHTML}));
-  for (const host of ['thiagoiutu.com', 'papigegamer.com']) await context.route(`https://${host}/**`, r=>r.fulfill({contentType:'text/html; charset=utf-8',body:remoteFixture(host,'/next')}));
+  for (const host of ['thiagoiutu.com', 'papigegamer.com', 'thiago-community-web.vercel.app']) await context.route(`https://${host}/**`, r=>r.fulfill({contentType:'text/html; charset=utf-8',body:remoteFixture(host,'/next')}));
   await context.route(/^https:\/\/(?:www\.)?kernelos\.org\//, r=>r.fulfill({contentType:'text/html; charset=utf-8',body:remoteFixture('KernelOS','/changelogs')}));
 }
 

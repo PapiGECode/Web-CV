@@ -12,7 +12,7 @@ const input = (...p) => path.join(root, ...p);
 const output = (...p) => path.join(dist, ...p);
 const revision = process.env.VERCEL_GIT_COMMIT_SHA || process.env.GITHUB_SHA || 'local';
 await fs.rm(dist, { recursive: true, force: true });
-for (const dir of ['css', 'js', 'js/vendor', 'assets', 'assets/fonts', 'projects']) await fs.mkdir(output(dir), { recursive: true });
+for (const dir of ['css', 'js', 'js/vendor', 'assets', 'assets/fonts', 'projects', 'demos']) await fs.mkdir(output(dir), { recursive: true });
 const replacements = new Map();
 const hash = text => crypto.createHash('sha256').update(text).digest('hex').slice(0, 12);
 async function hashedFile(relative, content) {
@@ -92,7 +92,7 @@ await sharp(Buffer.from(svg)).jpeg({ quality: 88 }).toFile(output('assets/previe
 
 const generatedPages = new Map(projects.map(project => [`projects/${project.slug}.html`, project]));
 const projectTemplate = await fs.readFile(input('projects/template.html'), 'utf8');
-const pages = [...new Set(['index.html', '404.html', 'privacidad.html', ...generatedPages.keys()])];
+const pages = [...new Set(['index.html', '404.html', 'privacidad.html', 'demos/kernelos.html', ...generatedPages.keys()])];
 for (const file of pages) {
   let html = generatedPages.has(file) ? renderProjectPage(projectTemplate, generatedPages.get(file)) : await fs.readFile(input(file), 'utf8');
   html = html.replace(/<div data-phone-placeholder="([a-z]+)" data-phone-instance="([a-z-]+)"><\/div>/g, (_, key, uid) => renderProjectPhone(key, uid));

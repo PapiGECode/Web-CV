@@ -15,7 +15,7 @@ export function renderProjectIdentity(project, sizes = '(max-width: 680px) 90vw,
     kernelos: '<img src="/assets/kernelos-logo.webp" width="160" height="160" alt="" loading="lazy"><strong>KernelOS<span>WINDOWS / GAMING / COMMUNITY</span></strong>',
     thiagoiutu: '<strong>THIAGO<br><em>IUTU.</em><span>ARCHIVO · PRESENTE · COMUNIDAD</span></strong>',
     robleis: '<img src="/assets/robleis-wordmark.svg" width="1511" height="143" alt="" loading="lazy"><span class="project-art-note">UN UNIVERSO / UN PROYECTO WEB</span>',
-    'thiago-community': `<img class="project-art-cover" src="/assets/thiago-community-sketch-960.webp" srcset="/assets/thiago-community-sketch-640.webp 640w, /assets/thiago-community-sketch-960.webp 960w, /assets/thiago-community-sketch-1280.webp 1280w" sizes="${escapeHTML(sizes)}" width="1586" height="992" alt="" loading="lazy" decoding="async"><span class="project-art-note">THIAGO COMMUNITY / BOT</span>`,
+    'thiago-community': `<img class="project-art-cover" src="/assets/thiago-community-sketch-960.webp" srcset="/assets/thiago-community-sketch-640.webp 640w, /assets/thiago-community-sketch-960.webp 960w, /assets/thiago-community-sketch-1280.webp 1280w" sizes="${escapeHTML(sizes)}" width="1586" height="992" alt="" loading="lazy" decoding="async"><span class="project-art-note">THIAGO COMMUNITY / WEB + BOT</span>`,
     'papigegamer-web': '<img src="/assets/papige-logo.webp" width="360" height="360" alt="" loading="lazy"><strong>PapiGECode<span>SOFTWARE & EXPERIMENTS</span></strong>',
   };
   return `<div class="project-art project-art-${project.slug}" aria-hidden="true">${art[project.slug] || escapeHTML(project.title)}</div>`;
@@ -43,7 +43,7 @@ export function renderProjectBody(project, modal = false) {
   <section id="${prefix}overview" class="pp-section"><p class="pp-label">Visión general</p><h2>El proyecto.</h2><p class="pp-copy">${e(project.overview)}</p></section>
   <section id="${prefix}approach" class="pp-section"><p class="pp-label">Mi participación</p><h2>${e(project.role)}</h2><p class="pp-copy">${e(project.approach)}</p></section>
   <section id="${prefix}implementation" class="pp-section"><p class="pp-label">Detalles</p><h2>Trabajo y enfoque.</h2><div class="pp-grid">${details}</div><div class="pp-stack">${project.tags.map(tag => `<span>${e(tag)}</span>`).join('')}</div></section>
-  ${phone ? `<details class="project-demo"><summary>Explorar la web real <span>Vista móvil ↗</span></summary><div class="pp-visual">${phone}</div></details>` : ''}
+  ${phone ? `<details class="project-demo"><summary>${project.phone === 'kernelos' ? 'Explorar el recorrido local' : 'Explorar la web real'} <span>Vista móvil ↗</span></summary><div class="pp-visual">${phone}</div></details>` : ''}
   <a class="pp-next" href="/projects/${e(nextProject.slug)}"><span>Siguiente proyecto</span><strong>${e(nextProject.title)} ↗</strong></a>`;
 }
 

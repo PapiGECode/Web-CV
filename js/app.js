@@ -653,8 +653,8 @@
             function trackGlow(event) {
               if (!glowMotion.matches || event.pointerType !== "mouse") return;
               var rect = card.getBoundingClientRect();
-              card.style.setProperty("--mouse-x", (event.clientX - rect.left) + "px");
-              card.style.setProperty("--mouse-y", (event.clientY - rect.top) + "px");
+              card.style.setProperty("--mouse-x", Math.max(0, Math.min(card.clientWidth, (event.clientX - rect.left) * card.offsetWidth / rect.width - card.clientLeft)) + "px");
+              card.style.setProperty("--mouse-y", Math.max(0, Math.min(card.clientHeight, (event.clientY - rect.top) * card.offsetHeight / rect.height - card.clientTop)) + "px");
               card.classList.add("is-glow-active");
             }
             card.addEventListener("pointerenter", trackGlow);

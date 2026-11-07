@@ -32,3 +32,21 @@ test('next-case navigation visits the complete curated selection exactly once', 
   assert.equal(current.slug, visited[0]);
   assert.equal(getNextProject(projects.find(project => project.slug === 'robleis')).slug, 'thiago-community');
 });
+
+
+test('owned sites embed real URLs and KernelOS uses an honest isolated local tour', async () => {
+  const { renderProjectLandscape, renderProjectPhone } = await import('../scripts/project-phones.mjs');
+  for (const key of ['kicord', 'portfolio', 'thiagoiutu', 'thiago-community', 'papigegamer-web']) {
+    const html = renderProjectLandscape(key);
+    assert.ok(html.includes('<template data-live-template><iframe'));
+    assert.ok(html.includes('target="_blank" rel="noopener noreferrer"'));
+    assert.ok(!html.includes('allow-top-navigation'));
+  }
+  for (const html of [renderProjectLandscape('kernelos'), renderProjectPhone('kernelos', 'test-kernelos')]) {
+    assert.ok(html.includes('data-frame-src="/demos/kernelos"'));
+    assert.ok(html.includes('recorrido local interactivo'));
+    assert.ok(html.includes('href="https://kernelos.org/"'));
+    assert.ok(!html.includes('allow-same-origin'));
+    assert.ok(!html.includes('data-frame-src="https://kernelos.org/"'));
+  }
+});

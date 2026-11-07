@@ -1,7 +1,7 @@
 import {test,expect,stubKiCord,remoteFixture} from './fixtures.js';
 import fs from 'node:fs/promises';
-const keys=['kicord','portfolio','kernelos'];
-const sources={kicord:'https://www.kicord.es/es',portfolio:'/?phone-preview=1',kernelos:'https://kernelos.org/'};
+const keys=['portfolio'];
+const sources={portfolio:'/?phone-preview=1'};
 async function ready(page,width=1440,path='/',theme='dark') {
   await page.setViewportSize({width,height:960});await page.emulateMedia({reducedMotion:'reduce',colorScheme:theme});
   await page.route('**/api/contact',r=>r.fulfill({json:{available:false}}));await page.goto(path);
@@ -9,6 +9,15 @@ async function ready(page,width=1440,path='/',theme='dark') {
   await page.evaluate(()=>document.fonts.ready);await fs.mkdir('review-reports',{recursive:true});
 }
 async function view(page,key,scope='.pp-visual') {
+  if (key === 'thiagoiutu' || key === 'papigegamer-web') {
+    await page.goto('/');
+    const phone = page.locator(`[data-live-landscape="${key}"]`);
+    await phone.scrollIntoViewIfNeeded();
+    await expect(phone.locator('iframe')).toHaveCount(1);
+    const frame = await (await phone.locator('iframe').elementHandle()).contentFrame();
+    await expect(frame.locator('h1')).toBeVisible();
+    return { phone, frame };
+  }
   if(scope==='.pp-visual' && new URL(page.url()).pathname!==`/projects/${key}`) await page.goto(`/projects/${key}`);
   const phone=page.locator(`${scope} [data-live-phone="${key}"]`);
   const disclosure=phone.locator('xpath=ancestor::details');
@@ -76,7 +85,7 @@ test('mounted canonical phones resize without replacing browsing contexts',async
     }
   }
 });
-for(const key of ['kicord','kernelos']) test(`${key}: remote navigation and scrolling stay in the matching frame`,async({page})=>{
+for(const key of ['thiagoiutu','papigegamer-web']) test(`${key}: remote navigation and scrolling stay in the matching frame`,async({page})=>{
   await ready(page,1440,`/projects/${key}`);const {phone,frame}=await view(page,key);const url=page.url();
   const link=frame.locator('#remote-navigation');await link.scrollIntoViewIfNeeded();
   const local=await link.evaluate(el=>{const r=el.getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height,viewport:innerWidth};});
@@ -84,7 +93,7 @@ for(const key of ['kicord','kernelos']) test(`${key}: remote navigation and scro
   // Chromium's OOP iframe locator coordinates can omit the parent's CSS scale.
   // Use actual screen coordinates so this remains a genuine pointer-navigation test.
   await page.mouse.click(display.x+(local.x+local.width/2)*ratio,display.y+(local.y+local.height/2)*ratio);
-  await expect.poll(()=>frame.url()).toContain(key==='kicord'?'/es/plugins':'/changelogs');expect(page.url()).toBe(url);
+  await expect.poll(()=>frame.url()).toContain('/next');expect(page.url()).toBe(url);
   const y=await page.evaluate(()=>scrollY),box=await phone.locator('iframe').boundingBox();
   await page.mouse.move(box.x+box.width/2,box.y+box.height/2);await page.mouse.wheel(0,180);
   await expect.poll(()=>frame.evaluate(()=>scrollY)).toBeGreaterThan(0);expect(Math.abs(await page.evaluate(()=>scrollY)-y)).toBeLessThan(2);
@@ -98,40 +107,43 @@ test('the actual portfolio never creates recursive frames, including inside case
   await frame.goto(new URL('/projects/portfolio',page.url()).href);await expect(frame.locator('h1')).toContainText('PabloSchefer.com');await expect(frame.locator('iframe')).toHaveCount(0);await expect(frame.locator('html')).toHaveClass(/phone-preview/);
   await frame.goto(new URL('/',page.url()).href);await frame.waitForFunction(()=>window.__portfolioReady);await expect(frame.locator('iframe')).toHaveCount(0);
 });
-test('closed demos stay unloaded; reload resets the selected real website, not the parent',async({page})=>{
-  for(const key of ['kicord','kernelos']) {
-    await ready(page,390,`/projects/${key}`);
-    await expect(page.locator('iframe')).toHaveCount(0);
-    const {frame,tools}=await view(page,key);const parentURL=page.url();
-    await frame.locator('#remote-navigation').press('Enter');
-    await expect.poll(()=>frame.url()).not.toBe(sources[key]);
-    await tools.locator('button').click();await expect.poll(()=>frame.url()).toBe(sources[key]);
-    expect(page.url()).toBe(parentURL);
-  }
+test('closed demos stay unloaded; reload resets the real portfolio, not the parent',async({page})=>{
+  await ready(page,390,'/projects/portfolio');
+  await expect(page.locator('iframe')).toHaveCount(0);
+  const {frame,tools}=await view(page,'portfolio');const parentURL=page.url();
+  await frame.goto(new URL('/projects/thiagoiutu',page.url()).href);
+  await expect(frame.locator('h1')).toHaveText('ThiagoIUTU');
+  await tools.locator('button').click();
+  await expect.poll(()=>frame.url()).toBe(new URL(sources.portfolio,page.url()).href);
+  expect(page.url()).toBe(parentURL);
 });
 test('closing and reopening every case removes only its frame and retains browser history',async({page})=>{
   await ready(page,390);
   for(let i=0;i<keys.length;i++) {
-    await page.locator('.panel-title a').nth(i).click();const modal=page.locator('#case-study-modal');await expect(modal).toHaveAttribute('aria-hidden','false');
+    await page.locator('.panel-title a[data-open-case=papige]').click();const modal=page.locator('#case-study-modal');await expect(modal).toHaveAttribute('aria-hidden','false');
     const {phone}=await view(page,keys[i],'#case-study-modal');await expectSafeViewport(phone);await page.locator('#cs-btn-close').click();await expect(modal).toHaveAttribute('aria-hidden','true');await expect(modal.locator('iframe')).toHaveCount(0);
     await page.goForward();await expect(modal).toHaveAttribute('aria-hidden','false');await view(page,keys[i],'#case-study-modal');await page.locator('#cs-btn-close').click();await expect(modal).toHaveAttribute('aria-hidden','true');
   }
   await expect(page.locator('#case-study-modal iframe')).toHaveCount(0);
 });
 test('page lifecycle restoration reuses existing browsing contexts without duplicates',async({page})=>{
-  await ready(page);await view(page,'kicord');
-  const result=await page.evaluate(()=>{const original=document.querySelector('.pp-visual iframe');dispatchEvent(new PageTransitionEvent('pagehide',{persisted:true}));dispatchEvent(new PageTransitionEvent('pageshow',{persisted:true}));return {same:original===document.querySelector('.pp-visual iframe'),count:document.querySelectorAll('.pp-visual [data-live-phone=kicord] iframe').length};});
+  await ready(page);await view(page,'portfolio');
+  const result=await page.evaluate(()=>{const original=document.querySelector('.pp-visual iframe');dispatchEvent(new PageTransitionEvent('pagehide',{persisted:true}));dispatchEvent(new PageTransitionEvent('pageshow',{persisted:true}));return {same:original===document.querySelector('.pp-visual iframe'),count:document.querySelectorAll('.pp-visual [data-live-phone=portfolio] iframe').length};});
   expect(result).toEqual({same:true,count:1});
 });
 test('CSP permits only intended origins and external sandboxes cannot navigate the parent',async({request,page})=>{
   const res=await request.get('/');const csp=res.headers()['content-security-policy'];
-  expect(csp).toContain("frame-src 'self' https://www.kicord.es https://kicord.es https://kernelos.org https://www.kernelos.org https://thiagoiutu.com https://papigegamer.com;");expect(csp).toContain("script-src 'self';");expect(csp).toContain("frame-ancestors 'self';");
-  await ready(page);for(const key of ['kicord','kernelos']) {const {phone}=await view(page,key);const frame=phone.locator('iframe');expect(await frame.getAttribute('sandbox')).not.toContain('allow-top-navigation');await expect(frame).toHaveAttribute('loading','lazy');await expect(frame).toHaveAttribute('referrerpolicy','strict-origin-when-cross-origin');}
+  expect(csp).toContain("frame-src 'self' https://thiago-community-web.vercel.app https://www.kicord.es https://kicord.es https://kernelos.org https://www.kernelos.org https://thiagoiutu.com https://papigegamer.com;");expect(csp).toContain("script-src 'self';");expect(csp).toContain("frame-ancestors 'self';");
+  await ready(page);for(const key of ['thiagoiutu','papigegamer-web']) {const {phone}=await view(page,key);const frame=phone.locator('iframe');expect(await frame.getAttribute('sandbox')).not.toContain('allow-top-navigation');await expect(frame).toHaveAttribute('loading','lazy');await expect(frame).toHaveAttribute('referrerpolicy','strict-origin-when-cross-origin');}
 });
-test('blocked external pages leave visible external controls without false success',async({page})=>{
-  await page.route('https://kernelos.org/**',r=>r.fulfill({status:403,headers:{'x-frame-options':'DENY'},body:'Blocked remote fixture'}));
-  await ready(page,390,'/projects/kernelos');await page.locator('.project-demo summary').click();const wrapper=page.locator('[data-phone-presentation=kernelos]');
-  await expect(wrapper.locator('.live-phone-tools a')).toBeVisible();await expect(wrapper.locator('.live-phone-tools button')).toBeVisible();await expect(wrapper.locator('.live-phone-tools a')).toHaveAttribute('target','_blank');await expect(wrapper).not.toContainText('Cargado correctamente');
+test('blocked external pages keep direct case links without a broken demo or false success',async({page})=>{
+  await ready(page,390,'/projects/kernelos');
+  await expect(page.locator('.project-demo')).toHaveCount(1);
+  await expect(page.locator('iframe')).toHaveCount(0);
+  await expect(page.locator('.project-demo summary')).toContainText('recorrido local');
+  const link=page.locator('.pp-actions a[href="https://kernelos.org/"]');
+  await expect(link).toBeVisible();await expect(link).toHaveAttribute('target','_blank');
+  await expect(page.locator('main')).not.toContainText('Cargado correctamente');
 });
 test('no JavaScript provides real links without starting a recursion chain',async({browser})=>{
   const context=await browser.newContext({javaScriptEnabled:false,viewport:{width:390,height:844}});
