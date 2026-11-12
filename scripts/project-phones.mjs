@@ -2,20 +2,21 @@
 const sites = Object.freeze({
   kicord: { name:'KiCord', domain:'kicord.es', url:'https://www.kicord.es/es', href:'https://www.kicord.es/es' },
   portfolio: { name:'PabloSchefer.com', domain:'pabloschefer.com', url:'/?phone-preview=1', href:'https://www.pabloschefer.com/' },
+  'thiago-community': { name:'Thiago Community', domain:'thiago-community-web.vercel.app', url:'https://thiago-community-web.vercel.app/', href:'https://thiago-community-web.vercel.app/' },
   thiagoiutu: { name:'ThiagoIUTU', domain:'thiagoiutu.com', url:'https://thiagoiutu.com/', href:'https://thiagoiutu.com/' },
   'papigegamer-web': { name:'PapiGEGamer', domain:'papigegamer.com', url:'https://papigegamer.com/', href:'https://papigegamer.com/' },
-  kernelos: { name:'KernelOS', domain:'kernelos.org', url:'https://kernelos.org/', href:'https://kernelos.org/' },
+  kernelos: { demo: true, name:'KernelOS', domain:'kernelos.org', url:'/demos/kernelos', href:'https://kernelos.org/' },
 });
 export function renderProjectPhone(key, uid) {
   const site = sites[key];
   if (!site || !/^[a-z0-9-]+$/.test(uid)) throw new Error('Invalid project phone');
-  const sandbox = key === 'portfolio' ? '' : ' sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"';
+  const sandbox = key === 'portfolio' ? '' : site.demo ? ' sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox"' : ' sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"';
   return `<div class="live-phone-presentation" data-phone-presentation="${key}">
-  <div class="project-phone" data-project-phone="${key}" data-live-phone="${key}" role="group" aria-label="Web de ${site.name} en un teléfono">
+  <div class="project-phone" data-project-phone="${key}" data-live-phone="${key}" role="group" aria-label="${site.demo ? 'Recorrido local de' : 'Web de'} ${site.name} en un teléfono">
     <div class="pf-screen">
       <div class="pf-viewport">
-      <div class="phone-preview-cover"><span class="phone-cover-label">${site.domain}</span><strong>${site.name}</strong><p>Web del proyecto</p><a href="${site.href}" target="_blank" rel="noopener noreferrer">Abrir la web ↗</a></div>
-      <template data-live-template><iframe class="pf-live-frame" title="${site.name} — web real en versión móvil" data-frame-src="${site.url}" width="${key === 'kernelos' ? 430 : 390}" height="825" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"${sandbox}></iframe></template>
+      <div class="phone-preview-cover"><span class="phone-cover-label">${site.domain}</span><strong>${site.name}</strong><p>${site.demo ? 'Recorrido local, no es la web oficial' : 'Web del proyecto'}</p><a href="${site.href}" target="_blank" rel="noopener noreferrer">Abrir la web ↗</a></div>
+      <template data-live-template><iframe class="pf-live-frame" title="${site.name} — ${site.demo ? 'recorrido local interactivo' : 'web real en versión móvil'}" data-frame-src="${site.url}" width="${key === 'kernelos' ? 430 : 390}" height="825" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"${sandbox}></iframe></template>
       </div>
     </div>
     <img class="phone-bezel" src="/assets/iphone18-pro-max-bezel.png" width="1470" height="3000" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" />
@@ -28,14 +29,15 @@ export function renderProjectPhone(key, uid) {
 export function renderProjectLandscape(key) {
   const site = sites[key];
   if (!site) return '';
-  const sandbox = key === 'portfolio' ? '' : ' sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"';
+  const sandbox = key === 'portfolio' ? '' : site.demo ? ' sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox"' : ' sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"';
   return `<div class="live-landscape-presentation">
-    <div class="project-art project-art-landscape" data-live-landscape="${key}" role="group" aria-label="Vista de la web de ${site.name}">
+    <div class="project-art project-art-landscape" data-live-landscape="${key}" role="group" aria-label="${site.demo ? 'Recorrido local de' : 'Vista de la web de'} ${site.name}">
       <div class="landscape-viewport">
-        <div class="landscape-cover"><strong>${site.name}</strong><span>${site.domain}</span></div>
-        <template data-live-template><iframe class="pf-live-frame" title="${site.name} — web real en vista de escritorio" data-frame-src="${site.url}" width="1100" height="815" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"${sandbox}></iframe></template>
+        <div class="landscape-cover"><strong>${site.name}</strong><span>${site.demo ? 'Recorrido local interactivo' : site.domain}</span></div>
+        <template data-live-template><iframe class="pf-live-frame" title="${site.name} — ${site.demo ? 'recorrido local interactivo' : 'web real en vista de escritorio'}" data-frame-src="${site.url}" width="1100" height="815" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"${sandbox}></iframe></template>
       </div>
     </div>
+    ${site.demo ? '<p class="project-external-note">Recorrido local interactivo · No es la web oficial</p>' : ''}
     <a class="landscape-external" href="${site.href}" target="_blank" rel="noopener noreferrer">Abrir ${site.domain} <span aria-hidden="true">↗</span></a>
   </div>`;
 }

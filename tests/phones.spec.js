@@ -35,7 +35,7 @@ for(const width of [320,390]) test(`device controls remain outside the display a
   }
 });
 test('reload controls have visible keyboard focus and preserve the parent route',async({page})=>{
-  await ready(page,'kernelos');const parentURL=page.url();
+  await ready(page,'portfolio');const parentURL=page.url();
   await page.keyboard.press('Tab');
   const button=page.locator('[data-phone-reload]');await button.focus();
   await expect(button).toBeFocused();await expect(button).toHaveCSS('outline-style','solid');

@@ -6,7 +6,7 @@ async function assertSketch(art, request) {
   await expect(art).toHaveAttribute('aria-hidden', 'true');
   await expect(art).toHaveCSS('overflow', 'hidden');
   expect(await art.evaluate(el => parseFloat(getComputedStyle(el).borderRadius))).toBeGreaterThanOrEqual(16);
-  await expect(art.locator('.project-art-note')).toHaveText('THIAGO COMMUNITY / BOT');
+  await expect(art.locator('.project-art-note')).toHaveText('THIAGO COMMUNITY / WEB + BOT');
   const image = art.locator('img');
   await expect(image).toHaveAttribute('alt', '');
   await expect(image).toHaveAttribute('width', '1586');
@@ -30,9 +30,10 @@ for (const width of [320, 390, 768, 1440]) for (const theme of ['dark', 'light']
     await page.emulateMedia({ colorScheme: theme, reducedMotion: 'reduce' });
     await page.goto('/#work');
     await page.waitForFunction(() => window.__portfolioReady);
-    const home = page.locator('.project-index .project-art-thiago-community');
-    await assertSketch(home, request);
-    await expect(page.locator('.project-index [data-live-landscape]')).toHaveCount(5);
+    const home = page.locator('[data-live-landscape=thiago-community]');
+    await home.scrollIntoViewIfNeeded();
+    await expect(home.locator('iframe')).toHaveAttribute('src', 'https://thiago-community-web.vercel.app/');
+    await expect(page.locator('.project-index [data-live-landscape]')).toHaveCount(6);
     await home.screenshot({ path: `review-reports/community-sketch-home-${width}-${theme}.png` });
     await page.locator('.panel-links [data-open-case=thiago-community]').click();
     const modal = page.locator('#cs-content .project-art-thiago-community');
@@ -56,7 +57,8 @@ for (const theme of ['dark', 'light']) test(`sketch and canonical navigation wor
   const context = await browser.newContext({ javaScriptEnabled: false, colorScheme: theme, viewport: { width: 320, height: 960 } });
   const page = await context.newPage();
   await page.goto(process.env.TEST_BASE_URL || 'http://localhost:3000');
-  await assertSketch(page.locator('.project-index .project-art-thiago-community'), request);
+  await expect(page.locator('[data-live-landscape=thiago-community] iframe')).toHaveCount(0);
+  await expect(page.locator('[data-live-landscape=thiago-community]').locator('..').locator('.landscape-external')).toHaveAttribute('href', 'https://thiago-community-web.vercel.app/');
   await page.locator('.panel-title [data-open-case=thiago-community]').click();
   await expect(page.locator('h1')).toHaveText('Thiago Community');
   await assertSketch(page.locator('main .project-art-thiago-community'), request);

@@ -6,7 +6,9 @@
     "html_url": "https://github.com/EpicGames",
     "api_url": "https://api.github.com/orgs/EpicGames",
     "source_file": "community-epicgames.png",
-    "verified_on": "2026-10-06"
+    "verified_on": "2026-11-07",
+    "name": "Epic Games",
+    "membership_source": "github-public-api"
   },
   {
     "login": "Design-and-Code",
@@ -15,7 +17,9 @@
     "html_url": "https://github.com/Design-and-Code",
     "api_url": "https://api.github.com/orgs/Design-and-Code",
     "source_file": "community-design-and-code.png",
-    "verified_on": "2026-10-06"
+    "verified_on": "2026-11-07",
+    "name": "Design and Code",
+    "membership_source": "github-public-api"
   },
   {
     "login": "Thread-Development",
@@ -24,7 +28,9 @@
     "html_url": "https://github.com/Thread-Development",
     "api_url": "https://api.github.com/orgs/Thread-Development",
     "source_file": "community-thread-development.png",
-    "verified_on": "2026-10-06"
+    "verified_on": "2026-11-07",
+    "name": "Thread Development",
+    "membership_source": "github-public-api"
   },
   {
     "login": "See-Bot",
@@ -33,7 +39,9 @@
     "html_url": "https://github.com/See-Bot",
     "api_url": "https://api.github.com/orgs/See-Bot",
     "source_file": "community-see-bot.png",
-    "verified_on": "2026-10-06"
+    "verified_on": "2026-11-07",
+    "name": "See Project",
+    "membership_source": "github-public-api"
   },
   {
     "login": "Open-Hub-Community",
@@ -42,7 +50,9 @@
     "html_url": "https://github.com/Open-Hub-Community",
     "api_url": "https://api.github.com/orgs/Open-Hub-Community",
     "source_file": "community-open-hub-community.jpg",
-    "verified_on": "2026-10-06"
+    "verified_on": "2026-11-07",
+    "name": "Open Hub Community",
+    "membership_source": "github-public-api"
   },
   {
     "login": "K1R4L-BS",
@@ -51,6 +61,8 @@
     "html_url": "https://github.com/K1R4L-BS",
     "api_url": "https://api.github.com/orgs/K1R4L-BS",
     "source_file": "community-k1r4l-bs.png",
-    "verified_on": "2026-10-06"
+    "verified_on": "2026-11-07",
+    "name": "K1R4LABS",
+    "membership_source": "user-confirmed"
   }
 ]

@@ -9,6 +9,8 @@ for(const width of [320,390,768,1440]) for(const theme of ['dark','light']) {
     await page.emulateMedia({reducedMotion:'reduce',colorScheme:theme});
     await page.goto('/#skills');await page.waitForFunction(()=>window.__portfolioReady);
     const skills=page.locator('#skills');
+    await expect(skills.locator('.community-links a')).toHaveCount(communities.length);
+    await expect(skills.locator('.community-links')).toContainText('See Project');
     await expect(skills.locator('.cap-card')).toHaveCount(4);
     await expect(skills.locator('.cap-badge,.cap-stat-box,.cap-tags')).toHaveCount(0);
     await expect(skills).not.toContainText('YouTube Data API');

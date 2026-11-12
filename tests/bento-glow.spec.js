@@ -1,7 +1,7 @@
 import { test, expect } from './fixtures.js';
 
 for (const theme of ['dark', 'light']) {
-  test(`both technical notes fade and resume without moving in ${theme}`, async ({ page }) => {
+  test(`all technical notes fade and resume without moving in ${theme}`, async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 960 });
     await page.emulateMedia({ reducedMotion: 'no-preference', colorScheme: theme });
     await page.goto('/');
@@ -53,5 +53,34 @@ test('touch never activates a persistent decorative glow', async ({ browser }) =
     }
   } finally {
     await context.close();
+  }
+});
+
+for (const width of [320,390,768,1440]) test(`organization links have bounded keyboard targets at ${width}px`,async({page})=>{
+  await page.setViewportSize({width,height:960});
+  await page.goto('/');
+  for(const link of await page.locator('.community-links a').all()) {
+    await link.scrollIntoViewIfNeeded(); await link.focus();
+    await expect(link).toBeFocused();
+    const box=await link.boundingBox();
+    expect(box.height).toBeGreaterThanOrEqual(64);
+    expect(box.x).toBeGreaterThanOrEqual(0);expect(box.x+box.width).toBeLessThanOrEqual(width);
+    expect(await link.evaluate(el=>parseFloat(getComputedStyle(el).borderRadius))).toBeGreaterThanOrEqual(16);
+  }
+});
+test('glow coordinates follow the clipped inner card at its corners',async({page})=>{
+  await page.setViewportSize({width:1440,height:960});
+  await page.emulateMedia({reducedMotion:'no-preference'});
+  await page.goto('/');await page.waitForFunction(()=>window.__portfolioReady);
+  for(const card of await page.locator('.bento-card').all()) {
+    await card.scrollIntoViewIfNeeded(); const box=await card.boundingBox();
+    await page.mouse.move(box.x+box.width-12,box.y+box.height-12);
+    const g=await card.evaluate(el=>({x:parseFloat(el.style.getPropertyValue('--mouse-x')),y:parseFloat(el.style.getPropertyValue('--mouse-y')),w:el.clientWidth,h:el.clientHeight,clip:getComputedStyle(el).overflow,radius:parseFloat(getComputedStyle(el).borderRadius)}));
+    expect(g.x).toBeGreaterThan(0);expect(g.x).toBeLessThanOrEqual(g.w);
+    expect(g.y).toBeGreaterThan(0);expect(g.y).toBeLessThanOrEqual(g.h);
+    expect(g.clip).toBe('hidden');expect(g.radius).toBeGreaterThanOrEqual(16);
+    await page.mouse.move(box.x+box.width+5,box.y+box.height-12);
+    await expect(card).not.toHaveClass(/is-glow-active/);
+    await expect(card.locator('.bento-border-glow')).toHaveCSS('opacity','0');
   }
 });

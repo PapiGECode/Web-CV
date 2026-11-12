@@ -1,7 +1,7 @@
 /* Real embedded websites. No proxy, copied pages, or cross-origin load-success claims. */
 (() => {
   'use strict';
-  const sites = Object.freeze({kicord:'https://www.kicord.es/es', portfolio:'/?phone-preview=1', kernelos:'https://kernelos.org/', thiagoiutu:'https://thiagoiutu.com/', 'papigegamer-web':'https://papigegamer.com/'});
+  const sites = Object.freeze({kicord:'https://www.kicord.es/es', portfolio:'/?phone-preview=1', kernelos:'/demos/kernelos', 'thiago-community':'https://thiago-community-web.vercel.app/', thiagoiutu:'https://thiagoiutu.com/', 'papigegamer-web':'https://papigegamer.com/'});
   const controllers = new Map();
   const isPreview = () => window.self !== window.top || new URL(location.href).searchParams.get('phone-preview') === '1';
   const roots = scope => [...(scope.matches?.('[data-live-phone], [data-live-landscape]') ? [scope] : []), ...scope.querySelectorAll('[data-live-phone], [data-live-landscape]')];

@@ -86,12 +86,13 @@
 .project-index .project-art-portfolio strong, .project-index .project-art-thiagoiutu strong { font-size: clamp(3rem, 5vw, 5.5rem); }
 .work-notes { margin-top: 3rem; }
 .work-notes .bento-title { font-size: clamp(1.5rem, 3vw, 2.2rem); }
-.work-notes #bento-projects-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3rem; }
+.work-notes #bento-projects-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 3rem; }
 .work-notes #bento-projects-grid .bento-card { border: 0; border-top: 1px solid var(--line-2); border-radius: 0; background: transparent; box-shadow: none; padding: 2rem 0; }
 .work-notes .bento-card::before, .work-notes .bento-status-badge, .work-notes .bento-num, .work-notes .bento-specs-row { display: none; }
 .work-notes .bento-card-inner { padding: 0; }
 .work-notes .bento-card-title { font-size: 1.3rem; }
 @media (max-width: 900px) {
+  .work-notes #bento-projects-grid { grid-template-columns: 1fr; }
   .work-layout, .work-entry:nth-child(even) .work-layout { grid-template-columns: 1fr; gap: 2rem; }
   .work-entry:nth-child(even) .project-art { order: 0; }
   .project-index .panel-title { font-size: clamp(2.2rem, 8vw, 4rem); }
@@ -123,3 +124,29 @@
   .work-entry:nth-child(even) .work-layout-live { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); }
   .project-index .work-layout-live .project-art { aspect-ratio: 1.5; }
 }
+
+.project-external-note { color: var(--ash); font-size: .8rem; line-height: 1.6; margin: 1rem 0 0; }
+
+/* Bounded technical notes: the illuminated area and the visible card share an edge. */
+.work-notes #bento-projects-grid { gap: 1.25rem; }
+.work-notes #bento-projects-grid .bento-card {
+  border: 1px solid var(--line-2); border-radius: 22px;
+  background: color-mix(in srgb, var(--bone) 3%, transparent);
+  padding: clamp(1.25rem, 2.5vw, 2rem); isolation: isolate;
+  overflow: hidden; transform: none; will-change: auto;
+}
+.work-notes #bento-projects-grid .bento-card:hover,
+.work-notes #bento-projects-grid .bento-card:focus-within { border-color: var(--ash); }
+.work-notes .bento-border-glow { border-radius: inherit; }
+.community-links { gap: .65rem; }
+.community-links a {
+  min-height: 76px; padding: .85rem 1rem; border: 1px solid var(--line-2);
+  border-radius: 16px; background: color-mix(in srgb, var(--bone) 3%, transparent);
+  transition: background-color .2s, border-color .2s, color .2s;
+}
+.community-links a:hover, .community-links a:focus-visible {
+  background: color-mix(in srgb, var(--bone) 7%, transparent);
+  border-color: var(--ash); color: var(--bone);
+}
+.community-links a:focus-visible { outline: 2px solid var(--bone); outline-offset: 4px; }
+@media (prefers-reduced-motion: reduce) { .community-links a { transition: none; } }

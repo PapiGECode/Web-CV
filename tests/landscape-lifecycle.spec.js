@@ -1,6 +1,6 @@
 import { test, expect } from './fixtures.js';
 
-const externalKeys = ['kicord', 'kernelos', 'thiagoiutu', 'papigegamer-web'];
+const externalKeys = ['kicord', 'thiagoiutu', 'thiago-community', 'papigegamer-web'];
 async function ready(page) {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/');
@@ -21,9 +21,9 @@ test('landscape requests start near the viewport and retain contexts offscreen',
   await ready(page);
   expect(requests).toEqual([]);
   await expect(page.locator('#work iframe')).toHaveCount(0);
-  const { root, frame } = await openView(page, 'kicord');
-  expect(requests.some(url => url.includes('kicord.es'))).toBe(true);
-  expect(requests.some(url => url.includes('kernelos.org'))).toBe(false);
+  const { root, frame } = await openView(page, 'thiagoiutu');
+  expect(requests.some(url => url.includes('thiagoiutu.com'))).toBe(true);
+  expect(requests.some(url => url.includes('papigegamer.com'))).toBe(false);
   await page.evaluate(() => scrollTo(0, 0));
   await expect(root.locator('iframe')).toHaveCount(1);
   expect(await (await root.locator('iframe').elementHandle()).contentFrame()).toBe(frame);
@@ -31,7 +31,7 @@ test('landscape requests start near the viewport and retain contexts offscreen',
 
 test('all mounted landscape contexts survive resize and persisted lifecycle events', async ({ page }) => {
   await ready(page);
-  for (const key of [...externalKeys, 'portfolio']) {
+  for (const key of [...externalKeys, 'portfolio', 'kernelos']) {
     const { root, frame } = await openView(page, key);
     for (const width of [320, 390, 768, 1440]) {
       await page.setViewportSize({ width, height: 960 });
@@ -49,9 +49,9 @@ test('all mounted landscape contexts survive resize and persisted lifecycle even
     const before = [...document.querySelectorAll('#work iframe')];
     dispatchEvent(new PageTransitionEvent('pagehide', { persisted: true }));
     dispatchEvent(new PageTransitionEvent('pageshow', { persisted: true }));
-    return before.length === 5 && before.every((frame, i) => frame === document.querySelectorAll('#work iframe')[i]);
+    return before.length === 6 && before.every((frame, i) => frame === document.querySelectorAll('#work iframe')[i]);
   })).toBe(true);
-  await expect(page.locator('#work iframe')).toHaveCount(5);
+  await expect(page.locator('#work iframe')).toHaveCount(6);
 });
 
 test('external landscapes retain exact sandbox isolation and block top navigation', async ({ page }) => {
@@ -101,7 +101,7 @@ test('self landscape never recurses or measures after navigation loses the previ
   }
   await expect.poll(() => senders.length).toBeGreaterThan(0);
   expect(senders.every(frame => frame === page.mainFrame())).toBe(true);
-  await frame.locator('.panel-title a').first().press('Enter');
+  await frame.locator('.panel-title a[data-open-case=papige]').press('Enter');
   await expect(frame.locator('#case-study-modal')).toHaveAttribute('aria-hidden', 'false');
   await frame.locator('.project-demo summary').press('Enter');
   await expect(frame.locator('iframe')).toHaveCount(0);
@@ -109,29 +109,29 @@ test('self landscape never recurses or measures after navigation loses the previ
 
 test('index frame navigation survives modal navigation and native Back/Forward', async ({ page }) => {
   await ready(page);
-  const { root, frame } = await openView(page, 'kicord');
+  const { root, frame } = await openView(page, 'thiagoiutu');
   await frame.locator('#remote-navigation').press('Enter');
-  await expect.poll(() => frame.url()).toContain('/es/plugins');
-  await page.locator('.panel-title a[data-open-case="kernelos"]').click();
+  await expect.poll(() => frame.url()).toContain('/next');
+  await page.locator('.panel-title a[data-open-case="papige"]').click();
   const modal = page.locator('#case-study-modal');
   await modal.locator('.project-demo summary').click();
-  const phone = modal.locator('[data-live-phone="kernelos"]');
+  const phone = modal.locator('[data-live-phone="portfolio"]');
   await phone.scrollIntoViewIfNeeded();
   await expect(phone.locator('iframe')).toHaveCount(1);
   const modalFrame = await (await phone.locator('iframe').elementHandle()).contentFrame();
-  await modalFrame.locator('#remote-navigation').press('Enter');
-  await expect.poll(() => modalFrame.url()).toContain('/changelogs');
+  await modalFrame.locator('.panel-title a').first().press('Enter');
+  await expect(modalFrame.locator('#case-study-modal')).toHaveAttribute('aria-hidden', 'false');
   await page.locator('#cs-btn-close').click();
   await expect(modal).toHaveAttribute('aria-hidden', 'true');
   await expect(modal.locator('iframe')).toHaveCount(0);
-  await expect(page.locator('.panel-title a[data-open-case="kernelos"]')).toBeFocused();
+  await expect(page.locator('.panel-title a[data-open-case="papige"]')).toBeFocused();
   expect(await (await root.locator('iframe').elementHandle()).contentFrame()).toBe(frame);
-  expect(frame.url()).toContain('/es/plugins');
+  expect(frame.url()).toContain('/next');
   // Joint-history traversal changes a child document without a main-frame load.
   await page.evaluate(() => history.back());
-  await expect.poll(() => frame.url()).toBe('https://www.kicord.es/es');
+  await expect.poll(() => frame.url()).toBe('https://thiagoiutu.com/');
   await page.evaluate(() => history.forward());
-  await expect.poll(() => frame.url()).toContain('/es/plugins');
+  await expect.poll(() => frame.url()).toContain('/next');
   await expect(modal).toHaveAttribute('aria-hidden', 'true');
   await page.evaluate(() => history.forward());
   await expect(modal).toHaveAttribute('aria-hidden', 'false');

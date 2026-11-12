@@ -48,13 +48,20 @@
             requestAnimationFrame(raf);
           }
         }
+        function navigationOffset() {
+          // One clearance for native anchors, Lenis and the active-section marker.
+          return parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 96;
+        }
         window.goTo = function (sel) {
           if (typeof sel !== 'string' || !/^#[a-z][a-z0-9_-]*$/i.test(sel)) return;
           var el = document.getElementById(sel.slice(1));
           if (!el) return;
           if (sel === '#main') { el.focus({ preventScroll: true }); el.scrollIntoView(); return; }
-          if (lenis) lenis.scrollTo(el, { offset: -96, duration: .85 });
-          else el.scrollIntoView({ behavior: REDUCE ? 'instant' : 'smooth' });
+          // An element target adds CSS scroll-padding + scroll-margin in Lenis.
+          // Use document coordinates so the fixed-nav clearance is applied once.
+          var top = Math.max(0, el.getBoundingClientRect().top + scrollY - navigationOffset());
+          if (lenis) lenis.scrollTo(top, { duration: .85 });
+          else window.scrollTo({ top: top, behavior: REDUCE ? 'instant' : 'smooth' });
         };
 
         // Keep the native cursor; motion is enhancement, not navigation.
@@ -140,8 +147,9 @@
             });
           else if (progress) progress.style.width = (y / max) * 100 + "%";
           var cur = "";
+          var marker = navigationOffset() + 24;
           sections.forEach(function (s) {
-            if (y >= s.offsetTop - 200) cur = s.id;
+            if (s.getBoundingClientRect().top <= marker) cur = s.id;
           });
           navlinks.forEach(function (l) {
             var active = l.getAttribute('href') === '#' + cur;
@@ -151,6 +159,8 @@
           });
         }
         addEventListener("scroll", onScroll, { passive: true });
+        addEventListener("resize", onScroll, { passive: true });
+        addEventListener("pageshow", onScroll);
         onScroll();
         if (progress && hasGSAP) gsap.set(progress, { scaleX: 0 });
 
@@ -653,8 +663,8 @@
             function trackGlow(event) {
               if (!glowMotion.matches || event.pointerType !== "mouse") return;
               var rect = card.getBoundingClientRect();
-              card.style.setProperty("--mouse-x", (event.clientX - rect.left) + "px");
-              card.style.setProperty("--mouse-y", (event.clientY - rect.top) + "px");
+              card.style.setProperty("--mouse-x", Math.max(0, Math.min(card.clientWidth, (event.clientX - rect.left) * card.offsetWidth / rect.width - card.clientLeft)) + "px");
+              card.style.setProperty("--mouse-y", Math.max(0, Math.min(card.clientHeight, (event.clientY - rect.top) * card.offsetHeight / rect.height - card.clientTop)) + "px");
               card.classList.add("is-glow-active");
             }
             card.addEventListener("pointerenter", trackGlow);
@@ -856,6 +866,7 @@
         if (document.fonts && document.fonts.ready) {
           document.fonts.ready.then(function () {
             if (hasGSAP) ScrollTrigger.refresh();
+            onScroll();
           });
         }
       })();

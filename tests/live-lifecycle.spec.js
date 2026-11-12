@@ -15,6 +15,9 @@ for(const [index,key] of [[0,'kicord'],[1,'portfolio'],[2,'kernelos']]) {
       await frame.waitForFunction(()=>window.__portfolioReady);
       await frame.locator('.panel-title a').first().press('Enter');
       await expect(frame.locator('#case-study-modal')).toHaveAttribute('aria-hidden','false');
+    } else if (key === 'kernelos') {
+      await frame.locator('nav a[href="#soporte"]').press('Enter');
+      await expect(frame.locator('#soporte')).toBeInViewport();
     } else {
       // Keyboard activation isolates history behavior from scaled-frame pointer coordinates.
       await frame.locator('#remote-navigation').press('Enter');
@@ -33,12 +36,12 @@ test('older browsers without Navigation API close a navigated frame without leav
   await page.route('**/api/contact',r=>r.fulfill({json:{available:false}}));
   await page.goto('/');await page.waitForFunction(()=>window.__portfolioReady);
   const original=new URL(page.url());
-  await page.locator('.panel-title a[data-open-case=kernelos]').click();
+  await page.locator('.panel-title a[data-open-case=papige]').click();
   await page.locator('#case-study-modal .project-demo summary').click();
-  const device=page.locator('#case-study-modal [data-live-phone=kernelos]');await device.scrollIntoViewIfNeeded();
+  const device=page.locator('#case-study-modal [data-live-phone=portfolio]');await device.scrollIntoViewIfNeeded();
   await expect(device.locator('iframe')).toHaveCount(1);
   const frame=await(await device.locator('iframe').elementHandle()).contentFrame();
-  await frame.locator('#remote-navigation').press('Enter');await expect.poll(()=>frame.url()).toContain('/changelogs');
+  await frame.locator('.panel-title a').first().press('Enter');await expect(frame.locator('#case-study-modal')).toHaveAttribute('aria-hidden','false');
   await page.locator('#cs-btn-close').click();await expect(page.locator('#case-study-modal')).toHaveAttribute('aria-hidden','true');
   expect(new URL(page.url()).pathname).toBe(original.pathname);await expect(page).not.toHaveURL(/#case-study-/);
 });
@@ -46,7 +49,7 @@ test('older browsers without Navigation API close a navigated frame without leav
 test('modal disclosure participates in forward and reverse keyboard order',async({page})=>{
   await page.emulateMedia({reducedMotion:'reduce'});
   await page.goto('/');await page.waitForFunction(()=>window.__portfolioReady);
-  await page.locator('.panel-title a').first().click();
+  await page.locator('.panel-title a[data-open-case=papige]').click();
   const modal=page.locator('#case-study-modal');
   const summary=modal.locator('.project-demo summary');
   const previous=modal.locator('.pp-actions a').last();
@@ -60,7 +63,7 @@ test('modal disclosure participates in forward and reverse keyboard order',async
   await expect(modal.locator('iframe')).toHaveCount(1);
   // Initial about:blank navigation can reset native focus; test the loaded document.
   const embedded = await (await modal.locator('iframe').elementHandle()).contentFrame();
-  await expect(embedded.locator('#remote-navigation')).toBeVisible();
+  await expect(embedded.locator('h1.hero-name')).toBeVisible();
   await page.keyboard.press('Tab');
   await expect.poll(()=>page.evaluate(()=>document.activeElement?.tagName)).toBe('IFRAME');
   await summary.focus();await page.keyboard.press('Shift+Tab');await expect(previous).toBeFocused();

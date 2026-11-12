@@ -1,7 +1,7 @@
 import { test, expect } from './fixtures.js';
 import AxeBuilder from '@axe-core/playwright';
 
-const keys = ['kicord', 'portfolio', 'kernelos', 'thiagoiutu', 'papigegamer-web'];
+const keys = ['kicord', 'portfolio', 'kernelos', 'thiagoiutu', 'thiago-community', 'papigegamer-web'];
 async function openView(page, key) {
   const root = page.locator(`[data-live-landscape="${key}"]`);
   await root.scrollIntoViewIfNeeded();
@@ -18,16 +18,16 @@ async function expectFit(root) {
 }
 
 for (const width of [320, 390, 768, 1440]) for (const theme of ['dark', 'light']) {
-  test(`five live landscape views fit ${width}px ${theme}`, async ({ page }) => {
+  test(`six interactive landscape views fit ${width}px ${theme}`, async ({ page }) => {
     await page.setViewportSize({ width, height: 960 });
     await page.emulateMedia({ reducedMotion: 'reduce', colorScheme: theme });
     await page.goto('/');
     await page.waitForFunction(() => window.__portfolioReady);
-    await expect(page.locator('[data-live-landscape]')).toHaveCount(5);
-    await expect(page.locator('[data-live-landscape] template')).toHaveCount(5);
+    await expect(page.locator('[data-live-landscape]')).toHaveCount(6);
+    await expect(page.locator('[data-live-landscape] template')).toHaveCount(6);
     await expect(page.locator('#work iframe')).toHaveCount(0);
     await expect(page.locator('#work .phone-bezel, #work [data-project-phone]')).toHaveCount(0);
-    await expect(page.locator('.project-art-thiago-community img')).toHaveCount(1);
+    await expect(page.locator('#work .project-art-thiago-community img')).toHaveCount(0);
     for (const key of keys) {
       const { root, frame } = await openView(page, key);
       expect(await frame.evaluate(() => innerWidth)).toBe(1100);
@@ -54,7 +54,7 @@ test('without JavaScript the five views remain inert with permanent external lin
     const page = await context.newPage();
     await page.goto(process.env.TEST_BASE_URL || 'http://localhost:3000');
     await expect(page.locator('iframe')).toHaveCount(0);
-    await expect(page.locator('.landscape-external')).toHaveCount(5);
+    await expect(page.locator('.landscape-external')).toHaveCount(6);
     for (const link of await page.locator('.landscape-external').all()) {
       await expect(link).toBeVisible();
       await expect(link).toHaveAttribute('target', '_blank');
@@ -81,13 +81,13 @@ for (const theme of ['dark', 'light']) {
         };
         const style = getComputedStyle(layout);
         return {
-          live: Boolean(art.dataset.liveLandscape), art: box(art), info: box(info),
+          live: layout.classList.contains('work-layout-live'), art: box(art), info: box(info),
           innerWidth: layout.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight),
           textFits: info.scrollWidth <= info.clientWidth + 1,
           radius: parseFloat(getComputedStyle(art).borderTopLeftRadius),
         };
       }));
-      expect(geometry.filter(row => row.live)).toHaveLength(5);
+      expect(geometry.filter(row => row.live)).toHaveLength(6);
       for (const [index, row] of geometry.entries()) {
         expect(row.textFits).toBe(true);
         expect(row.radius).toBeGreaterThanOrEqual(16);

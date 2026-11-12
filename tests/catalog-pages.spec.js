@@ -10,6 +10,7 @@ for (const project of projects) test(`${project.slug}: canonical content and sho
   await expect(page.locator('main a[href="/projects/robleis"]')).toHaveCount(0);
   await expect(page.locator('iframe')).toHaveCount(0);
   if (project.phone) await expect(page.locator('.project-demo')).not.toHaveAttribute('open', '');
+  else await expect(page.locator('.project-demo')).toHaveCount(0);
   await expect(page.locator('main')).toContainText(project.role);
   await expect(page.locator('link[rel=canonical]')).toHaveAttribute('href', `https://www.pabloschefer.com/projects/${project.slug}`);
   const response = await request.get('/projects/' + project.slug);
