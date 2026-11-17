@@ -133,7 +133,7 @@ test('page lifecycle restoration reuses existing browsing contexts without dupli
 });
 test('CSP permits only intended origins and external sandboxes cannot navigate the parent',async({request,page})=>{
   const res=await request.get('/');const csp=res.headers()['content-security-policy'];
-  expect(csp).toContain("frame-src 'self' https://thiago-community-web.vercel.app https://www.kicord.es https://kicord.es https://kernelos.org https://www.kernelos.org https://thiagoiutu.com https://papigegamer.com;");expect(csp).toContain("script-src 'self';");expect(csp).toContain("frame-ancestors 'self';");
+  expect(csp).toContain("frame-src 'self' https://thiago-community-web.pablopme41.workers.dev https://www.kicord.es https://kicord.es https://kernelos.org https://www.kernelos.org https://thiagoiutu.com https://papigegamer.com;");expect(csp).toContain("script-src 'self';");expect(csp).toContain("frame-ancestors 'self';");
   await ready(page);for(const key of ['thiagoiutu','papigegamer-web']) {const {phone}=await view(page,key);const frame=phone.locator('iframe');expect(await frame.getAttribute('sandbox')).not.toContain('allow-top-navigation');await expect(frame).toHaveAttribute('loading','lazy');await expect(frame).toHaveAttribute('referrerpolicy','strict-origin-when-cross-origin');}
 });
 test('blocked external pages keep direct case links without a broken demo or false success',async({page})=>{

@@ -2,7 +2,7 @@
 const sites = Object.freeze({
   kicord: { name:'KiCord', domain:'kicord.es', url:'https://www.kicord.es/es', href:'https://www.kicord.es/es' },
   portfolio: { name:'PabloSchefer.com', domain:'pabloschefer.com', url:'/?phone-preview=1', href:'https://www.pabloschefer.com/' },
-  'thiago-community': { name:'Thiago Community', domain:'thiago-community-web.vercel.app', url:'https://thiago-community-web.vercel.app/', href:'https://thiago-community-web.vercel.app/' },
+  'thiago-community': { name:'Thiago Community', domain:'thiago-community-web.pablopme41.workers.dev', url:'https://thiago-community-web.pablopme41.workers.dev/', href:'https://thiago-community-web.pablopme41.workers.dev/' },
   thiagoiutu: { name:'ThiagoIUTU', domain:'thiagoiutu.com', url:'https://thiagoiutu.com/', href:'https://thiagoiutu.com/' },
   'papigegamer-web': { name:'PapiGEGamer', domain:'papigegamer.com', url:'https://papigegamer.com/', href:'https://papigegamer.com/' },
   kernelos: { demo: true, name:'KernelOS', domain:'kernelos.org', url:'/demos/kernelos', href:'https://kernelos.org/' },

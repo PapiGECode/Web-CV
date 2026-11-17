@@ -51,7 +51,7 @@ Los casos de KiCord y el portfolio ofrecen una vista móvil real dentro de un de
 
 `scripts/project-phones.mjs` genera plantillas inertes y `js/project-phones.js` crea las vistas cerca de la zona visible. El portfolio usa la misma web en `/?phone-preview=1`, relativo al origen actual para funcionar también en los despliegues de prueba. Una página del portfolio incrustada no inicia otros iframes, incluso al navegar a otro caso de estudio. Su medición se desactiva para no duplicar visitas. Sin JavaScript se conservan enlaces directos reales.
 
-La CSP permite exclusivamente el propio origen y los dominios de KiCord, KernelOS, thiagoiutu.com, thiago-community-web.vercel.app y papigegamer.com. Los sitios externos conservan su sandbox sin navegación del documento superior. No se copian páginas ni se eliminan protecciones de terceros. El enlace externo siempre permanece disponible: un evento load no equivale a confirmar la carga correcta. Los modales eliminan sus marcos al cerrarse sin navegar a about:blank.
+La CSP permite exclusivamente el propio origen y los dominios de KiCord, KernelOS, thiagoiutu.com, thiago-community-web.pablopme41.workers.dev y papigegamer.com. Los sitios externos conservan su sandbox sin navegación del documento superior. No se copian páginas ni se eliminan protecciones de terceros. El enlace externo siempre permanece disponible: un evento load no equivale a confirmar la carga correcta. Los modales eliminan sus marcos al cerrarse sin navegar a about:blank.
 
 Las pruebas sustituyen solo los sitios externos por documentos explícitos de prueba. El iframe del portfolio carga la página real construida. La comprobación de los sitios externos interactivos en un navegador real se realiza aparte. Para aislar la vista previa puede usarse PORT; para probar contra ella, TEST_BASE_URL.
 
@@ -74,3 +74,7 @@ La selección de repositorios y las membresías se contrastaron el 7/11/2026. La
 ## Navegación activa
 
 El espacio para la barra fija se define una sola vez con scroll-padding-top en la raíz. Los enlaces controlados por JavaScript usan una coordenada de documento, no un elemento más un offset: Lenis ya incorpora los márgenes CSS al recibir un elemento. El indicador activo compara la posición visible de las secciones con ese mismo margen. No acumular scroll-padding, scroll-margin y offset, porque deja seleccionada la sección anterior. tests/navigation-active.spec.js cubre clics repetidos, ambos modos de movimiento, menú móvil, scroll manual, historial y enlaces sin JavaScript.
+
+## Cloudflare
+
+`npm ci && npm run build && npx wrangler deploy` builds the public assets and the native Worker API. Runtime secrets are configured separately in Cloudflare; never commit them. The contact form requires `RESEND_API_KEY`. Domains and routes are declared in `wrangler.jsonc`.

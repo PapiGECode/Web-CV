@@ -79,7 +79,7 @@ export const projects = [
     role: 'Desarrollo de la web y del bot',
     overview: 'Thiago Community reúne la web y el bot de la comunidad de ThiagoIUTU. Es un proyecto distinto de la web personal del creador.',
     approach: 'Mi participación se centra en el desarrollo de la web y el bot, con una presentación pública de la comunidad y sus normas.',
-    tags: ['Web', 'Bot', 'Comunidad'], links: [{ label: 'Visitar Thiago Community', url: 'https://thiago-community-web.vercel.app/' }],
+    tags: ['Web', 'Bot', 'Comunidad'], links: [{ label: 'Visitar Thiago Community', url: 'https://thiago-community-web.pablopme41.workers.dev/' }],
     details: [{ title: 'Proyecto independiente', text: 'La web de ThiagoIUTU y el bot de su comunidad son trabajos diferentes dentro del mismo entorno.' }],
   },
   {

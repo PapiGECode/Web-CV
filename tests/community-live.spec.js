@@ -4,7 +4,7 @@ import { test, expect } from './fixtures.js';
 for (const width of [390,1440]) test(`deployed community loads and navigates safely inside portfolio at ${width}px`, async ({page,context}) => {
   test.skip(process.env.LIVE_COMMUNITY !== '1', 'Requires network and the authorized localhost:3105 origin');
   test.setTimeout(60000);
-  await context.unroute('https://thiago-community-web.vercel.app/**');
+  await context.unroute('https://thiago-community-web.pablopme41.workers.dev/**');
   await page.setViewportSize({width,height:960});
   await page.emulateMedia({reducedMotion:'reduce'});
   await page.goto('/');await page.waitForFunction(()=>window.__portfolioReady);

@@ -10,7 +10,7 @@ const root = process.cwd();
 const dist = path.join(root, 'dist');
 const input = (...p) => path.join(root, ...p);
 const output = (...p) => path.join(dist, ...p);
-const revision = process.env.VERCEL_GIT_COMMIT_SHA || process.env.GITHUB_SHA || 'local';
+const revision = process.env.CF_PAGES_COMMIT_SHA || process.env.CF_BUILD_COMMIT_SHA || process.env.VERCEL_GIT_COMMIT_SHA || process.env.GITHUB_SHA || 'local';
 await fs.rm(dist, { recursive: true, force: true });
 for (const dir of ['css', 'js', 'js/vendor', 'assets', 'assets/fonts', 'projects', 'demos']) await fs.mkdir(output(dir), { recursive: true });
 const replacements = new Map();
@@ -127,3 +127,6 @@ for (const file of pages) {
 }
 for (const file of ['robots.txt', 'sitemap.xml', 'site.webmanifest']) await fs.copyFile(input(file), output(file));
 console.log(JSON.stringify({ revision, pages: pages.length, versionedAssets: replacements.size }));
+
+// Keep security headers and redirects with every Cloudflare build.
+for (const file of ['_headers', '_redirects']) await fs.copyFile(input('cloudflare', file), output(file));
